@@ -4,13 +4,13 @@ const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
+const path = require('path')
 // const logger = require('koa-logger')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
 const log = require('./logs/log')
 
-const controller = require('./middlewares/controller')
 const koaWinston = require('./middlewares/koa-winston')
 
 // error handler
@@ -22,11 +22,15 @@ app.use(bodyparser({
 }))
 app.use(json())
 // app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
+app.use(require('koa-static')(__dirname + '/build'))
 
-app.use(views(__dirname + '/views', {
-  extension: 'pug'
+app.use(views(__dirname + '/build', {
+  extension: 'html'
+  // map: {
+  //   html: 'underscroe'
+  // }
 }))
+
 
 // logger
 
@@ -36,7 +40,7 @@ app.use(views(__dirname + '/views', {
 //   const ms = new Date() - start
 //   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 // })
-// // 正常请求的日志
+//正常请求的日志
 app.use(koaWinston(log.logger));
 // add controller:
 // app.use(controller());
