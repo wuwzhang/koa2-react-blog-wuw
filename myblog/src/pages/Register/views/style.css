@@ -1,0 +1,23 @@
+.register-container {
+  margin-top: 60px;
+  border-left: 1px solid #336699;
+}
+
+.register-container h2 {
+  color: #336699;
+  text-shadow: 1px 1px #3399cc;
+  /*margin-left: 40px;*/
+  margin-bottom: 50px;
+}
+
+.btn-upload {
+  background: #3366aa;
+  margin-left: 10px;
+  border: 1px solid #3366ff;
+  padding: 5px;
+  border-radius: 3px;
+  color: #fff;
+  font-size: 16px;
+  box-shadow: 1px 1px 0px 0px #3399cc;
+}
+

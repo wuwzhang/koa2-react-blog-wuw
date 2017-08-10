@@ -12,6 +12,7 @@ import Home from './pages/Home.js';
 import About from './pages/About.js';
 import NotFound from './pages/NotFound.js';
 import {view as Login} from './pages/Login/';
+import {view as Register} from './pages/Register/';
 
 // const createElement = (Component, props) => {
 //   return (
@@ -51,6 +52,7 @@ const Routes = () => (
         <Route path="/home" component={ Home } ></Route>
         <Route path="/about" component={ About }></Route>
         <Route path="/login" component={ Login }></Route>
+        <Route path="/regist" component={ Register }></Route>
         <Route component={ NotFound }></Route>
         <Route  path="/" component={RedirectFromServer}/>
       </Switch>
