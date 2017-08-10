@@ -4,11 +4,14 @@ const views = require('koa-views')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
-const path = require('path')
+const session = require('koa2-session-store')
+var flash = require('koa-flash')
+const MongoStore = require('koa2-session-mongolass')
+const config = require('config-lite')(__dirname)
 // const logger = require('koa-logger')
 
 const index = require('./routes/index')
-const users = require('./routes/users')
+const signIn = require('./routes/signIn')
 const log = require('./logs/log')
 
 const koaWinston = require('./middlewares/koa-winston')
@@ -20,26 +23,44 @@ onerror(app)
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
 }))
-app.use(json())
-// app.use(logger())
-app.use(require('koa-static')(__dirname + '/build'))
 
-app.use(views(__dirname + '/build', {
-  extension: 'html'
-  // map: {
-  //   html: 'underscroe'
-  // }
+app.keys = [config.session.secret];
+app.use(session({
+  name: config.session.key,
+  secret: config.session.secret,
+  resave: true,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: config.session.maxAge
+  },
+  stroe: new MongoStore()
 }))
 
+app.use(flash())
+
+app.use(json())
+app.use(require('koa-static')(__dirname + '/build'))
+app.use(views(__dirname + '/build', {
+  extension: 'html'
+}))
+
+app.use(async(ctx, next) => {
+  try {
+    await next()
+  } catch (err) {
+    ctx.status = err.status || 500
+    ctx.body = err.message
+    ctx.app.emit('error', err, ctx)
+  }
+})
+app.use(async(ctx, next) => {
+  await next()
+  if (ctx.response.status === 400) {
+    ctx.response.redirect('?', ctx.request.url)
+  }
+})
 
 // logger
-
-// app.use(async (ctx, next) => {
-//   const start = new Date()
-//   await next()
-//   const ms = new Date() - start
-//   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
-// })
 //正常请求的日志
 app.use(koaWinston(log.logger));
 // add controller:
@@ -47,7 +68,7 @@ app.use(koaWinston(log.logger));
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(signIn.routes(), signIn.allowedMethods())
 
 //错误请求的日志
 app.use(koaWinston(log.errorloger));
