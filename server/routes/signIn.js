@@ -1,6 +1,5 @@
 const router = require('koa-router')();
-const Models = require('../lib/core');
-const $User = Models.$User;
+const UserModel = require('../models/user');
 const cheackNotLogin = require('../middlewares/check-login').cheackNotLogin;
 const crypto = require('crypto');
 
@@ -13,11 +12,13 @@ router.post('/api/signIn', async(ctx, next) => {
   let code = '1', message = '登录成功';
 
   let { account, password } = ctx.request.body;
-  let user = await $User.getUserByAccount(account);
+  console.log(account + " : " + password)
+  let user = await UserModel.getUserByAccount(account);
 
-  password = crypto.createHash('md5').update(password).digest('hex');
+  // password = crypto.createHash('md5').update(password).digest('hex');
 
-  if (user && (password === user.password)) {
+  console.log("user: " + user.password + ' ' + password);
+  if (user && (password == user.password)) {
     delete user.password;
     ctx.session.user = user;
     ctx.response.body = {

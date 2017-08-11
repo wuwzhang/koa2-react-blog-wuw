@@ -5,7 +5,7 @@ exports.addUser = (data) => (
 );
 
 exports.getUserById = (id) => (
-  User.findById(id).exex()
+  User.findById(id)
 );
 
 exports.getUserByAccount = (account) => (
