@@ -8,12 +8,16 @@ export const register = async(params) => {
   try {
     var result = await fetch(url, {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
       body: JSON.stringify({
         account: account,
         username: username,
         password: password
       }),
-      credentials: CREDENTIALS
+      credentials: CREDENTIAL
     })
   } catch(e) {
 

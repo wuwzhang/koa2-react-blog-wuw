@@ -12,6 +12,8 @@ const config = require('config-lite')(__dirname)
 
 const index = require('./routes/index')
 const signIn = require('./routes/signIn')
+const signUp = require('./routes/signUp')
+
 const log = require('./logs/log')
 
 const koaWinston = require('./middlewares/koa-winston')
@@ -69,6 +71,7 @@ app.use(koaWinston(log.logger));
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(signIn.routes(), signIn.allowedMethods())
+app.use(signUp.routes(), signUp.allowedMethods())
 
 //错误请求的日志
 app.use(koaWinston(log.errorloger));

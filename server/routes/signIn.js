@@ -1,4 +1,4 @@
-const router = require('koa-router')()
+const router = require('koa-router')();
 const Models = require('../lib/core');
 const $User = Models.$User;
 const cheackNotLogin = require('../middlewares/check-login').cheackNotLogin;
@@ -6,7 +6,7 @@ const crypto = require('crypto');
 
 router.get('/home/login', async(ctx, next) => {
   await ctx.render('home/login');
-})
+});
 
 router.post('/api/signIn', async(ctx, next) => {
   await cheackNotLogin(ctx, next);

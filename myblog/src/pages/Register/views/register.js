@@ -25,7 +25,9 @@ class Register extends Component {
     this.state = {
       account: '',
       password: '',
-      confirmPwd: ''
+      confirmPwd: '',
+      username: '',
+      porfile: ''
     }
 
   }
