@@ -52,6 +52,7 @@ const Routes = () => (
         <Route path="/home" component={ Home } ></Route>
         <Route path="/about" component={ About }></Route>
         <Route path="/login" component={ Login }></Route>
+        <Route path="/signOut" component={ Login }></Route>
         <Route path="/regist" component={ Register }></Route>
         <Route component={ NotFound }></Route>
         <Route  path="/" component={RedirectFromServer}/>

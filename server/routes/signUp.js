@@ -1,12 +1,10 @@
 const router = require('koa-router')();
 const UserModel = require('../models/user');
 const cheackNotLogin = require('../middlewares/check-login').cheackNotLogin;
-const formidable = require('formidable');
 const fs = require('async-file');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
 const crypto = require('crypto');
-const parse = require('co-body');
 
 router.get('/home/register', async(ctx, next) => {
   await ctx.render('home/register');
@@ -22,7 +20,9 @@ router.post('/api/signUp', async(ctx, next) => {
   let code = '1', message = '注册成功';
 
   try {
+    // console.log(ctx.request.body);
     var data = JSON.parse(ctx.request.body);
+    // console.log(data);
     let {
       account,
       username,
@@ -32,7 +32,7 @@ router.post('/api/signUp', async(ctx, next) => {
     // console.log(typeof data);
     // console.log(JSON.parse(data));
     password = crypto.createHash('md5').update(password).digest('hex');
-    console.log("ooooooooooooooo" + account + ' ' + username + ' ' + password);
+    // console.log("ooooooooooooooo" + account + ' ' + username + ' ' + password);
 
     const user = {
       account: account,
@@ -59,13 +59,11 @@ router.post('/api/signUp', async(ctx, next) => {
   }
 });
 
-
-  //确认账号是否存在
 router.post('/api/checkAccount', async(ctx, next) => {
   const { account } = ctx.request.body,
         user = await UserModel.getUserByAccount(account);
 
-  let code = '1', message = '';
+  let code = '1', message = 'ok';
 
   if (user) {
     code = '-1',
@@ -74,7 +72,10 @@ router.post('/api/checkAccount', async(ctx, next) => {
     code,
     message
   }
-
+  ctx.response.body = {
+    'code': code,
+    'message': message
+  }
 });
 
 module.exports = router;

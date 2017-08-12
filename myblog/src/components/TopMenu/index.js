@@ -22,7 +22,7 @@ const view = () => {
         <Col md={2} xs={4}>
           <ul className="base-option">
             <li className="base-item"><Link to='/login'>Login</Link></li>
-            <li className="base-item"><Link to='/logout'>Logout</Link></li>
+            <li className="base-item"><Link to='/signOut'>Logout</Link></li>
             <li className="base-item"><Link to='/regist'>Regist</Link></li>
           </ul>
         </Col>
