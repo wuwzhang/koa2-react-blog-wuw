@@ -15,7 +15,7 @@ router.post('/api/signIn', async(ctx, next) => {
   console.log(account + " : " + password)
   let user = await UserModel.getUserByAccount(account);
 
-  // password = crypto.createHash('md5').update(password).digest('hex');
+  password = crypto.createHash('md5').update(password).digest('hex');
 
   console.log("user: " + user.password + ' ' + password);
   if (user && (password == user.password)) {

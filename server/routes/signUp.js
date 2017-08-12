@@ -6,19 +6,7 @@ const fs = require('async-file');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
 const crypto = require('crypto');
-
-function formidablePromise(req, opts) {
-  return new Promise(function(resolve, reject) {
-    var form = new formidable.IncomingForm(opts)
-    form.parse(req, function(err, fields, files) {
-      if (err) return reject(err)
-      resolve({
-        fields: fields,
-        files: files
-      })
-    })
-  })
-}
+const parse = require('co-body');
 
 router.get('/home/register', async(ctx, next) => {
   await ctx.render('home/register');
@@ -32,25 +20,27 @@ router.post('/signIn', async(ctx, next) => {
 
 router.post('/api/signUp', async(ctx, next) => {
   let code = '1', message = '注册成功';
-  // const formidableResult = await formidablePromise(ctx.req);
-  try {
-    // const {
-    //   account,
-    //   username,
-    //   password
-    // } = ctx.request.body;
 
-    // password = crypto.createHash('md5').update(password).digest('hex');
-    // console.log(account + ' ' + username + ' ' + password);
+  try {
+    var data = JSON.parse(ctx.request.body);
+    let {
+      account,
+      username,
+      password
+    } = data;
+
+    // console.log(typeof data);
+    // console.log(JSON.parse(data));
+    password = crypto.createHash('md5').update(password).digest('hex');
+    console.log("ooooooooooooooo" + account + ' ' + username + ' ' + password);
 
     const user = {
-      account: 'wuwzhang@gmail.com',
-      username: 'wuw',
-      password: '12345678'
+      account: account,
+      username: username,
+      password: password
     }
 
-    await UserModel.create(ctx.request.body);
-    // const tmp = await $User.getUserByAccount(account);
+    await UserModel.create(user);
     delete user.password;
     ctx.session.user = user;
   } catch(e) {
