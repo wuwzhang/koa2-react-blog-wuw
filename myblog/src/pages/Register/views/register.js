@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { view as FieldGroup } from '../../../components/FieldGroup';
 import { register, checkAccount } from '../fetch';
 
 // import redirect from '../../../components/Redirect';
@@ -9,8 +11,6 @@ import { register, checkAccount } from '../fetch';
 import {
   FormGroup,
   ControlLabel,
-  FormControl,
-  HelpBlock,
   Button,
   Form,
   Col
@@ -236,24 +236,7 @@ class Register extends Component {
   }
 }
 
-function FieldGroup({label, help, validationState, ...props}) {
-  return (
-    <FormGroup
-      validationState={validationState}
-    >
-      <Col sm={12}>
-        <ControlLabel>{label}</ControlLabel>
-      </Col>
-      <Col sm={6}>
-        <FormControl {...props} />
-      </Col>
-      <Col sm={12}>
-        {help && <HelpBlock>{help}</HelpBlock>}
-      </Col>
-
-    </FormGroup>
-  );
-}
+Register.propTypes = {}
 
 // const mapDispatchToProps = (dispatch) => {
 //   return {

@@ -15,7 +15,7 @@ const view = () => {
         <Col md={10} xs={8}>
           <ul className="base-option">
             <li className="base-item"><Link to='/home'>Home</Link></li>
-            <li className="base-item"><Link to='/article_list'>Article</Link></li>
+            <li className="base-item"><Link to='/article'>Article</Link></li>
             <li className="base-item"><Link to='/about'>About</Link></li>
           </ul>
         </Col>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import { login } from '../fetch';
+import { view as FieldGroup } from '../../../components/FieldGroup';
 import {
   startLogin,
   finishLogin,
@@ -12,9 +13,6 @@ import {
 
 import {
   FormGroup,
-  ControlLabel,
-  FormControl,
-  HelpBlock,
   Checkbox,
   Button,
   Form,
@@ -123,24 +121,24 @@ class Login extends Component {
   }
 }
 
-function FieldGroup({label, help, validationState, ...props}) {
-  return (
-    <FormGroup
-      validationState={validationState}
-    >
-      <Col sm={12}>
-        <ControlLabel>{label}</ControlLabel>
-      </Col>
-      <Col sm={6}>
-        <FormControl {...props} />
-      </Col>
-      <Col sm={12}>
-        {help && <HelpBlock>{help}</HelpBlock>}
-      </Col>
+// function FieldGroup({label, help, validationState, ...props}) {
+//   return (
+//     <FormGroup
+//       validationState={validationState}
+//     >
+//       <Col sm={12}>
+//         <ControlLabel>{label}</ControlLabel>
+//       </Col>
+//       <Col sm={6}>
+//         <FormControl {...props} />
+//       </Col>
+//       <Col sm={12}>
+//         {help && <HelpBlock>{help}</HelpBlock>}
+//       </Col>
 
-    </FormGroup>
-  );
-}
+//     </FormGroup>
+//   );
+// }
 
 
 Login.propTypes = {
@@ -160,7 +158,7 @@ const mapDispatchToProps = (dispatch) => {
 
       let result = await login(user);
 
-      if (result.code === 1) {
+      if (result.code === '1') {
         dispatch(finishLogin());
       } else {
         dispatch(failLogin());

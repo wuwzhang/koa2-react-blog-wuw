@@ -27,7 +27,7 @@ export const login = async(params) => {
     return result.json();
   } else {
     return {
-      code: -2,
+      code: '-2',
       message: '未知错误'
     }
   }
