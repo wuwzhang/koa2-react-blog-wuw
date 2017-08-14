@@ -1,11 +1,12 @@
 const User = require('../models/').User;
 
-exports.addUser = (data) => (
+exports.create = (data) => (
   User.create(data)
 );
 
 exports.getUserById = (id) => (
-  User.findById(id)
+  User.findOne({_id: id})
+      .exec()
 );
 
 exports.getUserByAccount = (account) => (

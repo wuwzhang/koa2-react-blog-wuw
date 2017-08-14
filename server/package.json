@@ -26,6 +26,7 @@
     "koa-views": "^5.2.1",
     "koa2-session-mongolass": "^1.0.1",
     "koa2-session-store": "^1.0.3",
+    "marked": "^0.3.6",
     "moment": "^2.18.1",
     "mongolass": "^2.4.5",
     "mongoose": "^4.11.6",

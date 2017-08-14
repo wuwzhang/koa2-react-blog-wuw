@@ -1,33 +1,12 @@
-const User = require('../lib/mongo').User;
-//安全模式下只暴露公开信息
-User.plugin('safyMode',{
-  afterFindOne:function(user){
-    if(user){
-      return {
-        username:user.username,
-        _id:user._id
-      }
-    }
-  }
-})
-module.exports = {
-  // 注册一个用户
-  create: function create(user) {
-    return User.create(user).exec();
-  },
-  //通过用户名获取用户信息
-  getUserByAccount: function getUserByName(account) {
-  return User
-    .findOne({ account:account })
-    .addCreatedAt()
-    .exec();
-},
-//根据用户id获取用户信息
-getUserById:function getUserById(id){
-  return User
-        .findOne({_id:id})
-        .safyMode()
-        .exec();
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-  }
-};
+const UserSchema = new Schema({
+  account: { type:String, require: true },
+  username: { type: String, require: true },
+  password: { type: String, require: true },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
+})
+UserSchema.index({account: 1});
+module.exports = mongoose.model('User', UserSchema);

@@ -13,6 +13,7 @@ const config = require('config-lite')(__dirname)
 const index = require('./routes/index')
 const signIn = require('./routes/signIn')
 const signUp = require('./routes/signUp')
+const articlePost = require('./routes/articlePost')
 
 const log = require('./logs/log')
 
@@ -72,6 +73,7 @@ app.use(koaWinston(log.logger));
 app.use(index.routes(), index.allowedMethods())
 app.use(signIn.routes(), signIn.allowedMethods())
 app.use(signUp.routes(), signUp.allowedMethods())
+app.use(articlePost.routes(), articlePost.allowedMethods())
 
 //错误请求的日志
 app.use(koaWinston(log.errorloger));

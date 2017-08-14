@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import { view as FieldGroup } from '../../../components/FieldGroup';
 
-import { addPost } from '../fetch';
+import { addPost, checkTitle } from '../fetch';
 import {
   startPostArticle,
   successPostArticle,
@@ -33,7 +33,7 @@ class ArticlePostOrEdit extends Component {
     }
   }
 
-  _checkTitle(value) {
+  async _checkTitle(value) {
     this.setState({
       titleValid: null,
       titleHelp: ''
@@ -45,9 +45,18 @@ class ArticlePostOrEdit extends Component {
         titleHelp: '标题不为空'
       });
     } else {
-      this.setState({
-        titleValid: 'success'
-      })
+      let result = await checkTitle(value);
+
+      if (result.code === '1') {
+        this.setState({
+          titleValid: 'success'
+        })
+      } else {
+        this.setState({
+          titleValid: 'error',
+          titleHelp: '存在同名标题文章'
+        })
+      }
     }
   }
 
@@ -70,7 +79,32 @@ class ArticlePostOrEdit extends Component {
   }
 
   async _postArticle() {
+    const {
+      title,
+      content,
+      titleValid,
+      contentValid
+    } = this.state;
 
+    function _checkComplete() {
+
+      return (titleValid === 'success'
+              && contentValid === 'success');
+    }
+
+    if (_checkComplete()) {
+      const result = await this.props.addPost({
+        article: {
+          title,
+          content
+        }
+      })
+
+      console.log(result.code);
+      if (result.code === '1') {
+
+      }
+    }
   }
 
   async _updateArticle() {
@@ -130,7 +164,7 @@ class ArticlePostOrEdit extends Component {
 
 ArticlePostOrEdit.propTypes = {
   article: PropTypes.object,
-  posts: PropTypes.func
+  addPost: PropTypes.func
 };
 
 const mapStateToProps = (state) => (
@@ -141,7 +175,7 @@ const mapStateToProps = (state) => (
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    posts: async(article) => {
+    addPost: async(article) => {
       dispatch(startPostArticle());
 
       let result = await addPost(article);

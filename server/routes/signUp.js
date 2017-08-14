@@ -1,5 +1,6 @@
 const router = require('koa-router')();
-const UserModel = require('../models/user');
+const Models = require('../lib/core');
+const $User = Models.$User;
 const cheackNotLogin = require('../middlewares/check-login').cheackNotLogin;
 const fs = require('async-file');
 const path = require('path');
@@ -40,7 +41,7 @@ router.post('/api/signUp', async(ctx, next) => {
       password: password
     }
 
-    await UserModel.create(user);
+    await $User.create(user);
     delete user.password;
     ctx.session.user = user;
   } catch(e) {
@@ -61,7 +62,7 @@ router.post('/api/signUp', async(ctx, next) => {
 
 router.post('/api/checkAccount', async(ctx, next) => {
   const { account } = ctx.request.body,
-        user = await UserModel.getUserByAccount(account);
+        user = await $User.getUserByAccount(account);
 
   let code = '1', message = 'ok';
 
