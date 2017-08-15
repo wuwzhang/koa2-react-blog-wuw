@@ -6,6 +6,7 @@
     "async-child-process": "^1.1.1",
     "async-file": "^2.0.2",
     "bootstrap": "^3.3.7",
+    "github-markdown-css": "^2.8.0",
     "history": "^4.6.3",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

@@ -3,6 +3,26 @@ var Article = require('../models').Article;
 exports.create = (article) => {
   return Article.create(article);
 };
+exports.getArticles = () => {
+  const sort = {
+    _id: -1
+  };
+  return Article.find()
+                .sort(sort)
+                .exec();
+}
+exports.getArticlesByType = (type) => {
+  const query = {}
+  if (type) {
+    query.type = type;
+  }
+  const sort = {
+    _id: -1
+  };
+  return Article.find(query)
+                .sort(sort)
+                .exec();
+}
 exports.getArticleById = (articleId) => {
   return Article.findOne({_id: articleId})
                 .exec();

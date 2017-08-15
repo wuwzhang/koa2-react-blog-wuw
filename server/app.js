@@ -14,6 +14,7 @@ const index = require('./routes/index')
 const signIn = require('./routes/signIn')
 const signUp = require('./routes/signUp')
 const articlePost = require('./routes/articlePost')
+const articleList = require('./routes/articleList')
 
 const log = require('./logs/log')
 
@@ -74,7 +75,7 @@ app.use(index.routes(), index.allowedMethods())
 app.use(signIn.routes(), signIn.allowedMethods())
 app.use(signUp.routes(), signUp.allowedMethods())
 app.use(articlePost.routes(), articlePost.allowedMethods())
-
+app.use(articleList.routes(), articleList.allowedMethods())
 //错误请求的日志
 app.use(koaWinston(log.errorloger));
 

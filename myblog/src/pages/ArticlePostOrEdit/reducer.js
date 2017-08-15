@@ -2,9 +2,7 @@ import {
   POST_STARTED,
   POST_SUCCESS,
   POST_FAILURE,
-  INIT_ARTICLE,
-  ADD_ARTICLE,
-  DELETE_ARTICLE
+  ADD_ARTICLE
 } from './actionType.js';
 
 export default (state, action) => {
@@ -16,24 +14,9 @@ export default (state, action) => {
   }
 
   switch (action.type) {
-    case INIT_ARTICLE: {
-      return {
-        ...state,
-        article: action.article
-      }
-    }
     case ADD_ARTICLE: {
       return {
 
-      }
-    }
-    case DELETE_ARTICLE: {
-      return {
-        ...state,
-        article: [
-          ...state.articles.slice(0, action.articleIndex),
-          ...state.articles.slice(action.articleIndex + 1)
-        ]
       }
     }
     case POST_STARTED: {

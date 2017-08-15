@@ -27,8 +27,8 @@ class ArticlePostOrEdit extends Component {
     super(props);
 
     this.state = {
-      text: '',
-      content: '',
+      title: props.title || '',
+      content: props.content || '',
       mode: 1
     }
   }
@@ -100,7 +100,7 @@ class ArticlePostOrEdit extends Component {
         }
       })
 
-      console.log(result.code);
+      // console.log(result.code);
       if (result.code === '1') {
 
       }
