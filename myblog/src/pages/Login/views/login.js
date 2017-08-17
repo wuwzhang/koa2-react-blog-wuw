@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch) => {
       let result = await login(user);
 
       if (result.code === '1') {
-        dispatch(finishLogin());
+        dispatch(finishLogin(user));
       } else {
         dispatch(failLogin());
       }

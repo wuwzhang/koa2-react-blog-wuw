@@ -17,11 +17,11 @@ export const loginOut = (user) => ({
 });
 
 export const startLogin = () =>({
-  type:LOGIN_STARTED
+  type: LOGIN_STARTED
 });
 
 export const finishLogin = (result)=>({
-  type:LOGIN_SUCCESS,
+  type: LOGIN_SUCCESS,
   result
 });
 export const failLogin = (error)=>({

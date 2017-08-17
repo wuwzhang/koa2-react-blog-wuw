@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import {Grid} from 'react-bootstrap';
-import {view as TopMenu} from './components/TopMenu';
+import { view as TopMenu } from './components/TopMenu';
 import Home from './pages/Home.js';
 import About from './pages/About.js';
 import Article from './pages/Article.js';

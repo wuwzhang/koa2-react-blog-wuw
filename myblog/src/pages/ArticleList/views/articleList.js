@@ -7,9 +7,9 @@ import { articleInit } from '../action';
 import { view as ArticleLi } from '../../../components/ArticleLi/';
 
 class ArticleList extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   componentDidMount() {
     (async function() {

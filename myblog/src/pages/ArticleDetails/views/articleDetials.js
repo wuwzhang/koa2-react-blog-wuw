@@ -12,9 +12,9 @@ const marked = require('marked');
 // } from 'react-bootstrap';
 
 class ArticleDetails extends Component {
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   componentDidMount() {
     (async function () {
