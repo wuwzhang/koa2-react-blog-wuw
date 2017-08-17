@@ -4,6 +4,8 @@ import { detailArticle } from '../fetch';
 
 import { articleInitDetails } from '../action.js';
 
+const marked = require('marked');
+
 // import {
 //   Col,
 //   Row
@@ -23,13 +25,23 @@ class ArticleDetails extends Component {
 
   render() {
     let { article } = this.props;
-
     return(
       <section>
         <h2>Article details</h2>
         <h3>{ article.title }</h3>
-        <p>{ article.content }</p>
-        <div>{ article.updated_at }</div>
+        {
+          article.content ? <div
+                              className="content"
+                              dangerouslySetInnerHTML={{
+                                __html: marked(article.content, {sanitize: true})
+                              }}
+                            />
+                          : null
+        }
+        {
+          article.updated_at ? <div>{ article.updated_at.slice(0, 10) }</div>
+                             : null
+        }
       </section>
     );
   }

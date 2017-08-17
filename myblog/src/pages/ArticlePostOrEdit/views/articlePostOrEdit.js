@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import marked from 'marked';
+
 import { view as FieldGroup } from '../../../components/FieldGroup';
+// import { view as markdownPreview } from '../../../components/markdown';
 
 import { addPost, checkTitle } from '../fetch';
 import {
@@ -21,6 +24,17 @@ import {
   Col,
   Button
 } from 'react-bootstrap';
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: false,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+});
 
 class ArticlePostOrEdit extends Component {
   constructor(props) {
@@ -128,7 +142,7 @@ class ArticlePostOrEdit extends Component {
           <FormGroup
             validationState={this.state.contentValid}
           >
-            <Col sm={12} md={8}>
+            <Col sm={12} md={6}>
               <ControlLabel>Content</ControlLabel>
               <FormControl
                 componentClass="textarea"
@@ -139,8 +153,20 @@ class ArticlePostOrEdit extends Component {
               />
               {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
             </Col>
+            {
+              this.state.content? <Col smHidden xsHidden md={6}>
+                                    <ControlLabel>Preview</ControlLabel>
+                                    <div
+                                      dangerouslySetInnerHTML={{
+                                        __html: marked(this.state.content, {sanitize: true})
+                                      }}
+                                    />
+                                  </Col>
+                                : null
+            }
+
           </FormGroup>
-          <Col sm={12} md={2} mdOffset={7}>
+          <Col sm={12} md={2} >
           {
             this.state.mode === 1 ? <Button
                                       componentClass="foot_btn"
