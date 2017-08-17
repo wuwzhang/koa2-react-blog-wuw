@@ -4,6 +4,7 @@ import { routerReducer } from 'react-router-redux';
 import { reducer as loginReducer } from './pages/Login/';
 import { reducer as articleEditReducer } from './pages/ArticlePostOrEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
+import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
 
 import Perf from 'react-addons-perf';
 
@@ -11,6 +12,7 @@ const reducer = combineReducers({
   login: loginReducer,
   articleEdit: articleEditReducer,
   articleList: articleListReducer,
+  articleDetails: articleDetailsReducer,
   routing: routerReducer
 });
 

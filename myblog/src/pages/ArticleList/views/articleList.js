@@ -7,8 +7,8 @@ import { articleInit } from '../action';
 import { view as ArticleLi } from '../../../components/ArticleLi/';
 
 class ArticleList extends Component {
-  constructor(props, context) {
-    super(props, context);
+  constructor(props) {
+    super(props);
   }
 
   componentDidMount() {
@@ -19,7 +19,6 @@ class ArticleList extends Component {
 
   render() {
     let { articles } = this.props;
-
     return(
       <section>
         <h2>Article List</h2>
@@ -28,6 +27,7 @@ class ArticleList extends Component {
           {
             articles.map((article, index) => (
               <ArticleLi
+                id = { article._id }
                 key = { article._id }
                 index = { index }
                 title = { article.title }
@@ -53,6 +53,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     initArticles: async () => {
       let result = await listArticle();
+      // console.log('-----article list-----')
+      // console.log(result.articles);
       if (result.code === '1') {
         dispatch(articleInit({
           articles: result.articles

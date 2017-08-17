@@ -16,6 +16,7 @@ import {view as Login} from './pages/Login/';
 import {view as Register} from './pages/Register/';
 import {view as ArticlePostOrEdit} from './pages/ArticlePostOrEdit';
 import {view as ArticleList} from './pages/ArticleList';
+import {view as ArticleDetails} from './pages/ArticleDetails';
 
 // const createElement = (Component, props) => {
 //   return (
@@ -60,6 +61,7 @@ const Routes = () => (
         <Route path="/regist" component={ Register }></Route>
         <Route path="/article_edit" component={ ArticlePostOrEdit }></Route>
         <Route path="/article_list" component={ ArticleList }></Route>
+        <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
         <Route component={ NotFound }></Route>
         <Route  path="/" component={RedirectFromServer}/>
       </Switch>

@@ -15,6 +15,7 @@ const signIn = require('./routes/signIn')
 const signUp = require('./routes/signUp')
 const articlePost = require('./routes/articlePost')
 const articleList = require('./routes/articleList')
+const articleDetails = require('./routes/articleDetails')
 
 const log = require('./logs/log')
 
@@ -40,7 +41,7 @@ app.use(session({
   stroe: new MongoStore()
 }))
 
-app.use(flash())
+// app.use(flash())
 
 app.use(json())
 app.use(require('koa-static')(__dirname + '/build'))
@@ -76,6 +77,7 @@ app.use(signIn.routes(), signIn.allowedMethods())
 app.use(signUp.routes(), signUp.allowedMethods())
 app.use(articlePost.routes(), articlePost.allowedMethods())
 app.use(articleList.routes(), articleList.allowedMethods())
+app.use(articleDetails.routes(), articleDetails.allowedMethods())
 //错误请求的日志
 app.use(koaWinston(log.errorloger));
 
