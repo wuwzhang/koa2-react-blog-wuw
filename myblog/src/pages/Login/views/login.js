@@ -101,11 +101,14 @@ class Login extends Component {
               validationState={this.state.pwdValid}
               help={this.state.pwdHelp}
             />
-            <FormGroup>
-              <Col sm={10}>
-                <Checkbox>Remember me</Checkbox>
-              </Col>
-            </FormGroup>
+            {/*
+              <FormGroup>
+                <Col sm={10}>
+                  <Checkbox>Remember me</Checkbox>
+                </Col>
+              </FormGroup>
+            */}
+
             <FormGroup>
               <Col sm={2}>
                 <Button

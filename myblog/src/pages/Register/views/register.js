@@ -213,14 +213,16 @@ class Register extends Component {
               help={this.state.confirmPwdHelp}
             />
 
-            <FormGroup>
-              <Col sm={12}>
-                <ControlLabel>Upload display photo</ControlLabel>
-                <Button
-                  bsClass='btn-upload'
-                >Upload</Button>
-              </Col>
-            </FormGroup>
+            {/*
+              <FormGroup>
+                <Col sm={12}>
+                  <ControlLabel>Upload display photo</ControlLabel>
+                  <Button
+                    bsClass='btn-upload'
+                  >Upload</Button>
+                </Col>
+              </FormGroup>
+            */}
             <FormGroup>
               <Col sm={2}>
                 <Button
