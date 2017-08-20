@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory';
@@ -21,17 +21,20 @@ const Routes = () => (
   <ConnectedRouter history={ history }>
     <Grid>
       <TopMenu />
-      <Route exact path="/" component={ Home } ></Route>
-      <Route path="/home" component={ Home } ></Route>
-      <Route path="/article" component={ Article } ></Route>
-      <Route path="/about" component={ About }></Route>
-      <Route path="/login" component={ Login }></Route>
-      <Route path="/signOut" component={ Login }></Route>
-      <Route path="/regist" component={ Register }></Route>
-      <Route path="/article_edit" component={ ArticlePostOrEdit }></Route>
-      <Route path="/article_list" component={ ArticleList }></Route>
-      <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
-      <Route component={ NotFound }></Route>
+      <Switch>
+        <Route exact path="/" component={ Home } ></Route>
+        <Route path="/home" component={ Home } ></Route>
+        <Route path="/article" component={ Article } ></Route>
+        <Route path="/about" component={ About }></Route>
+        <Route path="/login" component={ Login }></Route>
+        <Route path="/signOut" component={ Login }></Route>
+        <Route path="/regist" component={ Register }></Route>
+        <Route path="/article_edit" component={ ArticlePostOrEdit }></Route>
+        <Route path="/article_list" component={ ArticleList }></Route>
+        <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
+        <Route component={ NotFound }></Route>
+      </Switch>
+
     </Grid>
   </ConnectedRouter>
 );

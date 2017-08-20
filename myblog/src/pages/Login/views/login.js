@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import { login } from '../fetch';
 import { view as FieldGroup } from '../../../components/FieldGroup';
@@ -13,7 +13,6 @@ import {
 
 import {
   FormGroup,
-  Checkbox,
   Button,
   Form,
   Col
@@ -76,6 +75,17 @@ class Login extends Component {
   }
 
   render() {
+    let { user } = this.props;
+    if (user) {
+      return (
+        <Redirect
+          to = {{
+            pathname: '/home'
+          }}
+        />
+      );
+    }
+
     return (
       <section >
         <Col className='login-container' md={8} xs={10} xsOffset={3} mdOffset={4}>

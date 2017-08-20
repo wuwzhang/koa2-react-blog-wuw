@@ -3,6 +3,8 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import createHistory from 'history/createBrowserHistory';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 
+import thunk from 'redux-thunk';
+
 import { reducer as loginReducer } from './pages/Login/';
 import { reducer as articleEditReducer } from './pages/ArticlePostOrEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
@@ -11,7 +13,7 @@ import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
 import Perf from 'react-addons-perf';
 
 const history = createHistory();
-const middleware = routerMiddleware(history);
+const histroyMiddleware = routerMiddleware(history);
 
 const reducer = combineReducers({
   login: loginReducer,
@@ -24,9 +26,16 @@ const reducer = combineReducers({
 const win = window;
 win.Perf = Perf;
 
+const middlewares = [thunk, histroyMiddleware];
+
+// if (process.env.NODE_ENV !== 'production') {
+//   middlewares.push(require('redux-immutable-state-invariant').default());
+// }
+
+
 const storeEnhancers = compose(
   (win && win.devToolsExtension) ? win.devToolsExtension() : (f) => f,
-  applyMiddleware(middleware)
+  applyMiddleware(...middlewares)
 );
 
 const initialState = {
