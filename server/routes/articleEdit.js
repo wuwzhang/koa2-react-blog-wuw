@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const Models = require('../lib/core');
 const $Article = Models.$Article;
 
-router.get('/api/article_details/:articleId', async(ctx, next) => {
+router.post('/api/article_edit/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { articleId } = ctx.params;
 
@@ -21,24 +21,27 @@ router.get('/api/article_details/:articleId', async(ctx, next) => {
   }
 });
 
-router.get('/api/article_edit/:articleId', async(ctx, next) => {
+router.post('/api/article_update/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
-  const { articleId } = ctx.params;
+  const { articleId } = ctx.params,
+        { title, content, update_time } = ctx.request.body;
 
   try {
-    var result = await $Article.getArticleById(articleId);
-    console.log(result);
+    let data = {
+      title: title,
+      content: content,
+      update_at: update_time
+    }
+    await $Article.updateArticleById(articleId, data)
   } catch (e) {
-    code = '-1',
-    message = e.message
+    message = e.message;
+    code = '-1';
   }
 
   ctx.response.body = {
     'code': code,
     'message': message,
-    'article': result
   }
-});
-
+})
 
 module.exports = router;

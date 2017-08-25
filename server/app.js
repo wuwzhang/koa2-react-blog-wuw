@@ -5,7 +5,6 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const session = require('koa2-session-store')
-var flash = require('koa-flash')
 const MongoStore = require('koa2-session-mongolass')
 const config = require('config-lite')(__dirname)
 // const logger = require('koa-logger')
@@ -16,6 +15,7 @@ const signUp = require('./routes/signUp')
 const articlePost = require('./routes/articlePost')
 const articleList = require('./routes/articleList')
 const articleDetails = require('./routes/articleDetails')
+const articleEdit = require('./routes/articleEdit')
 
 const log = require('./logs/log')
 
@@ -78,6 +78,8 @@ app.use(signUp.routes(), signUp.allowedMethods())
 app.use(articlePost.routes(), articlePost.allowedMethods())
 app.use(articleList.routes(), articleList.allowedMethods())
 app.use(articleDetails.routes(), articleDetails.allowedMethods())
+app.use(articleEdit.routes(), articleEdit.allowedMethods())
+
 //错误请求的日志
 app.use(koaWinston(log.errorloger));
 

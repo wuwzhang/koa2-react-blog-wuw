@@ -30,6 +30,7 @@ router.post('/api/article_post', async(ctx, next) => {
   }
 });
 
+
 router.post('/api/checkTitle', async(ctx, next) => {
   const { title } = ctx.request.body,
         article = await $Article.getArticleByTitle(title);

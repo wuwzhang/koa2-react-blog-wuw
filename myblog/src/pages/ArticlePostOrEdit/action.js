@@ -2,23 +2,25 @@ import {
   POST_STARTED,
   POST_SUCCESS,
   POST_FAILURE,
-  ADD_ARTICLE
+  ADD_ARTICLE,
+  EDIT_ARTICLE,
+  EDIT_STARTED,
+  EDIT_SUCCESS,
+  EDIT_FAILURE,
+  UPDATE_STARTED,
+  UPDATE_SUCCESS,
+  UPDATE_FAILURE
 } from './actionType.js';
 
-// export const articleInit = (artcile) => ({
-//   type: INIT_ARTICLE,
-//   artcile
-// });
-
-export const artcileAdd = (artcile) => ({
+export const artcileAdd = (article) => ({
   type: ADD_ARTICLE,
-  artcile
+  article
 });
 
-// export const artcileDelete = (artcileIndex) => ({
-//   type: DELETE_ARTICLE,
-//   artcileIndex
-// });
+export const articleInitEdit = (article) => ({
+  type: EDIT_ARTICLE,
+  article
+})
 
 export const startPostArticle = () => ({
   type: POST_STARTED
@@ -32,4 +34,32 @@ export const successPostArticle = (result) => ({
 export const failPostArticle = (error) => ({
   type: POST_FAILURE,
   error
+})
+
+export const startEditArticle = () => ({
+  type: EDIT_STARTED
+});
+
+export const successEditArticle = (result) => ({
+  type: EDIT_SUCCESS,
+  result
+});
+
+export const failEditArticle = (error) => ({
+  type: EDIT_FAILURE,
+  error
+})
+
+export const startUpdateArticle = () => ({
+  type: UPDATE_STARTED
+});
+
+export const successUpdateArticle = () => ({
+  type: UPDATE_SUCCESS,
+
+});
+
+export const failUpdateArticle = () => ({
+  type: UPDATE_FAILURE,
+
 })

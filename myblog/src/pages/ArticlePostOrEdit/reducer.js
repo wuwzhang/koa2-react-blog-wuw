@@ -2,7 +2,14 @@ import {
   POST_STARTED,
   POST_SUCCESS,
   POST_FAILURE,
-  ADD_ARTICLE
+  ADD_ARTICLE,
+  EDIT_ARTICLE,
+  EDIT_STARTED,
+  EDIT_SUCCESS,
+  EDIT_FAILURE,
+  UPDATE_STARTED,
+  UPDATE_SUCCESS,
+  UPDATE_FAILURE
 } from './actionType.js';
 
 export default (state, action) => {
@@ -19,6 +26,11 @@ export default (state, action) => {
 
       }
     }
+    case EDIT_ARTICLE: {
+      return {
+        article: action.article
+      }
+    }
     case POST_STARTED: {
       return {
         posting: true
@@ -27,10 +39,7 @@ export default (state, action) => {
     case POST_SUCCESS: {
       return {
         posting: false,
-        article: [
-          ...state.article,
-          action.result
-        ]
+        article: action.article
       }
     }
     case POST_FAILURE: {
@@ -40,6 +49,39 @@ export default (state, action) => {
           ...state.article,
           action.error
         ]
+      }
+    }
+    case EDIT_STARTED: {
+      return {
+        startEditing: true,
+      }
+    }
+    case EDIT_SUCCESS: {
+      return {
+        ...state,
+        startEditing: false,
+        article: action.article.article
+      }
+    }
+    case EDIT_FAILURE: {
+      return {
+        startEditing: false
+      }
+    }
+    case UPDATE_STARTED: {
+      return {
+        startUpdating: true,
+      }
+    }
+    case UPDATE_SUCCESS: {
+      return {
+        ...state,
+        startUpdating: false
+      }
+    }
+    case UPDATE_FAILURE: {
+      return {
+        startUpdating: false
       }
     }
     default: {

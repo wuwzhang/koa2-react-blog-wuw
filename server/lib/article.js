@@ -24,17 +24,20 @@ exports.getArticlesByType = (type) => {
                 .exec();
 }
 exports.getArticleById = (articleId) => {
-  return Article.findOne({_id: articleId})
+  return Article.findOne({ _id: articleId })
                 .exec();
 };
 exports.getArticleByTitle = (title) => {
-  return Article.findOne({title: title})
+  return Article.findOne({ title: title })
                 .exec();
 };
 exports.updateArticleById = (articleId, data) => {
-  return Article.update({_id: articleId}, { $set: data }).exec();
+  console.log(data);
+  return Article.update({ _id: articleId }, { $set: data }, function(err){
+    console.log(err);
+  }).exec();
 };
 exports.deleteArticleById = (articleId) => {
-  return Article.remove({  _id: articleId })
+  return Article.remove({ _id: articleId })
                 .exec();
 }

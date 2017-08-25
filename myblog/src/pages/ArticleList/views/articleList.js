@@ -28,7 +28,7 @@ class ArticleList extends Component {
             articles.map((article, index) => (
               <ArticleLi
                 id = { article._id }
-                key = { article._id }
+                key = { index }
                 index = { index }
                 title = { article.title }
                 update_time = { article.updated_at }

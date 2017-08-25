@@ -6,13 +6,23 @@ import { withRouter } from 'react-router-dom';
 import marked from 'marked';
 
 import { view as FieldGroup } from '../../../components/FieldGroup';
-// import { view as markdownPreview } from '../../../components/markdown';
+import redirect from '../../../components/Redirect';
 
-import { addPost, checkTitle } from '../fetch';
+import {
+  addPost,
+  checkTitle,
+  getEditArticle,
+  updateArticle
+} from '../fetch';
+
 import {
   startPostArticle,
   successPostArticle,
-  failPostArticle
+  failPostArticle,
+  articleInitEdit,
+  startUpdateArticle,
+  successUpdateArticle,
+  failUpdateArticle,
 } from '../action';
 
 import {
@@ -41,10 +51,29 @@ class ArticlePostOrEdit extends Component {
     super(props);
 
     this.state = {
-      title: props.title || '',
-      content: props.content || '',
+      title: this.props.articleTitle || '',
+      content: this.props.articleContent || '',
+      titleValid: 'success',
+      contentValid: 'success',
       mode: 1
     }
+  }
+
+  componentDidMount () {
+    (async function() {
+      let result = await getEditArticle(this.props.articleId);
+
+      if (result.code === '1') {
+        this.setState({
+          title: result.article.title,
+          content: result.article.content,
+          mode: 2
+        })
+      } else {
+        console.log(result.code);
+      }
+
+    }.bind(this))()
   }
 
   async _checkTitle(value) {
@@ -59,16 +88,22 @@ class ArticlePostOrEdit extends Component {
         titleHelp: '标题不为空'
       });
     } else {
-      let result = await checkTitle(value);
+      if (this.state.mode === 1) {
+        let result = await checkTitle(value);
 
-      if (result.code === '1') {
-        this.setState({
-          titleValid: 'success'
-        })
+        if (result.code === '1') {
+          this.setState({
+            titleValid: 'success'
+          })
+        } else {
+          this.setState({
+            titleValid: 'error',
+            titleHelp: '存在同名标题文章'
+          })
+        }
       } else {
         this.setState({
-          titleValid: 'error',
-          titleHelp: '存在同名标题文章'
+          titleValid: 'success'
         })
       }
     }
@@ -107,25 +142,48 @@ class ArticlePostOrEdit extends Component {
     }
 
     if (_checkComplete()) {
-      const result = await this.props.addPost({
+      this.props.addPost({
         article: {
           title,
           content
         }
       })
-
-      // console.log(result.code);
-      if (result.code === '1') {
-
-      }
     }
   }
 
   async _updateArticle() {
 
+    const {
+      title,
+      content,
+      titleValid,
+      contentValid
+    } = this.state;
+
+
+    function _checkComplete() {
+
+      return (titleValid === 'success'
+              && contentValid === 'success');
+    }
+
+    if (_checkComplete()) {
+      let d = new Date();
+      const update_time = d.toUTCString();
+
+      const article = {
+        title: title,
+        content: content,
+        update_time: update_time
+      }
+
+      this.props.updatePost(this.props.articleId, article);
+    }
   }
 
   render() {
+    let { title, content } = this.state;
+
     return(
       <section>
         <h2>Article Edit</h2>
@@ -134,6 +192,7 @@ class ArticlePostOrEdit extends Component {
             type='text'
             label='Title'
             placeholder='Enter title'
+            value={title}
             onChange={(event)=>this.setState({title:event.target.value})}
             onBlur={(event)=>this._checkTitle(event.target.value)}
             validationState={this.state.titleValid}
@@ -147,6 +206,7 @@ class ArticlePostOrEdit extends Component {
               <FormControl
                 componentClass="textarea"
                 placeholder='Enter Content'
+                value={content}
                 onChange={(event)=>this.setState({content:event.target.value})}
                 onBlur={(event)=>this._checkContent(event.target.value)}
                 style={{height: 500}}
@@ -193,15 +253,21 @@ ArticlePostOrEdit.propTypes = {
   addPost: PropTypes.func
 };
 
-const mapStateToProps = (state) => (
-  {
+const mapStateToProps = (state) => {
+  let pathname = state.routing.location.pathname,
+      articleId = pathname.split('/')[2];
 
+  let title = '',
+      content = '';
+
+  return {
+    articleId: articleId
   }
-);
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addPost: async(article) => {
+    addPost: async (article) => {
       dispatch(startPostArticle());
 
       let result = await addPost(article);
@@ -211,8 +277,22 @@ const mapDispatchToProps = (dispatch) => {
       } else {
         dispatch(failPostArticle());
       }
+    },
+    updatePost: async (articleId, data) => {
+
+      dispatch(startUpdateArticle())
+      let result = await updateArticle(articleId, data);
+
+      if (result.code === '1') {
+        dispatch(successUpdateArticle())
+      } else {
+        dispatch(failUpdateArticle())
+      }
     }
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ArticlePostOrEdit));
+export default redirect(withRouter(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ArticlePostOrEdit)));

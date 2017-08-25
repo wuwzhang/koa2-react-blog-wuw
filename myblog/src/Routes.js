@@ -29,7 +29,8 @@ const Routes = () => (
         <Route path="/login" component={ Login }></Route>
         <Route path="/signOut" component={ Login }></Route>
         <Route path="/regist" component={ Register }></Route>
-        <Route path="/article_edit" component={ ArticlePostOrEdit }></Route>
+        <Route path="/article_post" component={ ArticlePostOrEdit }></Route>
+        <Route path="/article_edit/:articleId" component={ ArticlePostOrEdit }></Route>
         <Route path="/article_list" component={ ArticleList }></Route>
         <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
         <Route component={ NotFound }></Route>

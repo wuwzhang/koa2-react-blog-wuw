@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import { detailArticle } from '../fetch';
 
 import { articleInitDetails } from '../action.js';
+import ArticleOptionNav from '../../../components/ArticleOptionNav/articleOptionNav.js';
+import {
+  Col,
+  Row
+} from 'react-bootstrap';
 
 const marked = require('marked');
-
-// import {
-//   Col,
-//   Row
-// } from 'react-bootstrap';
 
 class ArticleDetails extends Component {
   // constructor(props) {
@@ -28,6 +28,19 @@ class ArticleDetails extends Component {
     return(
       <section>
         <h2>Article details</h2>
+        <Row>
+          <Col md={6} sm={6}>
+            {
+              article.updated_at ? <div>{ article.updated_at.slice(0, 10) }</div>
+                                 : null
+            }
+          </Col>
+          <Col md={6} sm={6}>
+            <ArticleOptionNav />
+          </Col>
+        </Row>
+
+
         <h3>{ article.title }</h3>
         {
           article.content ? <div
@@ -37,10 +50,6 @@ class ArticleDetails extends Component {
                               }}
                             />
                           : null
-        }
-        {
-          article.updated_at ? <div>{ article.updated_at.slice(0, 10) }</div>
-                             : null
         }
       </section>
     );

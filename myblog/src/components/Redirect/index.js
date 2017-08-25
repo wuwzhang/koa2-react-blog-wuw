@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
 const redirect = (WrappedComponent) => (props) => {
@@ -26,13 +26,13 @@ const redirect = (WrappedComponent) => (props) => {
       } = this.state;
 
       return(
-        (redirectState && path) ? (<Redirect
+        (redirectState && path) ? <Redirect
                                     to = {{pathname: path, state: redirectState}}
-                                  />)
-                                : (<WrappedComponent
+                                  />
+                                : <WrappedComponent
                                     {...props}
                                     redirect={(path, state) => (this._redirect(path, state))}
-                                  />)
+                                  />
       )
     }
   }
