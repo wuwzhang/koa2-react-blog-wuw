@@ -55,11 +55,11 @@ export const startUpdateArticle = () => ({
 });
 
 export const successUpdateArticle = () => ({
-  type: UPDATE_SUCCESS,
+  type: UPDATE_SUCCESS
 
 });
 
 export const failUpdateArticle = () => ({
-  type: UPDATE_FAILURE,
+  type: UPDATE_FAILURE
 
 })

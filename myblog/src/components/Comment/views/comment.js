@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
+import { CommentInput } from '../../CommentInput/';
+import CommentList from '../../CommentList/views/commentList.js';
 
-class Component extends Component {
+class Comment extends Component {
   render() {
-    return {
+    return (
       <section>
+        <CommentList />
         <CommentInput />
       </section>
-    }
+    )
   }
 }
+
+export default Comment;

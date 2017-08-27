@@ -7,7 +7,7 @@ const Article = () => {
       <h2>Article</h2>
       <ul>
         <li><Link to='/article_list'>List</Link></li>
-        <li><Link to='/article_edit'>Edit</Link></li>
+        <li><Link to='/article_post'>POST</Link></li>
       </ul>
     </section>
   );

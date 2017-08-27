@@ -19,10 +19,9 @@ import {
   startPostArticle,
   successPostArticle,
   failPostArticle,
-  articleInitEdit,
   startUpdateArticle,
   successUpdateArticle,
-  failUpdateArticle,
+  failUpdateArticle
 } from '../action';
 
 import {

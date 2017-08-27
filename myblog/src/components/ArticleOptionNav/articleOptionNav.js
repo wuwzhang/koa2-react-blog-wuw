@@ -26,7 +26,6 @@ class ArticleOptionNav extends Component {
   }
 
   render() {
-    console.log(this.props);
 
     if (this.props.startEditing === true) {
       const articleId = this.props.id || this.props.articleId;

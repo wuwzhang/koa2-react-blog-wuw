@@ -1,5 +1,6 @@
 const User = require('./user');
 const Article = require('./article');
+const Comments = require('./comments');
 
 module.exports = {
   get $User () {
@@ -7,5 +8,8 @@ module.exports = {
   },
   get $Article () {
     return Article;
+  },
+  get $Comments () {
+    return Comments;
   }
 };

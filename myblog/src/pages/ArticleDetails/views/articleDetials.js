@@ -4,6 +4,7 @@ import { detailArticle } from '../fetch';
 
 import { articleInitDetails } from '../action.js';
 import ArticleOptionNav from '../../../components/ArticleOptionNav/articleOptionNav.js';
+import { Comment } from '../../../components/Comment/'
 import {
   Col,
   Row
@@ -51,6 +52,7 @@ class ArticleDetails extends Component {
                             />
                           : null
         }
+        <Comment />
       </section>
     );
   }

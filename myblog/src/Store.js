@@ -9,6 +9,7 @@ import { reducer as loginReducer } from './pages/Login/';
 import { reducer as articleEditReducer } from './pages/ArticlePostOrEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
 import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
+import { reducer as commentReducer } from './components/Comment/';
 
 import Perf from 'react-addons-perf';
 
@@ -20,6 +21,7 @@ const reducer = combineReducers({
   articleEdit: articleEditReducer,
   articleList: articleListReducer,
   articleDetails: articleDetailsReducer,
+  comment: commentReducer,
   routing: routerReducer
 });
 
