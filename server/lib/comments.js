@@ -23,4 +23,9 @@ exports.getCommentsCount = (articleId) => {
   return Comments.count({articleId: articleId}).exec();
 }
 
+exports.deleteCommentsByArticleId = (articleId) => {
+  return Comments.remove({articleId: articleId})
+                 .exec();
+}
+
 

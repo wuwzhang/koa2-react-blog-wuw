@@ -1,5 +1,6 @@
 import {
   DELETE_ARTICLE,
+  DELETE_SUCCESS,
   INIT_ARTICLE,
   POST_STARTED,
   POST_SUCCESS,
@@ -10,6 +11,10 @@ export const artcileDelete = (articleIndex) => ({
   type: DELETE_ARTICLE,
   articleIndex
 });
+
+export const successDelete = () => ({
+  type: DELETE_SUCCESS
+})
 
 export const articleInit = (articles) => ({
   type: INIT_ARTICLE,

@@ -86,8 +86,6 @@ export const getEditArticle = async (articleId) => {
 
 export const updateArticle = async (articleId, article) => {
   let url = DOMAIN + `/api/article_update/${articleId}`;
-  console.log(articleId)
-  console.log(article)
   try {
     var result = await fetch(url, {
       method: 'POST',
@@ -115,3 +113,5 @@ export const updateArticle = async (articleId, article) => {
     }
   }
 }
+
+

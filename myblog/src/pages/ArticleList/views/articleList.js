@@ -25,16 +25,20 @@ class ArticleList extends Component {
         <section>
           <ul>
           {
-            articles.map((article, index) => (
-              <ArticleLi
-                id = { article._id }
-                key = { index }
-                index = { index }
-                title = { article.title }
-                update_time = { article.updated_at }
-                create_time = { article.created_at }
-              />
-            ))
+            articles.map((article, index) => {
+              if (article) {
+                return (
+                  <ArticleLi
+                    id = { article._id }
+                    key = { index }
+                    index = { index }
+                    title = { article.title }
+                    update_time = { article.updated_at }
+                    create_time = { article.created_at }
+                  />
+                )
+              }
+            })
           }
           </ul>
         </section>

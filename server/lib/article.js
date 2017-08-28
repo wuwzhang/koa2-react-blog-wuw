@@ -1,4 +1,5 @@
 var Article = require('../models').Article;
+var Comments = require('../models').Comments;
 
 exports.create = (article) => {
   return Article.create(article);
@@ -32,12 +33,19 @@ exports.getArticleByTitle = (title) => {
                 .exec();
 };
 exports.updateArticleById = (articleId, data) => {
-  console.log(data);
+
   return Article.update({ _id: articleId }, { $set: data }, function(err){
     console.log(err);
   }).exec();
 };
 exports.deleteArticleById = (articleId) => {
+
   return Article.remove({ _id: articleId })
-                .exec();
+                .exec()
+                .then((res) => {
+                  if (res.result.ok && res.result.n > 0) {
+                    return Comments.remove({articleId: articleId})
+                                   .exec();
+                  }
+                })
 }

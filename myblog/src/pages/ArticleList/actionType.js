@@ -1,4 +1,5 @@
 export const DELETE_ARTICLE = 'ARTICLE/DELETE';
+export const DELETE_SUCCESS = 'DELETE/SUCCESS';
 export const INIT_ARTICLE = 'ARTICLE/INIT';
 
 export const POST_STARTED = 'POST/STARTED';
