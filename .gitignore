@@ -5,9 +5,6 @@ node_modules
 server/logs/*
 # build folder
 server/build
-.eslintrc
-.editorconfig
-.babelrc
 markdown/*
 #coverage
 # the mac problem

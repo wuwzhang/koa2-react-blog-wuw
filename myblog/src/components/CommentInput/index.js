@@ -1,3 +1,3 @@
-import CommentInput from './views/CommentInput.js'
+import CommentInput from './views/commentInput.js'
 
 export { CommentInput };
