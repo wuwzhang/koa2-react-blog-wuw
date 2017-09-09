@@ -42,21 +42,19 @@ class ArticleOptionNav extends Component {
   _deleteArticle(event) {
     event.preventDefault();
     const articleId = this.props.id || this.props.articleId;
-    console.log(articleId);
-    this.props.deletePost(articleId);
+    console.log(this.props.index);
+    this.props.deletePost(articleId, this.props.index);
     this.setState({
       alertVisble: false
     })
   }
 
   _handleDeleteAlertShow(event) {
-    console.log('show')
     event.preventDefault();
     this.setState({
       alertVisble: true
     })
 
-    console.log(this.state.alertVisble)
   }
 
   _handleDeleteAlertDismiss(event) {
@@ -126,11 +124,11 @@ const mapDispatchToProps = (dispatch) => {
 
       dispatch(editActions.startEditArticle());
     },
-    deletePost: async (articleId) => {
+    deletePost: async (articleId, index) => {
       let result = await deleteFetchs.deleteArticle(articleId);
 
       if (result.code === '1') {
-        dispatch(deleteActions.artcileDelete());
+        dispatch(deleteActions.artcileDelete(index));
       } else {
         console.log(result)
       }

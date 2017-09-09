@@ -17,13 +17,16 @@ export default (state, action) => {
   }
 
   switch (action.type) {
+
     case INIT_ARTICLE: {
       return {
         ...state,
-        articles: action.articles.articles
+        articles: action.articles,
+        count: action.count
       }
     }
     case DELETE_ARTICLE: {
+
       return {
         ...state,
         deleted: true,

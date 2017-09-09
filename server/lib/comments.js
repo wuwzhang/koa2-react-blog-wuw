@@ -2,6 +2,7 @@ const Comments = require('../models/').Comments;
 
 exports.create = (data) => (
   Comments.create(data)
+
 );
 
 exports.getCommentById = (id) => (

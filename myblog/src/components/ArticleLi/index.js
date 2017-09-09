@@ -9,9 +9,10 @@ import {
 } from 'react-bootstrap';
 import './style.css';
 
-const view = ({title, id, key, update_time, create_time}) => {
+const view = ({title, id, index, update_time, create_time}) => {
   update_time = update_time.slice(0, 10);
   create_time = create_time.slice(0, 10);
+  console.log(index);
   return (
     <Row>
       <li>
@@ -21,7 +22,8 @@ const view = ({title, id, key, update_time, create_time}) => {
           <Col md={1} xsHidden>{create_time}</Col>
           <Col md={2} xs={2}>
             <ArticleOptionNav
-              id={ id }
+              id={id}
+              index={index}
             />
           </Col>
         </Link>

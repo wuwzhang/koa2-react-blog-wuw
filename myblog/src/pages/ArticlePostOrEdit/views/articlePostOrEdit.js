@@ -52,6 +52,8 @@ class ArticlePostOrEdit extends Component {
     this.state = {
       title: this.props.articleTitle || '',
       content: this.props.articleContent || '',
+      tags: '',
+      tagsValid: 'success',
       titleValid: 'success',
       contentValid: 'success',
       mode: 1
@@ -66,6 +68,7 @@ class ArticlePostOrEdit extends Component {
         this.setState({
           title: result.article.title,
           content: result.article.content,
+          tags: result.article.tags,
           mode: 2
         })
       } else {
@@ -126,25 +129,39 @@ class ArticlePostOrEdit extends Component {
     }
   }
 
+  _checkTags(value) {
+    console.log(value);
+
+    this.setState({
+      tagsValid: 'success',
+      tagsHelp: ''
+    })
+  }
+
   async _postArticle() {
+    console.log(this.state);
     const {
       title,
       content,
+      tags,
       titleValid,
-      contentValid
+      contentValid,
+      tagsValid
     } = this.state;
 
     function _checkComplete() {
 
       return (titleValid === 'success'
-              && contentValid === 'success');
+              && contentValid === 'success'
+              && tagsValid === 'success');
     }
 
     if (_checkComplete()) {
       this.props.addPost({
         article: {
           title,
-          content
+          content,
+          tags
         }
       })
     }
@@ -155,24 +172,31 @@ class ArticlePostOrEdit extends Component {
     const {
       title,
       content,
+      tags,
       titleValid,
-      contentValid
+      contentValid,
+      tagsValid
     } = this.state;
 
 
     function _checkComplete() {
 
       return (titleValid === 'success'
-              && contentValid === 'success');
+              && contentValid === 'success'
+              && tagsValid === 'success');
     }
 
     if (_checkComplete()) {
       let d = new Date();
       const update_time = d.toUTCString();
 
+      console.log(d);
+      console.log(update_time);
+
       const article = {
         title: title,
         content: content,
+        tags: tags,
         update_time: update_time
       }
 
@@ -181,7 +205,7 @@ class ArticlePostOrEdit extends Component {
   }
 
   render() {
-    let { title, content } = this.state;
+    let { title, content, tags } = this.state;
 
     return(
       <section>
@@ -225,6 +249,20 @@ class ArticlePostOrEdit extends Component {
             }
 
           </FormGroup>
+          <FormGroup>
+            <ControlLabel
+              validationState={this.state.commentValid}
+            >Input Tags</ControlLabel>
+            <FormControl
+              type='text'
+              label='tags'
+              placeholder='不同标签之间由;间隔'
+              value={tags}
+              onChange={(event)=>this.setState({tags:event.target.value})}
+              onBlur={(event)=>this._checkTags(event.target.value)}
+            />
+            {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}
+          </FormGroup>
           <Col sm={12} md={2} >
           {
             this.state.mode === 1 ? <Button
@@ -255,9 +293,6 @@ ArticlePostOrEdit.propTypes = {
 const mapStateToProps = (state) => {
   let pathname = state.routing.location.pathname,
       articleId = pathname.split('/')[2];
-
-  let title = '',
-      content = '';
 
   return {
     articleId: articleId

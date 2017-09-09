@@ -1,13 +1,8 @@
-import React from 'react';
-import marked from 'marked';
+import React, { Component } from 'react';
 
-const view = ({markdownString}) => {
- return (
-    <div
-      dangerouslySetInnerHTML={{
-        __html: marked(markdownString, {sanitize: true})
-      }}
-    />
-  );
+class MarkdownEdit extends Component {
+  render() {
+    rreturn (
+    );
+  }
 }
-export { view }

@@ -96,6 +96,7 @@ export const updateArticle = async (articleId, article) => {
       body: JSON.stringify({
         title: article.title,
         content: article.content,
+        tags: article.tags,
         update_time: article.update_time
       }),
       credentials: CREDENTIALS

@@ -6,6 +6,7 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { articleInitDetails } from '../action.js';
 import ArticleOptionNav from '../../../components/ArticleOptionNav/articleOptionNav.js';
 import { Comment } from '../../../components/Comment/'
+import { Aside } from '../../../components/Aside/index.js';
 import { actions as deleteActions } from '../../ArticleList/';
 import {
   Col,
@@ -43,14 +44,17 @@ class ArticleDetails extends Component {
         <section>
           <h2>Article details</h2>
           <Row>
-            <Col md={6} sm={6}>
+            <Col md={6} xs={6}>
               {
                 article.updated_at ? <div>{ article.updated_at.slice(0, 10) }</div>
                                    : null
               }
             </Col>
-            <Col md={6} sm={6}>
+            <Col md={3} xs={6}>
               <ArticleOptionNav />
+            </Col>
+            <Col md={3} xsHidden>
+              <Aside />
             </Col>
           </Row>
 

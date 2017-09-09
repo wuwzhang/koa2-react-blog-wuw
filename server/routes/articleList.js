@@ -38,4 +38,47 @@ router.post('/api/article_delete/:articleId', async(ctx, next) => {
   }
 });
 
+router.post('/api/article_date_list', async(ctx, next) => {
+  let code = '1', message = 'ok';
+
+  try {
+
+    var result = await $Article.getArticlesCountByMonth();
+
+  } catch (e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'result': result
+  }
+});
+
+router.post('/api/article_list/init', async(ctx, next) => {
+  let code = '1', message = 'ok';
+  const { page, eachPageArticles } = ctx.request.body;
+
+  console.log(page)
+  console.log(eachPageArticles)
+
+  try {
+    var count = await $Article.getArticleCount(),
+        result = await $Article.getPageArticle(page, eachPageArticles);
+
+  } catch (e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'count': count,
+    'articles': result
+  }
+});
+
 module.exports = router;

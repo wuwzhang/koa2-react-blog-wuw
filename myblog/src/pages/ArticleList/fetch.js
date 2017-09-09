@@ -27,6 +27,36 @@ export const listArticle = async() => {
   }
 }
 
+export const listPageArticle = async(page, eachPageArticles) => {
+  let url = DOMAIN + '/api/article_list/init';
+
+  try {
+    var result = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        page,
+        eachPageArticles
+      }),
+      credentials: CREDENTIALS
+    })
+  } catch(e) {
+
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: '-2',
+      message: '未知错误'
+    }
+  }
+}
+
 export const deleteArticle = async (articleId) => {
   let url = DOMAIN + `/api/article_delete/${articleId}`;
 
@@ -40,6 +70,32 @@ export const deleteArticle = async (articleId) => {
       credentials: CREDENTIALS
     })
   } catch (e) {
+    console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: '-2',
+      message: '未知错误'
+    }
+  }
+}
+
+export const getArticleDateList = async () => {
+  let url = DOMAIN + `/api/article_date_list`;
+
+  try {
+    var result = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      credentials: CREDENTIALS
+    })
+  } catch(e) {
     console.log(e);
   }
 
