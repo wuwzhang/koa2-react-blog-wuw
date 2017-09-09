@@ -39,6 +39,7 @@ class ArticleDetails extends Component {
       );
     }
     let { article } = this.props;
+    console.log(article);
     if (article) {
       return(
         <section>
@@ -54,7 +55,9 @@ class ArticleDetails extends Component {
               <ArticleOptionNav />
             </Col>
             <Col md={3} xsHidden>
-              <Aside />
+              <Aside
+                tags = {article.tags}
+              />
             </Col>
           </Row>
 

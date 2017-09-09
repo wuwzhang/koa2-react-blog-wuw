@@ -38,7 +38,7 @@ class keepOnFile extends Component {
 
       let result = await listFetchs.getArticleDateList();
       if (result.code === '1') {
-        console.log(result.result);
+        // console.log(result.result);
         this.setState({
           result: result.result
         })
@@ -51,13 +51,12 @@ class keepOnFile extends Component {
   render() {
 
     let result = this.state.result;
-    console.log(result[0]);
+
     return (
       <div>
         <h6>Keep On File</h6>
         {
           result.map((item, index) => {
-            console.log(item);
             return (
               <KeepOnFileList
                 index = { index }
