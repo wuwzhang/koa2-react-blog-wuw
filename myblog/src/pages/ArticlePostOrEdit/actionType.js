@@ -5,6 +5,7 @@ export const POST_STARTED = 'POST/STARTED';
 export const POST_SUCCESS = 'POST/SUCCESS';
 export const POST_FAILURE = 'POST/FAILURE';
 
+export const EDIT_INIT_START = 'EDIT/INITSTART';
 export const EDIT_STARTED = 'EDIT/STARTED';
 export const EDIT_SUCCESS = 'EDIT/SUCCESS';
 export const EDIT_FAILURE = 'EDIT/FAILURE';

@@ -10,3 +10,12 @@ exports.deleteTag = (tagId) => {
   return Tags.remove({ _id: tagId })
              .exec()
 };
+exports.getTags = (count) => {
+  return Tags.find()
+             .limit(count)
+             .exec();
+}
+exports.getAllTags = () => {
+  return Tags.find()
+             .exec();
+}

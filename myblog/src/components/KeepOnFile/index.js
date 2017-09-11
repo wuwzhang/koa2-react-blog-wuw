@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchs as listFetchs } from '../../pages/ArticleList/';
 import {
   Badge
 } from 'react-bootstrap';
 
-const KeepOnFileList = ({ index, year, monthInfo }) => {
+const KeepOnFileList = ({ year, monthInfo }) => {
   let Arr = ['Jan.', 'Feb.', 'Mar.', 'Apr.',
              'May', 'Jane', 'July', 'Aug.',
              'Sept.', 'Oct.', 'Nov.', 'Dec.' ]
@@ -53,8 +54,8 @@ class keepOnFile extends Component {
     let result = this.state.result;
 
     return (
-      <div>
-        <h6>Keep On File</h6>
+      <section className="keepOnFile">
+        <h6><Link to = "/Keep_On_File">Keep On File</Link></h6>
         {
           result.map((item, index) => {
             return (
@@ -67,7 +68,7 @@ class keepOnFile extends Component {
             );
           })
         }
-      </div>
+      </section>
     );
   }
 }

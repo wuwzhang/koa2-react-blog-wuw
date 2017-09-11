@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchs as editFetchs, actions as editActions } from '../../pages/ArticlePostOrEdit';
+import { actions as editActions } from '../../pages/ArticlePostOrEdit';
 import { fetchs as deleteFetchs, actions as deleteActions } from '../../pages/ArticleList/';
 
 import {
@@ -42,7 +42,7 @@ class ArticleOptionNav extends Component {
   _deleteArticle(event) {
     event.preventDefault();
     const articleId = this.props.id || this.props.articleId;
-    console.log(this.props.index);
+    // console.log(this.props.index);
     this.props.deletePost(articleId, this.props.index);
     this.setState({
       alertVisble: false
@@ -90,15 +90,17 @@ class ArticleOptionNav extends Component {
       );
     }
     return (
-      <nav>
+      <nav className="article-option-nav">
         <ul>
           <li>
-            <button
+            <span
               onClick = { this._editArticle }
-            >Edit</button>
-            <button
+            >Edit</span>
+          </li>
+          <li>
+            <span
               onClick = { this._handleDeleteAlertShow }
-            >Delete</button>
+            >Delete</span>
           </li>
         </ul>
       </nav>

@@ -1,0 +1,22 @@
+.article-option-nav {
+
+}
+.article-option-nav ul {
+
+}
+.article-option-nav li, .article-option-nav li:hover {
+  display: inline-block;
+  list-style: none;
+  margin: 0 2px;
+}
+.article-option-nav span:hover {
+  color: orange;
+  border-top: 1px solid orange;
+  border-bottom: 1px solid orange;
+  cursor: pointer;
+}
+.article-option-nav span {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 3px 2px;
+}

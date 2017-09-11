@@ -66,7 +66,7 @@ exports.deleteArticleById = (articleId) => {
                 })
 }
 
-exports.getArticlesCountByMonth= () => {
+exports.getArticlesCountByMonth = () => {
   return Article.aggregate(
     {
       $group: {
@@ -82,4 +82,13 @@ exports.getArticlesCountByMonth= () => {
     }
   );
 
+}
+
+exports.getArticleListByDate = () => {
+  return Article.aggregate(
+                    { $group: {
+                      _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
+                      articles: { $push: {id: "$_id", title: '$title', created_at: "$created_at"} }
+                    }}
+                  );
 }

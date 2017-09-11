@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { listPageArticle } from '../fetch';
 
 import { articleInit } from '../action';
+import { actions as articleEditActions } from '../../ArticlePostOrEdit/';
 
 import { view as ArticleLi } from '../../../components/ArticleLi/';
 import Pagination from '../../../components/Pagination/pagination';
@@ -44,18 +45,17 @@ class ArticleList extends Component {
           <ul>
           {
             articles.map((article, index) => {
-              if (article) {
-                return (
-                  <ArticleLi
-                    id = { article._id }
-                    key = { index }
-                    index = { index }
-                    title = { article.title }
-                    update_time = { article.updated_at }
-                    create_time = { article.created_at }
-                  />
-                )
-              }
+              return (
+                article ? <ArticleLi
+                            id = { article._id }
+                            key = { index }
+                            index = { index }
+                            title = { article.title }
+                            update_time = { article.updated_at }
+                            create_time = { article.created_at }
+                          />
+                        : null
+              );
             })
           }
           </ul>
@@ -72,7 +72,7 @@ class ArticleList extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.articleList)
+  // console.log(state.articleList)
   return {
     articles: state.articleList.articles,
     pageArticleCount: state.articleList.count
@@ -82,6 +82,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     initArticles: async (page, eachPageArticles) => {
+      // console.log(articleEditActions);
+      dispatch(articleEditActions.initStartEditArticle());
       let result = await listPageArticle(page, eachPageArticles);
       // console.log('-----article list-----')
       // console.log(result);

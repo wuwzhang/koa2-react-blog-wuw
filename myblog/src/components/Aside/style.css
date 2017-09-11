@@ -1,0 +1,7 @@
+.aside {
+  position: absolute;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 200px;
+  padding: 10px;
+}

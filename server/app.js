@@ -17,6 +17,8 @@ const articleList = require('./routes/articleList')
 const articleDetails = require('./routes/articleDetails')
 const articleEdit = require('./routes/articleEdit')
 const comments = require('./routes/comments')
+const tags = require('./routes/tags')
+const keepOnFileList = require('./routes/keepOnFileList')
 
 const log = require('./logs/log')
 
@@ -80,7 +82,9 @@ app.use(articlePost.routes(), articlePost.allowedMethods())
 app.use(articleList.routes(), articleList.allowedMethods())
 app.use(articleDetails.routes(), articleDetails.allowedMethods())
 app.use(articleEdit.routes(), articleEdit.allowedMethods())
-app.use(comments.routes(), articleEdit.allowedMethods())
+app.use(comments.routes(), comments.allowedMethods())
+app.use(tags.routes(), tags.allowedMethods())
+app.use(keepOnFileList.routes(), keepOnFileList.allowedMethods())
 
 //错误请求的日志
 app.use(koaWinston(log.errorloger));

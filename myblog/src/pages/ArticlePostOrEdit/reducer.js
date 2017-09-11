@@ -3,6 +3,7 @@ import {
   POST_SUCCESS,
   POST_FAILURE,
   ADD_ARTICLE,
+  EDIT_INIT_START,
   EDIT_ARTICLE,
   EDIT_STARTED,
   EDIT_SUCCESS,
@@ -51,9 +52,14 @@ export default (state, action) => {
         ]
       }
     }
+    case EDIT_INIT_START: {
+      return {
+        startEditing: false
+      }
+    }
     case EDIT_STARTED: {
       return {
-        startEditing: true,
+        startEditing: true
       }
     }
     case EDIT_SUCCESS: {
@@ -70,7 +76,7 @@ export default (state, action) => {
     }
     case UPDATE_STARTED: {
       return {
-        startUpdating: true,
+        startUpdating: true
       }
     }
     case UPDATE_SUCCESS: {

@@ -13,6 +13,8 @@ import {
   Row
 } from 'react-bootstrap';
 
+import './style.css';
+
 const marked = require('marked');
 
 class ArticleDetails extends Component {
@@ -39,7 +41,7 @@ class ArticleDetails extends Component {
       );
     }
     let { article } = this.props;
-    console.log(article);
+    // console.log(article);
     if (article) {
       return(
         <section>
@@ -51,10 +53,10 @@ class ArticleDetails extends Component {
                                    : null
               }
             </Col>
-            <Col md={3} xs={6}>
+            <Col md={4} xs={6}>
               <ArticleOptionNav />
             </Col>
-            <Col md={3} xsHidden>
+            <Col md={2} xsHidden>
               <Aside
                 tags = {article.tags}
               />
@@ -65,7 +67,7 @@ class ArticleDetails extends Component {
           <h3>{ article.title }</h3>
           {
             article.content ? <div
-                                className="content"
+                                className="article-content"
                                 dangerouslySetInnerHTML={{
                                   __html: marked(article.content, {sanitize: true})
                                 }}

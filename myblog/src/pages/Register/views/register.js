@@ -10,7 +10,6 @@ import { register, checkAccount } from '../fetch';
 
 import {
   FormGroup,
-  ControlLabel,
   Button,
   Form,
   Col

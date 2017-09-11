@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const ArticleTags = ({tags}) => {
-  console.log(tags);
+  // console.log(tags);
   if (!tags) {
     tags = [];
   }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import moment from 'moment';
 
 import marked from 'marked';
 
@@ -44,6 +45,7 @@ marked.setOptions({
   smartLists: true,
   smartypants: false
 });
+moment.locale('zh-cn');
 
 class ArticlePostOrEdit extends Component {
   constructor(props) {
@@ -130,16 +132,27 @@ class ArticlePostOrEdit extends Component {
   }
 
   _checkTags(value) {
-    console.log(value);
-
+    // console.log(value);
     this.setState({
-      tagsValid: 'success',
+      tagsValid: null,
       tagsHelp: ''
     })
+
+    if (value.indexOf('；') === '-1') {
+      this.setState({
+        tagsValid: 'error',
+        tagsHelp: '使用英文;分割'
+      })
+    } else {
+      this.setState({
+        tagsValid: 'success',
+        tagsHelp: ''
+      })
+    }
   }
 
   async _postArticle() {
-    console.log(this.state);
+    // console.log(this.state);
     const {
       title,
       content,
@@ -188,7 +201,7 @@ class ArticlePostOrEdit extends Component {
 
     if (_checkComplete()) {
       let d = new Date();
-      const update_time = d.toUTCString();
+      const update_time = d.format();
 
       console.log(d);
       console.log(update_time);
@@ -206,6 +219,9 @@ class ArticlePostOrEdit extends Component {
 
   render() {
     let { title, content, tags } = this.state;
+
+    let tagsArr = Array.from(tags);
+    let tagsStr = tagsArr.join(';');
 
     return(
       <section>
@@ -257,8 +273,8 @@ class ArticlePostOrEdit extends Component {
               type='text'
               label='tags'
               placeholder='不同标签之间由;间隔'
-              value={tags}
-              onChange={(event)=>this.setState({tags:event.target.value})}
+              value={ tagsStr }
+              onChange={(event)=>this.setState({tagsStr:event.target.value})}
               onBlur={(event)=>this._checkTags(event.target.value)}
             />
             {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}

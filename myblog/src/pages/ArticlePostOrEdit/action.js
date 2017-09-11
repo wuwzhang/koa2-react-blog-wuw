@@ -4,6 +4,7 @@ import {
   POST_FAILURE,
   ADD_ARTICLE,
   EDIT_ARTICLE,
+  EDIT_INIT_START,
   EDIT_STARTED,
   EDIT_SUCCESS,
   EDIT_FAILURE,
@@ -36,6 +37,9 @@ export const failPostArticle = (error) => ({
   error
 })
 
+export const initStartEditArticle = () => ({
+  type: EDIT_INIT_START
+})
 export const startEditArticle = () => ({
   type: EDIT_STARTED
 });
