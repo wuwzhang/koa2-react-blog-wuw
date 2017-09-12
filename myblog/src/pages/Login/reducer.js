@@ -3,7 +3,9 @@ import {
   LOGIN_OUT,
   LOGIN_STARTED,
   LOGIN_SUCCESS,
-  LOGIN_FAILURE
+  LOGIN_FAILURE,
+  LOGIN_ALERT_SUCCESS,
+  LOGIN_ALERT_FAILE
 } from './actionType.js';
 
 export default (state, action) => {
@@ -11,7 +13,8 @@ export default (state, action) => {
     state = {
       user: null,
       logining: false,
-      message: ''
+      message: '',
+      msg: null
     }
   }
   switch(action.type) {
@@ -44,6 +47,20 @@ export default (state, action) => {
         ...state,
         logining: false,
         message: action.error
+      }
+    }
+    case LOGIN_ALERT_FAILE: {
+      return {
+        ...state,
+        msg: action.msg,
+        msgType: action.msgType
+      }
+    }
+    case LOGIN_ALERT_SUCCESS: {
+      return {
+        ...state,
+        msg: action.msg,
+        msgType: action.msgType
       }
     }
     default: {

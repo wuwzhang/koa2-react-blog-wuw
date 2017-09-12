@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^2.13.1",
     "async-child-process": "^1.1.1",
     "async-file": "^2.0.2",
     "bootstrap": "^3.3.7",
@@ -15,6 +16,7 @@
     "react-addons-perf": "^15.4.2",
     "react-bootstrap": "^0.31.2",
     "react-dom": "^15.6.1",
+    "react-fontawesome": "^1.6.1",
     "react-marked": "^0.3.1",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.2",
@@ -31,6 +33,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "babel-plugin-import": "^1.4.0",
     "enzyme": "^2.9.1",
     "redux-immutable-state-invariant": "^2.0.0",
     "redux-mock-store": "^1.2.3",

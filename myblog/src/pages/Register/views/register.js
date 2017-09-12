@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { view as FieldGroup } from '../../../components/FieldGroup';
 import { register, checkAccount } from '../fetch';
+import {
+  startRegist,
+  registSuccess,
+  registFaile,
+  finishRegist,
+  faileRegist
+} from '../action';
 
 // import redirect from '../../../components/Redirect';
 
@@ -14,6 +21,7 @@ import {
   Form,
   Col
 } from 'react-bootstrap';
+import { Alert } from 'antd';
 
 import './style.css';
 
@@ -153,22 +161,16 @@ class Register extends Component {
     // console.log(accountValid + ' ' + usernameValid + ' ' + passwordValid + ' ' + confirmPwdValid);
     // console.log(_checkComplete())
     if (_checkComplete()) {
-      // console.log(account + ' ' + username + ' ' + password)
-      const result = await register({ account, username, password });
-      // console.log(result.code);
-      if (result.code === '1') {
-        // const pathname = '/login',
-        // redirectState = {
-        //   from: this.props.location
-        // };
-
-        // this.props.redirect(pathname, redirectState)
-      }
+      this.props.loginUp({ account, username, password });
     }
 
   }
 
   render() {
+    let { msgType } = this.props;
+
+    console.log(msgType)
+
     return (
       <section>
         <Col className='register-container' md={8} xs={10} xsOffset={3} mdOffset={4}>
@@ -230,6 +232,12 @@ class Register extends Component {
                 >Sign Up</Button>
               </Col>
             </FormGroup>
+            {
+              msgType === 'warning' ? <Alert className="myAlert" message="注册失败" type="warning" showIcon closable/> : null
+            }
+            {
+              msgType === 'success' ? <Alert className="myAlert" message="注册成功" type="success" showIcon closable/> : null
+            }
           </Form>
         </Col>
       </section>
@@ -237,14 +245,30 @@ class Register extends Component {
   }
 }
 
-// Register.propTypes = {}
+Register.propTypes = {
+  loginUp: PropTypes.func
+}
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     loginUp: async(user) => {
-//       dispatch()
-//     }
-//   }
-// }
+const mapStateToProps = (state)=> (
+  state.register
+);
 
-export default withRouter(connect()(Register));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginUp: async (data) => {
+      dispatch(startRegist());
+
+      let result = await register(data);
+
+      if (result.code === '1') {
+        dispatch(finishRegist());
+        dispatch(registSuccess());
+      } else {
+        dispatch(faileRegist(result.message));
+        dispatch(registFaile(result.message));
+      }
+    }
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Register));

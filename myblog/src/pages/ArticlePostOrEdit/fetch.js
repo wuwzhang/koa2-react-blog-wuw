@@ -97,6 +97,7 @@ export const updateArticle = async (articleId, article) => {
         title: article.title,
         content: article.content,
         tags: article.tags,
+        preTags: article.preTags,
         update_time: article.update_time
       }),
       credentials: CREDENTIALS

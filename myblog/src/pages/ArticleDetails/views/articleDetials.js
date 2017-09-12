@@ -47,16 +47,16 @@ class ArticleDetails extends Component {
         <section>
           <h2>Article details</h2>
           <Row>
-            <Col md={6} xs={6}>
+            <Col md={6} sm={6} xs={6}>
               {
                 article.updated_at ? <div>{ article.updated_at.slice(0, 10) }</div>
                                    : null
               }
             </Col>
-            <Col md={4} xs={6}>
+            <Col md={4} sm={6}  xs={6}>
               <ArticleOptionNav />
             </Col>
-            <Col md={2} xsHidden>
+            <Col md={2} sm={2} xsHidden>
               <Aside
                 tags = {article.tags}
               />

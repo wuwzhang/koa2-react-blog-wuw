@@ -6,6 +6,7 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 import thunk from 'redux-thunk';
 
 import { reducer as loginReducer } from './pages/Login/';
+import { reducer as registReducer } from './pages/Register/';
 import { reducer as articleEditReducer } from './pages/ArticlePostOrEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
 import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
@@ -18,6 +19,7 @@ const histroyMiddleware = routerMiddleware(history);
 
 const reducer = combineReducers({
   login: loginReducer,
+  register: registReducer,
   articleEdit: articleEditReducer,
   articleList: articleListReducer,
   articleDetails: articleDetailsReducer,

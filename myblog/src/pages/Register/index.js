@@ -1,3 +1,5 @@
 import view from './views/register.js';
+import * as actions from './action.js';
+import reducer from './reducer.js';
 
-export { view };
+export { actions, reducer, view };

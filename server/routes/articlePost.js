@@ -28,8 +28,6 @@ router.post('/api/article_post', async(ctx, next) => {
       tags: tagsArr
     };
 
-    console.log(articleModel);
-
     var result = await $Article.create(articleModel);
   }catch (e) {
     if (e.message.match('E11000 duplicate key')) {

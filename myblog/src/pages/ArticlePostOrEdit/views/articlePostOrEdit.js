@@ -62,22 +62,19 @@ class ArticlePostOrEdit extends Component {
     }
   }
 
-  componentDidMount () {
-    (async function() {
-      let result = await getEditArticle(this.props.articleId);
+  async componentDidMount () {
+    let result = await getEditArticle(this.props.articleId);
 
-      if (result.code === '1') {
-        this.setState({
-          title: result.article.title,
-          content: result.article.content,
-          tags: result.article.tags,
-          mode: 2
-        })
-      } else {
-        console.log(result.code);
-      }
-
-    }.bind(this))()
+    if (result.code === '1') {
+      this.setState({
+        title: result.article.title,
+        content: result.article.content,
+        tags: result.article.tags,
+        mode: 2
+      })
+    } else {
+      console.log(result.code);
+    }
   }
 
   async _checkTitle(value) {
@@ -181,7 +178,6 @@ class ArticlePostOrEdit extends Component {
   }
 
   async _updateArticle() {
-
     const {
       title,
       content,
@@ -200,11 +196,8 @@ class ArticlePostOrEdit extends Component {
     }
 
     if (_checkComplete()) {
-      let d = new Date();
-      const update_time = d.format();
-
-      console.log(d);
-      console.log(update_time);
+      let d = new Date(),
+        update_time = moment(d).format();
 
       const article = {
         title: title,
@@ -220,8 +213,8 @@ class ArticlePostOrEdit extends Component {
   render() {
     let { title, content, tags } = this.state;
 
-    let tagsArr = Array.from(tags);
-    let tagsStr = tagsArr.join(';');
+    // let tagsArr = Array.from(tags);
+    // let tagsStr = tagsArr.join(';');
 
     return(
       <section>
@@ -273,8 +266,8 @@ class ArticlePostOrEdit extends Component {
               type='text'
               label='tags'
               placeholder='不同标签之间由;间隔'
-              value={ tagsStr }
-              onChange={(event)=>this.setState({tagsStr:event.target.value})}
+              value={ (tags instanceof Array) ? Array.from(tags).join(';') : tags }
+              onChange={(event)=>this.setState({tags:event.target.value})}
               onBlur={(event)=>this._checkTags(event.target.value)}
             />
             {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}

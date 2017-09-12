@@ -3,7 +3,9 @@ import {
   LOGIN_OUT,
   LOGIN_STARTED,
   LOGIN_SUCCESS,
-  LOGIN_FAILURE
+  LOGIN_FAILURE,
+  LOGIN_ALERT_SUCCESS,
+  LOGIN_ALERT_FAILE
 } from './actionType.js';
 
 export const loginIn = (user) => ({
@@ -30,12 +32,14 @@ export const failLogin = (error)=>({
 });
 export const loginSuccess = ()=> (
   {
+    type: LOGIN_ALERT_SUCCESS,
     msg:'登录成功',
     msgType:'success'
   }
 );
 export const loginFail = (error)=> (
   {
+    type: LOGIN_ALERT_FAILE,
     msg:error,
     msgType:'warning'
   }

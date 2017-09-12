@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class TagItem extends Component {
 
@@ -7,7 +8,7 @@ class TagItem extends Component {
     const { content }  = this.props;
 
     return (
-      <li> { content } </li>
+      <Link to={ `/article_by_tag/${content}` }><li> { content } </li> </Link>
     );
   }
 }

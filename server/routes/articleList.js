@@ -61,9 +61,6 @@ router.post('/api/article_list/init', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { page, eachPageArticles } = ctx.request.body;
 
-  console.log(page)
-  console.log(eachPageArticles)
-
   try {
     var count = await $Article.getArticleCount(),
         result = await $Article.getPageArticle(page, eachPageArticles);
@@ -80,5 +77,27 @@ router.post('/api/article_list/init', async(ctx, next) => {
     'articles': result
   }
 });
+
+/**
+ *   通过标签查找文章
+ */
+router.post('/api/getArticlesByTag', async(ctx, next) => {
+  let code = '1', message = 'ok';
+
+  const { tag } = ctx.request.body;
+
+  try {
+    var result = await $Article.getArticlesByTag(tag);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'articles': result
+  }
+})
 
 module.exports = router;

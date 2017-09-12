@@ -12,6 +12,7 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
+import FontAwesome from 'react-fontawesome';
 
 class Topmenu extends Component {
 
@@ -31,25 +32,25 @@ class Topmenu extends Component {
     return (
       <Row>
         <nav className="top-menu">
-          <Col md={10} xs={8}>
+          <Col md={9} xs={8}>
             <ul className="base-option">
-              <li className="base-item"><Link to='/home'>Home</Link></li>
-              <li className="base-item"><Link to='/article'>Article</Link></li>
-              <li className="base-item"><Link to='/about'>About</Link></li>
+              <li className="base-item"><Link to='/home'><FontAwesome name='home'/><span>Home</span></Link></li>
+              <li className="base-item"><Link to='/article'><FontAwesome name='pencil'/><span>Article</span></Link></li>
+              <li className="base-item"><Link to='/about'><FontAwesome name='pagelines'/><span>About Me</span></Link></li>
             </ul>
           </Col>
-          <Col md={2} xs={4}>
+          <Col md={3} xs={4}>
             <ul className="base-option">
               {
-                (!this.props.user)? <li className="base-item"><Link to='/login'>Login</Link></li>
+                (!this.props.user)? <li className="base-item"><Link to='/login'><FontAwesome name='user-circle'/><span>Login</span></Link></li>
                                   : <li className="base-item">
-                                      <span
+                                      <p
                                         className = "base-item logout"
                                         onClick = { this.handleSignOut }
-                                      >logout</span>
+                                      ><FontAwesome name='user-circle-o'/><span>Logout</span></p>
                                     </li>
               }
-              <li className="base-item"><Link to='/regist'>Regist</Link></li>
+              <li className="base-item"><Link to='/regist'><FontAwesome name='user-plus'/><span>Regist</span></Link></li>
             </ul>
           </Col>
         </nav>

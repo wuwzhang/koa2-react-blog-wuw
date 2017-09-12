@@ -10,6 +10,22 @@
   color: #336699;
   font-size: 16px;
 }
+.base-item a {
+  color: #336699;
+}
+.base-item a:hover {
+  text-decoration: none;
+  color: orange;
+}
+.base-item span {
+  display: inline-block;
+  margin-left: 5px;
+  }
+.base-item:hover {
+  padding-bottom: 2px;
+  border-bottom: 2px solid orange;
+  cursor: pointer;
+}
 .logout:hover {
   cursor: pointer;
   text-decoration:underline;

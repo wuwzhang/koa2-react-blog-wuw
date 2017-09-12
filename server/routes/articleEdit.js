@@ -3,6 +3,9 @@ const Models = require('../lib/core');
 const $Article = Models.$Article;
 const $Tag = Models.$Tag;
 
+/**
+ * 通过文章id获取要修改的文章
+ */
 router.post('/api/article_edit/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { articleId } = ctx.params;
@@ -22,20 +25,21 @@ router.post('/api/article_edit/:articleId', async(ctx, next) => {
   }
 });
 
+/**
+ * 通过文章Id修改文章
+ */
 router.post('/api/article_update/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { articleId } = ctx.params,
-        { title, content, update_time, tags } = ctx.request.body;
+        { title, content, update_time, tags} = ctx.request.body;
 
-  let tagsArr = tags.split(';');
-  console.log(tagsArr);
+  let tagsArr = (typeof tags === 'string' && tags.constructor === String) ? tags.split(';') : tags;
 
   let tagsIdArr = [];
   tagsArr.map(async (iteam, index) => {
     if (iteam) {
       let exist = await $Tag.findTagByTagName(iteam);
       if (!exist) {
-        // console.log('标签不存在')
         let res = await $Tag.create({ tag: iteam });
       }
     }
@@ -46,9 +50,9 @@ router.post('/api/article_update/:articleId', async(ctx, next) => {
       title: title,
       content: content,
       tags: tagsArr,
-      update_at: update_time
+      updated_at: update_time
     }
-    await $Article.updateArticleById(articleId, data)
+    await $Article.updateArticleById(articleId, data);
   } catch (e) {
     message = e.message;
     code = '-1';
@@ -56,7 +60,7 @@ router.post('/api/article_update/:articleId', async(ctx, next) => {
 
   ctx.response.body = {
     'code': code,
-    'message': message,
+    'message': message
   }
 })
 

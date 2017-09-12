@@ -9,4 +9,10 @@
   /*margin-left: 40px;*/
   margin-bottom: 50px;
 }
+.myAlert {
+  position: fixed !important;
+  width: 450px;
+  top: 80px;
+  left: calc(100% - 500px);
+}
 

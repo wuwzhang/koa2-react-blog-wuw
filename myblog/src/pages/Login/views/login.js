@@ -8,7 +8,9 @@ import { view as FieldGroup } from '../../../components/FieldGroup';
 import {
   startLogin,
   finishLogin,
-  failLogin
+  failLogin,
+  loginFail,
+  loginSuccess
 } from '../action';
 
 import {
@@ -17,6 +19,7 @@ import {
   Form,
   Col
 } from 'react-bootstrap';
+import { Alert } from 'antd';
 
 import './style.css';
 
@@ -62,10 +65,10 @@ class Login extends Component {
       pwdHelp:''
     });
 
-    if (value.length < 8) {
+    if (value.length === 0) {
       this.setState({
         pwdValid:'error',
-        pwdHelp:'密码长度需要大于8位'
+        pwdHelp:'密码不为空'
       });
     } else {
       this.setState({
@@ -75,16 +78,17 @@ class Login extends Component {
   }
 
   render() {
-    let { user } = this.props;
-    if (user) {
-      return (
-        <Redirect
-          to = {{
-            pathname: '/home'
-          }}
-        />
-      );
-    }
+    let { user, msgType } = this.props;
+
+    // if (user) {
+    //   return (
+    //     <Redirect
+    //       to = {{
+    //         pathname: '/home'
+    //       }}
+    //     />
+    //   );
+    // }
 
     return (
       <section >
@@ -127,31 +131,19 @@ class Login extends Component {
                 >Sign in</Button>
               </Col>
             </FormGroup>
+
+            {
+              msgType === 'warning' ? <Alert className="myAlert" message="用户名或密码错误" type="warning" showIcon closable/> : null
+            }
+            {
+              msgType === 'success' ? <Alert className="myAlert" message="登录成功" type="success" showIcon closable/> : null
+            }
           </Form>
         </Col>
       </section>
     )
   }
 }
-
-// function FieldGroup({label, help, validationState, ...props}) {
-//   return (
-//     <FormGroup
-//       validationState={validationState}
-//     >
-//       <Col sm={12}>
-//         <ControlLabel>{label}</ControlLabel>
-//       </Col>
-//       <Col sm={6}>
-//         <FormControl {...props} />
-//       </Col>
-//       <Col sm={12}>
-//         {help && <HelpBlock>{help}</HelpBlock>}
-//       </Col>
-
-//     </FormGroup>
-//   );
-// }
 
 
 Login.propTypes = {
@@ -166,15 +158,17 @@ const mapStateToProps = (state)=> (
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loginIn: async(user) => {
+    loginIn: async (user) => {
       dispatch(startLogin());
 
       let result = await login(user);
 
       if (result.code === '1') {
         dispatch(finishLogin(user));
+        dispatch(loginSuccess(result.message));
       } else {
-        dispatch(failLogin());
+        dispatch(failLogin(result.message));
+        dispatch(loginFail(result.message));
       }
     }
   }

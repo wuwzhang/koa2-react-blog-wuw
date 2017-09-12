@@ -1,13 +1,20 @@
 var Article = require('../models').Article;
 var Comments = require('../models').Comments;
 
+/**
+ * 创建新文章
+ */
 exports.create = (article) => {
   return Article.create(article)
 
 };
+
+/**
+ * 获取所有文章，通过创建时间排序
+ */
 exports.getArticles = () => {
   const sort = {
-    _id: -1
+    created_at: -1
   };
   return Article.find()
                 .sort(sort)
@@ -20,26 +27,42 @@ exports.getArticlesByType = (type) => {
     query.type = type;
   }
   const sort = {
-    _id: -1
+    created_at: -1
   };
   return Article.find(query)
                 .sort(sort)
                 .exec();
 };
 
+/**
+ * 通过文章id获取文章
+ */
 exports.getArticleById = (articleId) => {
+
   return Article.findOne({ _id: articleId })
                 .exec();
 };
 
+/**
+ * 通过文章标题获取文章（相同作者不能有相同标题的文章！！！！！！！！）
+ */
 exports.getArticleByTitle = (title) => {
   return Article.findOne({ title: title })
                 .exec();
 };
+/**
+ * 获取文章数量
+ */
 exports.getArticleCount = () => {
   return Article.count()
                 .exec();
 }
+
+/**
+ * 获取当前页的文章
+ * @param  {number} page  第几页
+ * @param  {number} range 每页显示的文章数
+ */
 exports.getPageArticle = (page, range) => {
   return Article.find({})
                 .sort({created_at: -1})
@@ -48,13 +71,21 @@ exports.getPageArticle = (page, range) => {
                 .exec();
 }
 
+/**
+ * 修改文章
+ * @param  {number} articleId 文章id
+ * @param  {object} data      修改的内容
+ */
 exports.updateArticleById = (articleId, data) => {
-
   return Article.update({ _id: articleId }, { $set: data }, function(err){
     console.log(err);
-  }).exec();
+  });
 };
 
+/**
+ * 通过文章id删除文章
+ * @param  {number} articleId 文章id
+ */
 exports.deleteArticleById = (articleId) => {
   return Article.remove({ _id: articleId })
                 .exec()
@@ -66,6 +97,13 @@ exports.deleteArticleById = (articleId) => {
                 })
 }
 
+/**
+ * 返回归档数据
+ * {
+ *   _id: {year: ""}
+ *   monthCount: {month: "", count: ""}
+ * }
+ */
 exports.getArticlesCountByMonth = () => {
   return Article.aggregate(
     {
@@ -84,6 +122,13 @@ exports.getArticlesCountByMonth = () => {
 
 }
 
+/**
+ * 返回归档格式的文章
+ * {
+ *   _id: {year: "", month: ""}
+ *   articles: [{id: "", title: "", create_at: ""}, {}]
+ * }
+ */
 exports.getArticleListByDate = () => {
   return Article.aggregate(
                     { $group: {
@@ -92,3 +137,9 @@ exports.getArticleListByDate = () => {
                     }}
                   );
 }
+
+exports.getArticlesByTag = (tag) => {
+  return Article.find({ tags: { "$in": [tag] }})
+                .exec();
+}
+

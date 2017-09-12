@@ -1,4 +1,5 @@
 const Tags = require('../models/').Tags;
+const Article = require('../models/').Article;
 
 exports.create = (tag) => {
   return Tags.create(tag);
@@ -16,6 +17,7 @@ exports.getTags = (count) => {
              .exec();
 }
 exports.getAllTags = () => {
-  return Tags.find()
-             .exec();
+  return  Tags.find()
+              .exec()
 }
+
