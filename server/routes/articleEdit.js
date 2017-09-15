@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const Models = require('../lib/core');
 const $Article = Models.$Article;
 const $Tag = Models.$Tag;
+const $Catalog = Models.$Catalog;
 
 /**
  * 通过文章id获取要修改的文章
@@ -31,7 +32,7 @@ router.post('/api/article_edit/:articleId', async(ctx, next) => {
 router.post('/api/article_update/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { articleId } = ctx.params,
-        { title, content, update_time, tags} = ctx.request.body;
+        { title, content, update_time, tags, catalog } = ctx.request.body;
 
   let tagsArr = (typeof tags === 'string' && tags.constructor === String) ? tags.split(';') : tags;
 
@@ -39,8 +40,15 @@ router.post('/api/article_update/:articleId', async(ctx, next) => {
   tagsArr.map(async (iteam, index) => {
     if (iteam) {
       let exist = await $Tag.findTagByTagName(iteam);
+
       if (!exist) {
-        let res = await $Tag.create({ tag: iteam });
+        try {
+          let res = await $Tag.create({ tag: iteam });
+
+        } catch(e) {
+          message = e.message;
+          code =  '-2';
+        }
       }
     }
   })
@@ -50,9 +58,16 @@ router.post('/api/article_update/:articleId', async(ctx, next) => {
       title: title,
       content: content,
       tags: tagsArr,
+      catalog: catalog,
       updated_at: update_time
     }
     await $Article.updateArticleById(articleId, data);
+    let exit = await $Catalog.getCatalogrByCatalogName(catalog);
+    console.log(exit)
+
+    if (!exit) {
+      await $Catalog.create({catalog: catalog});
+    }
   } catch (e) {
     message = e.message;
     code = '-1';

@@ -32,6 +32,7 @@ import {
   ControlLabel,
   FormControl,
   HelpBlock,
+  Row,
   Col,
   Button
 } from 'react-bootstrap';
@@ -56,7 +57,9 @@ class ArticlePostOrEdit extends Component {
       title: this.props.articleTitle || '',
       content: this.props.articleContent || '',
       tags: '',
+      catalog: '',
       tagsValid: 'success',
+      catalogValid: 'success',
       titleValid: 'success',
       contentValid: 'success',
       mode: 1
@@ -71,6 +74,7 @@ class ArticlePostOrEdit extends Component {
         title: result.article.title,
         content: result.article.content,
         tags: result.article.tags,
+        catalog: result.article.catalog,
         mode: 2
       })
     } else {
@@ -148,23 +152,44 @@ class ArticlePostOrEdit extends Component {
       })
     }
   }
+  _checkCatalog(value) {
+    // console.log(value);
+    this.setState({
+      catalogValid: null,
+      catalogHelp: ''
+    })
 
+    if (value.indexOf(';') === '-1') {
+      this.setState({
+        catalogValid: 'error',
+        catalogHelp: '分类不得多于一个'
+      })
+    } else {
+      this.setState({
+        catalogValid: 'success',
+        catalogHelp: ''
+      })
+    }
+  }
   async _postArticle() {
     // console.log(this.state);
     const {
       title,
       content,
       tags,
+      catalog,
       titleValid,
       contentValid,
-      tagsValid
+      tagsValid,
+      catalogValid
     } = this.state;
 
     function _checkComplete() {
 
       return (titleValid === 'success'
               && contentValid === 'success'
-              && tagsValid === 'success');
+              && tagsValid === 'success'
+              && catalogValid === 'success');
     }
 
     if (_checkComplete()) {
@@ -172,7 +197,8 @@ class ArticlePostOrEdit extends Component {
         article: {
           title,
           content,
-          tags
+          tags,
+          catalog
         }
       })
     }
@@ -183,9 +209,11 @@ class ArticlePostOrEdit extends Component {
       title,
       content,
       tags,
+      catalog,
       titleValid,
       contentValid,
-      tagsValid
+      tagsValid,
+      catalogValid
     } = this.state;
 
 
@@ -193,7 +221,8 @@ class ArticlePostOrEdit extends Component {
 
       return (titleValid === 'success'
               && contentValid === 'success'
-              && tagsValid === 'success');
+              && tagsValid === 'success'
+              && catalogValid === 'success');
     }
 
     if (_checkComplete()) {
@@ -204,6 +233,7 @@ class ArticlePostOrEdit extends Component {
         title: title,
         content: content,
         tags: tags,
+        catalog: catalog,
         update_time: update_time
       }
 
@@ -212,8 +242,7 @@ class ArticlePostOrEdit extends Component {
   }
 
   render() {
-    let { title, content, tags } = this.state;
-
+    let { title, content, tags, catalog } = this.state;
     // let tagsArr = Array.from(tags);
     // let tagsStr = tagsArr.join(';');
 
@@ -275,7 +304,23 @@ class ArticlePostOrEdit extends Component {
                   onChange={(event)=>this.setState({tags:event.target.value})}
                   onBlur={(event)=>this._checkTags(event.target.value)}
                 />
-                {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}
+                {this.state.tagsHelp && <HelpBlock>{this.state.tagsHelp}</HelpBlock>}
+              </FormGroup>
+            </Col>
+            <Col sm={6} md={6}>
+              <FormGroup>
+                <ControlLabel
+                  validationState={this.state.commentValid}
+                >Input Catalog</ControlLabel>
+                <FormControl
+                  type='text'
+                  label='catalog'
+                  placeholder='catalog'
+                  value={ catalog }
+                  onChange={(event)=>this.setState({catalog:event.target.value})}
+                  onBlur={(event)=>this._checkTags(event.target.value)}
+                />
+                {this.state.catalogHelp && <HelpBlock>{this.state.catalogHelp}</HelpBlock>}
               </FormGroup>
             </Col>
           </Row>
@@ -318,6 +363,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addPost: async (article) => {
+
       dispatch(startPostArticle());
 
       let result = await addPost(article);
@@ -329,7 +375,6 @@ const mapDispatchToProps = (dispatch) => {
       }
     },
     updatePost: async (articleId, data) => {
-
       dispatch(startUpdateArticle())
       let result = await updateArticle(articleId, data);
 

@@ -70,6 +70,7 @@ class ArticleDetails extends Component {
             <Col md={2} sm={2} xsHidden>
               <Aside
                 tags = {article.tags}
+                catalog = { article.catalog }
                 create_time = { article.created_at ? article.created_at.slice(0, 10) : '' }
                 update_time = { article.updated_at ? article.updated_at.slice(0, 10) : '' }
               />

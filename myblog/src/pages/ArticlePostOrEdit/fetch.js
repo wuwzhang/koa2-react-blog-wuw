@@ -3,7 +3,7 @@ const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
 
 export const addPost = async(params) => {
 	let url = DOMAIN + '/api/article_post';
-
+  console.log(params)
 	try {
 	  var result = await fetch(url, {
 	    method: 'POST',
@@ -97,6 +97,7 @@ export const updateArticle = async (articleId, article) => {
         title: article.title,
         content: article.content,
         tags: article.tags,
+        catalog: article.catalog,
         preTags: article.preTags,
         update_time: article.update_time
       }),

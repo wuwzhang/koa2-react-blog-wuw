@@ -2,6 +2,7 @@ const router = require('koa-router')();
 const Models = require('../lib/core');
 const $Article = Models.$Article;
 const $Tag = Models.$Tag;
+const $Catalog = Models.$Catalog;
 
 router.post('/api/article_post', async(ctx, next) => {
   let { article } = ctx.request.body;
@@ -25,10 +26,21 @@ router.post('/api/article_post', async(ctx, next) => {
     const articleModel = {
       title: article.title,
       content: article.content,
-      tags: tagsArr
+      tags: tagsArr,
+      catalog: article.catalog
     };
 
     var result = await $Article.create(articleModel);
+    var exist = await $Catalog.getCatalogrByCatalogName(article.catalog);
+    if (!exist) {
+      console.log('111')
+      let res = await $Catalog.create({ catalog: article.catalog });
+      console.log(res)
+    }
+    // var res = await $Catalog.create({catalog: article.catalog})
+        // res = await $Catalog.create({ catalog: article.catalog });
+
+    // console.log(res);
   }catch (e) {
     if (e.message.match('E11000 duplicate key')) {
       code = '-1';

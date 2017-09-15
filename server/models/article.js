@@ -7,6 +7,7 @@ const ArticleSchema = new Schema({
   title: { type: String, require: true },
   content: { type: String, require: true },
   tags: [{ type: String }],
+  catalog: { type: String },
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 }, { versionKey: false });
