@@ -8,6 +8,7 @@ import marked from 'marked';
 
 import { view as FieldGroup } from '../../../components/FieldGroup';
 import redirect from '../../../components/Redirect';
+import './style.css';
 
 import {
   addPost,
@@ -241,7 +242,7 @@ class ArticlePostOrEdit extends Component {
                 value={content}
                 onChange={(event)=>this.setState({content:event.target.value})}
                 onBlur={(event)=>this._checkContent(event.target.value)}
-                style={{height: 500}}
+                style={{ height: 800 }}
               />
               {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
             </Col>
@@ -249,6 +250,8 @@ class ArticlePostOrEdit extends Component {
               this.state.content? <Col smHidden xsHidden md={6}>
                                     <ControlLabel>Preview</ControlLabel>
                                     <div
+                                      className="marked-preview edit-marked-preview"
+
                                       dangerouslySetInnerHTML={{
                                         __html: marked(this.state.content, {sanitize: true})
                                       }}
@@ -258,20 +261,24 @@ class ArticlePostOrEdit extends Component {
             }
 
           </FormGroup>
-          <FormGroup>
-            <ControlLabel
-              validationState={this.state.commentValid}
-            >Input Tags</ControlLabel>
-            <FormControl
-              type='text'
-              label='tags'
-              placeholder='不同标签之间由;间隔'
-              value={ (tags instanceof Array) ? Array.from(tags).join(';') : tags }
-              onChange={(event)=>this.setState({tags:event.target.value})}
-              onBlur={(event)=>this._checkTags(event.target.value)}
-            />
-            {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}
-          </FormGroup>
+          <Row>
+            <Col sm={6} md={6}>
+              <FormGroup>
+                <ControlLabel
+                  validationState={this.state.commentValid}
+                >Input Tags</ControlLabel>
+                <FormControl
+                  type='text'
+                  label='tags'
+                  placeholder='不同标签之间由;间隔'
+                  value={ (tags instanceof Array) ? Array.from(tags).join(';') : tags }
+                  onChange={(event)=>this.setState({tags:event.target.value})}
+                  onBlur={(event)=>this._checkTags(event.target.value)}
+                />
+                {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}
+              </FormGroup>
+            </Col>
+          </Row>
           <Col sm={12} md={2} >
           {
             this.state.mode === 1 ? <Button

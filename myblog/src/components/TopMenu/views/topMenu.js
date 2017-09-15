@@ -44,10 +44,9 @@ class Topmenu extends Component {
               {
                 (!this.props.user)? <li className="base-item"><Link to='/login'><FontAwesome name='user-circle'/><span>Login</span></Link></li>
                                   : <li className="base-item">
-                                      <p
-                                        className = "base-item logout"
+                                      <p className = "base-item"
                                         onClick = { this.handleSignOut }
-                                      ><FontAwesome name='user-circle-o'/><span>Logout</span></p>
+                                      ><FontAwesome name='user-circle-o' style={{ color: 'orange' }}/><span>Logout</span></p>
                                     </li>
               }
               <li className="base-item"><Link to='/regist'><FontAwesome name='user-plus'/><span>Regist</span></Link></li>

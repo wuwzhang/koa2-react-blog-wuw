@@ -45,35 +45,36 @@ class ArticleDetails extends Component {
     if (article) {
       return(
         <section>
-          <h2>Article details</h2>
           <Row>
             <Col md={6} sm={6} xs={6}>
-              {
-                article.updated_at ? <div>{ article.updated_at.slice(0, 10) }</div>
-                                   : null
-              }
+              <h3>{ article.title }</h3>
             </Col>
-            <Col md={4} sm={6}  xs={6}>
+            <Col md={6} sm={6}  xs={6}>
               <ArticleOptionNav />
-            </Col>
-            <Col md={2} sm={2} xsHidden>
-              <Aside
-                tags = {article.tags}
-              />
             </Col>
           </Row>
 
 
-          <h3>{ article.title }</h3>
-          {
-            article.content ? <div
-                                className="article-content"
-                                dangerouslySetInnerHTML={{
-                                  __html: marked(article.content, {sanitize: true})
-                                }}
-                              />
-                            : null
-          }
+          <Row>
+            <Col md={10} sm={10} xs={12}>
+              {
+                article.content ? <div
+                                    className="article-content marked-preview"
+                                    dangerouslySetInnerHTML={{
+                                      __html: marked(article.content, {sanitize: true})
+                                    }}
+                                  />
+                                : null
+              }
+            </Col>
+            <Col md={2} sm={2} xsHidden>
+              <Aside
+                tags = {article.tags}
+                create_time = { article.created_at ? article.created_at.slice(0, 10) : '' }
+                update_time = { article.updated_at ? article.updated_at.slice(0, 10) : '' }
+              />
+            </Col>
+          </Row>
           <Comment />
         </section>
       );

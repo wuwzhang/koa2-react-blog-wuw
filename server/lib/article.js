@@ -131,11 +131,12 @@ exports.getArticlesCountByMonth = () => {
  */
 exports.getArticleListByDate = () => {
   return Article.aggregate(
-                    { $group: {
-                      _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
-                      articles: { $push: {id: "$_id", title: '$title', created_at: "$created_at"} }
-                    }}
-                  );
+                  { $group: {
+                    _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
+                    articles: { $push: {id: "$_id", title: '$title', content: '$content', created_at: "$created_at"} }
+                  }}
+                )
+                .sort({_id: -1});
 }
 
 exports.getArticlesByTag = (tag) => {

@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import TagItem from '../../TagItem/index.js';
 import { getTags } from '../fetch.js';
 
+import FontAwesome from 'react-fontawesome';
+import './style.css';
+
 class TagsCloud extends Component {
   constructor(props) {
     super(props);
@@ -27,8 +30,8 @@ class TagsCloud extends Component {
     let tags = this.state.tags;
 
     return (
-      <section>
-        <h6><Link to='/tags_cloud'>cloud label</Link></h6>
+      <section className="TagsCloud">
+        <h6 className="TagsCloud-TagsTitle"><Link to='/tags_cloud'><FontAwesome className="TagsCloud-icon" name='cloud' /><span>cloud label</span></Link></h6>
         <section>
           <ul>
             {

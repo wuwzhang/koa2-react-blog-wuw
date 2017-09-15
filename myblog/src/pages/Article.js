@@ -8,6 +8,7 @@ const Article = () => {
       <ul>
         <li><Link to='/article_list'>List</Link></li>
         <li><Link to='/article_post'>POST</Link></li>
+        <li><Link to='/Keep_On_File'>Keep On File</Link></li>
       </ul>
     </section>
   );

@@ -1,0 +1,24 @@
+.keepOnFile {
+  margin: 10px 0 0 15px;
+}
+.KeepOnFile-AsideTitle {
+  font-size: 16px;
+  font-weight: bolder;
+  margin-bottom: 10px;
+}
+.KeepOnFile-AsideTitle a {
+  color: #3366cc;
+  text-shadow: #336699;
+}
+.keepOnFileAside-Icon {
+  margin-right: 5px;
+}
+.KeepOnFile-year {
+  font-weight: bolder;
+  font-size: 14px;
+}
+.KeepOnFile-month {
+  color: #ccc;
+  margin-left: 5px;
+  line-height: 25px;
+}

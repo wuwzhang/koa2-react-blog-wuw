@@ -1,15 +1,17 @@
 import React from 'react';
-import KeepOnFile from '../KeepOnFile/index.js';
-import { ArticleTags } from '../ArticleTags/index.js';
+import ArticleTags from '../ArticleTags/index.js';
+import { ArticleTime } from '../ArticleTime/index.js';
 import { view as TagsCloud } from '../TagsCloud/';
 import './style.css';
 
-export const Aside = ({tags}) => {
+export const Aside = ({tags, create_time, update_time }) => {
   return (
     <section className="aside">
       <div>
-        <h5>Aside</h5>
-        <KeepOnFile />
+        <ArticleTime
+          create_time = { create_time }
+          update_time = { update_time }
+        />
         <ArticleTags
           tags = {tags}
         />

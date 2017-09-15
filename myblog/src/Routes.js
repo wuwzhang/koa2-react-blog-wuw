@@ -16,7 +16,7 @@ import { view as Register } from './pages/Register/';
 import { view as ArticlePostOrEdit } from './pages/ArticlePostOrEdit/';
 import { view as ArticleList } from './pages/ArticleList/';
 import { view as ArticleDetails } from './pages/ArticleDetails/';
-import { view as keepOnFile } from './pages/KeepOnFileList/';
+import { view as KeepOnFileList } from './pages/KeepOnFileList/';
 import { view as ArticleByTag } from './pages/ArticleByTag/'
 
 const history = createHistory();
@@ -36,7 +36,7 @@ const Routes = () => (
         <Route path="/article_post" component={ ArticlePostOrEdit }></Route>
         <Route path="/article_edit/:articleId" component={ ArticlePostOrEdit }></Route>
         <Route path="/article_list" component={ ArticleList }></Route>
-        <Route path="/Keep_On_File" component={ keepOnFile }></Route>
+        <Route path="/Keep_On_File" component={ KeepOnFileList }></Route>
         <Route path="/article_by_tag" component={ ArticleByTag }></Route>
         <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
         <Route component={ NotFound }></Route>

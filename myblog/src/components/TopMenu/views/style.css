@@ -13,7 +13,7 @@
 .base-item a {
   color: #336699;
 }
-.base-item a:hover {
+.base-item a:hover, .base-item:hover {
   text-decoration: none;
   color: orange;
 }

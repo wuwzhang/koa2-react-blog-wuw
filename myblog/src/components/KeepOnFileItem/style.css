@@ -1,7 +1,46 @@
+.keepOnFile-date {
+  font-size: 16px;
+  width: 120px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  background: rgb(51, 102, 153, .7);
+  margin-left: -12px;
+}
+.keepOnFile-date span {
+  display: inline-block;
+  font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+  color: #fff;
+  text-shadow: 1px 1px #eee;
+  margin-left: 10px;
+}
 .keepOnFile-item {
+  list-style: none;
+  margin-left: 20px;
+  border-bottom: 1px solid #336699;
+  width: 95%;
+  margin: 10px 0;
+  padding-left: 10px;
 
 }
-..keepOnFile-item li {
-  list-style: none;
-  display: inline-block;
+
+.KeepOnFile-hover:hover li, .KeepOnFile-hover:hover .detail-time, .KeepOnFile-hover:hover p {
+  color: orange;
 }
+.KeepOnFile-hover p {
+  color: #336699;
+}
+.KeepOnFile-hover:hover .keepOnFile-item {
+  border-bottom: 1px solid orange;
+}
+.keepOnFile-item li {
+  display: inline-block;
+  font-size: 16px;
+  line-height: 37px;
+  height: 37px;
+  text-align: center;
+  margin-right: 20px;
+  color: #1470b3;
+}
+
+

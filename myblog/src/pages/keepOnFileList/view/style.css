@@ -1,0 +1,19 @@
+section.keepOnFile-page {
+  margin-top: 30px;
+}
+
+.aside {
+  position: absolute;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 200px;
+  padding: 10px;
+}
+.KeepOnFile-View {
+  position: absolute;
+  top: -5px;
+
+}
+.KeepOnFile-ViewIcon {
+  margin-right: 5px !important;
+}
