@@ -11,6 +11,7 @@ markdown/*
 .DS_Store
 .DS_Store?
 毕业设计.*
-Myblog.todo
+*.todo
 .gitignore
+server/package-lock.json
 myblog/package-lock.json
