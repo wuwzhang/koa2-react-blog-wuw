@@ -143,4 +143,7 @@ exports.getArticlesByTag = (tag) => {
   return Article.find({ tags: { "$in": [tag] }})
                 .exec();
 }
-
+exports.getArticlesByCatalog = (catalog) => {
+  return Article.find({ catalog: catalog })
+                .exec();
+}

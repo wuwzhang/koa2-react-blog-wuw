@@ -18,6 +18,7 @@ import { view as ArticleList } from './pages/ArticleList/';
 import { view as ArticleDetails } from './pages/ArticleDetails/';
 import { view as KeepOnFileList } from './pages/KeepOnFileList/';
 import { view as ArticleByTag } from './pages/ArticleByTag/'
+import { view as ArticleByCatalog } from './pages/ArticleByCatalog/'
 
 const history = createHistory();
 const Routes = () => (
@@ -38,6 +39,7 @@ const Routes = () => (
         <Route path="/article_list" component={ ArticleList }></Route>
         <Route path="/Keep_On_File" component={ KeepOnFileList }></Route>
         <Route path="/article_by_tag" component={ ArticleByTag }></Route>
+        <Route path="/article_by_catalog" component={ ArticleByCatalog }></Route>
         <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
         <Route component={ NotFound }></Route>
       </Switch>

@@ -10,7 +10,11 @@ import {
   EDIT_FAILURE,
   UPDATE_STARTED,
   UPDATE_SUCCESS,
-  UPDATE_FAILURE
+  UPDATE_FAILURE,
+  POST_ALERT_SUCCESS,
+  POST_ALERT_FAIL,
+  UPDATE_ALERT_SUCCESS,
+  UPDATE_ALERT_FAIL
 } from './actionType.js';
 
 export const artcileAdd = (article) => ({
@@ -65,5 +69,28 @@ export const successUpdateArticle = () => ({
 
 export const failUpdateArticle = () => ({
   type: UPDATE_FAILURE
+});
 
+export const postSuccess = () => ({
+  type: POST_ALERT_SUCCESS,
+  msg:'发表成功',
+  msgType:'success'
+});
+
+export const postFail = () => ({
+  type: POST_ALERT_FAIL,
+  msg: '发表失败',
+  msgType: 'warning'
+})
+
+export const updateSuccess = () => ({
+  type: UPDATE_ALERT_SUCCESS,
+  msg:'修改成功',
+  msgType:'success'
+});
+
+export const updateFail = () => ({
+  type: UPDATE_ALERT_FAIL,
+  msg: '修改失败',
+  msgType: 'warning'
 })

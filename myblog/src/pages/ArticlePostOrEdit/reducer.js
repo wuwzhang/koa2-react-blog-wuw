@@ -10,7 +10,11 @@ import {
   EDIT_FAILURE,
   UPDATE_STARTED,
   UPDATE_SUCCESS,
-  UPDATE_FAILURE
+  UPDATE_FAILURE,
+  POST_ALERT_SUCCESS,
+  POST_ALERT_FAIL,
+  UPDATE_ALERT_SUCCESS,
+  UPDATE_ALERT_FAIL
 } from './actionType.js';
 
 export default (state, action) => {
@@ -88,6 +92,34 @@ export default (state, action) => {
     case UPDATE_FAILURE: {
       return {
         startUpdating: false
+      }
+    }
+    case POST_ALERT_SUCCESS: {
+      return {
+        ...state,
+        msg: action.msg,
+        msgType: action.msgType
+      }
+    }
+    case POST_ALERT_FAIL: {
+      return {
+        ...state,
+        msg: action.msg,
+        msgType: action.msgType
+      }
+    }
+    case UPDATE_ALERT_SUCCESS: {
+      return {
+        ...state,
+        msg: action.msg,
+        msgType: action.msgType
+      }
+    }
+    case UPDATE_ALERT_FAIL: {
+      return {
+        ...state,
+        msg: action.msg,
+        msgType: action.msgType
       }
     }
     default: {

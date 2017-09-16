@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { view as ArticlTagItem } from '../../../components/ArticleItem/';
+
 import { getArticlesByTag } from '../fetch.js'
 
 class ArticleByTag extends Component {
@@ -50,27 +52,6 @@ class ArticleByTag extends Component {
       </section>
     );
   }
-}
-
-const ArticlTagItem = ({ article }) => {
-  return (
-    <li>
-      <section>
-        <h5>{ article.title }</h5>
-        <div>
-          <span>
-          {
-            article.tags.map((tag) => {
-              return tag ? <span>{ tag }</span> : null
-            })
-          }
-          </span>
-          <span>{ article.updated_at.slice(0, 10) }</span>
-        </div>
-        <p>{ article.content } </p>
-      </section>
-    </li>
-  );
 }
 
 const mapStateToProps = (state) => {

@@ -99,5 +99,26 @@ router.post('/api/getArticlesByTag', async(ctx, next) => {
     'articles': result
   }
 })
+/**
+ *   通过标签查找文章
+ */
+router.post('/api/getArticlesByCatalog', async(ctx, next) => {
+  let code = '1', message = 'ok';
+
+  const { catalog } = ctx.request.body;
+
+  try {
+    var result = await $Article.getArticlesByCatalog(catalog);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'articles': result
+  }
+})
 
 module.exports = router;

@@ -21,9 +21,13 @@ import {
   startPostArticle,
   successPostArticle,
   failPostArticle,
+  postSuccess,
+  postFail,
   startUpdateArticle,
   successUpdateArticle,
-  failUpdateArticle
+  failUpdateArticle,
+  updateSuccess,
+  updateFail
 } from '../action';
 
 import {
@@ -36,6 +40,7 @@ import {
   Col,
   Button
 } from 'react-bootstrap';
+import { Alert } from 'antd';
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -243,8 +248,10 @@ class ArticlePostOrEdit extends Component {
 
   render() {
     let { title, content, tags, catalog } = this.state;
-    // let tagsArr = Array.from(tags);
-    // let tagsStr = tagsArr.join(';');
+    let { msgType, msg } = this.props.articleEdit;
+
+    console.log(msgType);
+    console.log(msg);
 
     return(
       <section>
@@ -340,6 +347,12 @@ class ArticlePostOrEdit extends Component {
                                   : null
           }
           </Col>
+          {
+            msgType === 'warning' ? <Alert className="myAlert" message={ msg } type="warning" showIcon closable/> : null
+          }
+          {
+            msgType === 'success' ? <Alert className="myAlert" message={ msg } type="success" showIcon closable/> : null
+          }
         </Form>
       </section>
     );
@@ -356,7 +369,8 @@ const mapStateToProps = (state) => {
       articleId = pathname.split('/')[2];
 
   return {
-    articleId: articleId
+    articleId: articleId,
+    articleEdit: state.articleEdit
   }
 };
 
@@ -370,8 +384,10 @@ const mapDispatchToProps = (dispatch) => {
 
       if (result.code === '1') {
         dispatch(successPostArticle());
+        dispatch(postSuccess());
       } else {
         dispatch(failPostArticle());
+        dispatch(postFail());
       }
     },
     updatePost: async (articleId, data) => {
@@ -380,8 +396,10 @@ const mapDispatchToProps = (dispatch) => {
 
       if (result.code === '1') {
         dispatch(successUpdateArticle())
+        dispatch(updateSuccess());
       } else {
         dispatch(failUpdateArticle())
+        dispatch(updateFail());
       }
     }
   }

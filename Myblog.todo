@@ -18,11 +18,13 @@ MyBlog:
           ☐ style
       ☐ style
     Article-Post:
-      ☐ Markdwon-Edit
-      ☐ Markdown-Preview
+      ✔ Markdwon-Edit @done (17-09-16 11:46)
+      ✔ Markdown-Preview @done (17-09-16 11:46)
+      ☐ Mathjax
       ☐ Local-Post
+      ☐ Success/Fail-Alert
       ✔ tags @done (17-09-14 10:31)
-      ☐ catalog
+      ✔ catalog @done (17-09-16 11:47)
       ☐ style
     Article-Edit:
       ✔ edit @done (17-09-14 13:16)
@@ -69,8 +71,8 @@ MyBlog:
         ✔ tags @done (17-09-14 13:24)
         ✔ style @done (17-09-14 19:28)
       This-Article-Catalog:
-        ☐ Catalog
-        ☐ style
+        ✔ Catalog @done (17-09-15 22:01)
+        ✔ style @done (17-09-15 22:01)
       Tags-Cloud:
         ✔ tags cloud @done (17-09-14 09:32)
         ✔ style @done (17-09-15 11:02)
@@ -85,5 +87,10 @@ MyBlog:
         ☐ Catalog
         ☐ style
 --- ✄ -----------------------
-2017-9-15:
-  ✔ 完成markdown-preview样式修复 @done (17-09-15 12:38)
+2017-09-15:
+  ✔ markdown-preview样式修复 @done (17-09-15 12:38)
+  ✔ catalog model @done (17-09-15 21:59)
+  ✔ 文章侧边栏分类 @done (17-09-15 22:00)
+  ✔ 文章分类添加、修改 @done (17-09-15 22:00)
+2017-09-16:
+  ✔ 通过catalog查找文章 @done (17-09-16 11:48)
