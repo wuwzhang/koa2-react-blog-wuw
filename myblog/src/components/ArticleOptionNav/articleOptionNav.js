@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { actions as editActions } from '../../pages/ArticlePostOrEdit';
+import { Link } from 'react-router-dom';
+// import { actions as editActions } from '../../pages/ArticleEdit';
 import { fetchs as deleteFetchs, actions as deleteActions } from '../../pages/ArticleList/';
 
-import {
-  Redirect
-} from 'react-router'
+// import {
+//   Redirect
+// } from 'react-router'
 
 import {
   Alert,
@@ -22,21 +23,11 @@ class ArticleOptionNav extends Component {
       alertVisble: false
     }
 
-    this._editArticle = this._editArticle.bind(this);
     this._deleteArticle = this._deleteArticle.bind(this);
 
     this._handleDeleteAlertShow = this._handleDeleteAlertShow.bind(this);
     this._handleDeleteAlertDismiss = this._handleDeleteAlertDismiss.bind(this);
 
-  }
-
-  // shouldComponentUpdate(next, nextState) {
-
-  // }
-
-  _editArticle(event) {
-    event.preventDefault();
-    this.props.editPost(this.props.articleId);
   }
 
   _deleteArticle(event) {
@@ -80,22 +71,11 @@ class ArticleOptionNav extends Component {
         </Alert>
       );
     }
-    if (this.props.startEditing === true) {
-      const articleId = this.props.id || this.props.articleId;
-
-      return (
-        <Redirect to={{
-          pathname: `/article_edit/${articleId}`
-        }}/>
-      );
-    }
     return (
       <nav className="article-option-nav">
         <ul>
           <li>
-            <span
-              onClick = { this._editArticle }
-            >Edit</span>
+            <Link to={`/article_edit/${ this.props.articleId || this.props.id }`}><span>Edit</span></Link>
           </li>
           <li>
             <span
@@ -113,19 +93,18 @@ const mapStateToProps = (state) => {
   let pathname = state.routing.location.pathname,
       articleId = pathname.split('/')[2];
 
-  let startEditing = state.articleEdit.startEditing;
+  // let startEditing = state.articleEdit.startEditing;
 
   return {
-    articleId: articleId,
-    startEditing: startEditing
+    articleId: articleId
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    editPost: async (articleId) => {
+    // editPost: async () => {
 
-      dispatch(editActions.startEditArticle());
-    },
+    //   dispatch(editActions.startEditArticle());
+    // },
     deletePost: async (articleId, index) => {
       let result = await deleteFetchs.deleteArticle(articleId);
 

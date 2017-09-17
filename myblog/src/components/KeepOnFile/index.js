@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchs as listFetchs } from '../../pages/ArticleList/';
+import { getArticleDateList } from './fetch.js'
 import { Badge, Timeline } from 'antd';
 import FontAwesome from 'react-fontawesome';
 import './style.css';
@@ -34,19 +34,16 @@ class KeepOnFile extends Component {
       result: []
     }
   }
-  componentDidMount() {
-    (async function() {
-
-      let result = await listFetchs.getArticleDateList();
-      if (result.code === '1') {
-        // console.log(result.result);
-        this.setState({
-          result: result.result
-        })
-      } else {
-        console.log(result);
-      }
-    }.bind(this))();
+  async componentDidMount() {
+    let result = await getArticleDateList()
+    if (result.code === '1') {
+      // console.log(result.result);
+      this.setState({
+        result: result.result
+      })
+    } else {
+      console.log(result);
+    }
   }
 
   render() {

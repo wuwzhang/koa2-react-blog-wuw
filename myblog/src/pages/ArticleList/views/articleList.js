@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { listPageArticle } from '../fetch';
 
-import { articleInit } from '../action';
-import { actions as articleEditActions } from '../../ArticlePostOrEdit/';
+// import { articleInit } from '../action';
+// import { actions as articleEditActions } from '../../ArticleEdit/';
 
 import { view as ArticleLi } from '../../../components/ArticleLi/';
 import Pagination from '../../../components/Pagination/pagination';
@@ -13,29 +12,46 @@ class ArticleList extends Component {
     super(props);
     this.handlePage = this.handlePage.bind(this);
     this.state = {
-      currentPage: 1
+      currentPage: 1,
+      articles: [],
+      pageArticleCount: 1
     }
   }
 
-  componentDidMount() {
-    (async function() {
-      await this.props.initArticles(1, 10);
-    }.bind(this))();
+  async componentDidMount() {
+    // await this.props.initArticles(1, 10);
+    let result = await listPageArticle(1, 10);
+
+    if (result.code === '1') {
+      this.setState({
+        articles: result.articles,
+        pageArticleCount: result.count
+      })
+    } else {
+      console.log(result)
+    }
   }
 
-  handlePage(curPage) {
+  async handlePage(curPage) {
 
     this.setState({
       currentPage: curPage
     })
-    this.props.initArticles(curPage, 10);
+    let result = await listPageArticle(curPage, 10);
+
+    if (result.code === '1') {
+      this.setState({
+        articles: result.articles,
+        pageArticleCount: result.count
+      })
+    } else {
+      console.log(result)
+    }
   }
 
   render() {
-    let { articles, pageArticleCount } = this.props;
-    const { currentPage } = this.state
-    // console.log(this.props);
-    // console.log(articles)
+    const { currentPage, articles, pageArticleCount } = this.state
+    // console.log(pageArticleCount);
     let totalPages = Math.ceil(pageArticleCount / 10);
 
     return(
@@ -71,32 +87,4 @@ class ArticleList extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  // console.log(state.articleList)
-  return {
-    articles: state.articleList.articles,
-    pageArticleCount: state.articleList.count
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    initArticles: async (page, eachPageArticles) => {
-      // console.log(articleEditActions);
-      dispatch(articleEditActions.initStartEditArticle());
-      let result = await listPageArticle(page, eachPageArticles);
-      // console.log('-----article list-----')
-      // console.log(result);
-      if (result.code === '1') {
-        dispatch(articleInit({
-          count: result.count,
-          articles: result.articles
-        }))
-      } else {
-        console.log(result);
-      }
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ArticleList);
+export default ArticleList;

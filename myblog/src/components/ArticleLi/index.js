@@ -12,7 +12,6 @@ import './style.css';
 const view = ({title, id, index, update_time, create_time}) => {
   update_time = update_time.slice(0, 10);
   create_time = create_time.slice(0, 10);
-
   return (
     <section className="article-list">
       <Row>

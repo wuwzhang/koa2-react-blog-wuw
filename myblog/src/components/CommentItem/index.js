@@ -3,6 +3,7 @@ import {
   Row,
   Col
 } from 'react-bootstrap'
+import './style.css';
 
 const marked = require('marked');
 
@@ -11,8 +12,8 @@ const CommentItem = ({user, content, create_at}) => {
   return (
     <Row>
       <li>
-        <Col md={2}><span>{ user.username }: </span></Col>
-        <Col md={8}>
+        <Col md={1}><span className="comment-user">{ user.username }: </span></Col>
+        <Col md={9}>
           {
            content ? <span
                       dangerouslySetInnerHTML={{

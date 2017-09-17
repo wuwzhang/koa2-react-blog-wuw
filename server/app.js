@@ -18,6 +18,7 @@ const articleDetails = require('./routes/articleDetails')
 const articleEdit = require('./routes/articleEdit')
 const comments = require('./routes/comments')
 const tags = require('./routes/tags')
+// const catalog = require('./routes/catalog')
 const keepOnFileList = require('./routes/keepOnFileList')
 
 const log = require('./logs/log')
@@ -84,6 +85,7 @@ app.use(articleDetails.routes(), articleDetails.allowedMethods())
 app.use(articleEdit.routes(), articleEdit.allowedMethods())
 app.use(comments.routes(), comments.allowedMethods())
 app.use(tags.routes(), tags.allowedMethods())
+// app.use(catalog.routes(), catalog.allowedMethods())
 app.use(keepOnFileList.routes(), keepOnFileList.allowedMethods())
 
 //错误请求的日志

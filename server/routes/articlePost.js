@@ -31,11 +31,11 @@ router.post('/api/article_post', async(ctx, next) => {
     };
 
     var result = await $Article.create(articleModel);
-    var exist = await $Catalog.getCatalogrByCatalogName(article.catalog);
-    if (!exist) {
-      console.log('111')
-      let res = await $Catalog.create({ catalog: article.catalog });
-      console.log(res)
+    if (article.catalog) {
+      var exist = await $Catalog.getCatalogrByCatalogName(article.catalog);
+      if (!exist) {
+        let res = await $Catalog.create({ catalog: article.catalog });
+      }
     }
     // var res = await $Catalog.create({catalog: article.catalog})
         // res = await $Catalog.create({ catalog: article.catalog });

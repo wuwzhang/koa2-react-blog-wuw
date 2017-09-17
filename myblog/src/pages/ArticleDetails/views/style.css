@@ -1,3 +1,6 @@
 .article-content {
   min-height: 500px;
 }
+.article-content img {
+  max-width: 100%;
+}

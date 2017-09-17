@@ -12,8 +12,20 @@
 .marked-preview li{ display:list-item !important}
 .marked-preview ol{list-style-type: decimal !important}
 .marked-preview ol, .marked-preview ul, .marked-preview dir, .marked-preview menu, .marked-preview dd{ margin-left: 40px !important}
-
+.marked-preview img {
+  max-width: 100%;
+}
 .edit-marked-preview {
   height: 800px;
   overflow: scroll;
+}
+.previewButton {
+  margin-top: 24px;
+
+}
+.myButton {
+  height: 34px !important;
+}
+.postButton {
+  margin-left: -15px;
 }

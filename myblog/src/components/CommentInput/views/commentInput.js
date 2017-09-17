@@ -16,7 +16,9 @@ import {
   FormControl,
   Button,
   ControlLabel,
-  HelpBlock
+  HelpBlock,
+  Row,
+  Col
 } from 'react-bootstrap';
 
 class CommentInput extends Component {
@@ -76,26 +78,40 @@ class CommentInput extends Component {
     return (
       <Form>
         <FormGroup>
-          <ControlLabel
-            validationState={this.state.commentValid}
-          >Comment</ControlLabel>
-          <FormControl
-            componentClass='textarea'
-            placeholder='Enter Comment'
-            onChange={(event)=>this.setState({comment:event.target.value})}
-            onBlur={(event)=>this._checkComment(event.target.value)}
-          />
-          {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}
-          {
-            this.props.user ? <Button
 
-                                onClick={()=>this._addComment()}
-                              >submit</Button>
-                            : <Button
+          <Row>
+            <Col md={1} >
+              <ControlLabel
+                validationState={this.state.commentValid}
+              >Comment：</ControlLabel>
+            </Col>
+            <Col md={11} >
+              <FormControl
+                componentClass='textarea'
+                placeholder='Enter Comment'
+                onChange={(event)=>this.setState({comment:event.target.value})}
+                onBlur={(event)=>this._checkComment(event.target.value)}
+                style={{height: '100px'}}
+              />
+              {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}
+            </Col>
+          </Row>
+          <Row>
+            <Col md={2} mdOffset={10}>
+              {
+                this.props.user ? <Button
 
-                                onClick={()=>this._login()}
-                              >login</Button>
-          }
+                                    className="myButton commentButton"
+                                    onClick={()=>this._addComment()}
+                                  >submit</Button>
+                                : <Button
+
+                                    className="myButton commentButton"
+                                    onClick={()=>this._login()}
+                                  >login</Button>
+              }
+            </Col>
+          </Row>
         </FormGroup>
       </Form>
     )

@@ -6,7 +6,6 @@ import { view as TagsCloud } from '../TagsCloud/';
 import './style.css';
 
 export const Aside = ({tags, create_time, catalog, update_time }) => {
-  console.log(ArticleCatalog)
   return (
     <section className="aside">
       <div>

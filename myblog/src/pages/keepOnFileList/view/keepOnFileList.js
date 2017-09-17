@@ -4,6 +4,7 @@ import { getArticleDateList } from '../fetch.js';
 import { view as KeepOnFileItem } from '../../../components/KeepOnFileItem/';
 import KeepOnFile from '../../../components/KeepOnFile/index.js'
 import { view as TagsCloud } from '../../../components/TagsCloud/';
+import CatalogAside from '../../../components/CatalogAside/';
 
 import { Timeline, Radio } from 'antd';
 import FontAwesome from 'react-fontawesome';
@@ -77,6 +78,7 @@ class KeepOnFileList extends Component {
               <div>
                 <KeepOnFile />
                 <TagsCloud />
+                <CatalogAside />
               </div>
             </section>
           </Col>

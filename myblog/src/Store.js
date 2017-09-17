@@ -7,7 +7,9 @@ import thunk from 'redux-thunk';
 
 import { reducer as loginReducer } from './pages/Login/';
 import { reducer as registReducer } from './pages/Register/';
-import { reducer as articleEditReducer } from './pages/ArticlePostOrEdit/';
+// import { reducer as articleEditReducer } from './pages/ArticlePostOrEdit/';
+import { reducer as articlePostReducer } from './pages/ArticlePost/';
+import { reducer as articleEditReducer } from './pages/ArticleEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
 import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
 import { reducer as commentReducer } from './components/Comment/';
@@ -20,6 +22,7 @@ const histroyMiddleware = routerMiddleware(history);
 const reducer = combineReducers({
   login: loginReducer,
   register: registReducer,
+  articlePost: articlePostReducer,
   articleEdit: articleEditReducer,
   articleList: articleListReducer,
   articleDetails: articleDetailsReducer,

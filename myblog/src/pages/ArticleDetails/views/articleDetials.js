@@ -41,7 +41,7 @@ class ArticleDetails extends Component {
       );
     }
     let { article } = this.props;
-    // console.log(article);
+
     if (article) {
       return(
         <section>
@@ -76,7 +76,11 @@ class ArticleDetails extends Component {
               />
             </Col>
           </Row>
-          <Comment />
+          <Row>
+            <Col md={10} ms={10} xs={10}>
+              <Comment />
+            </Col>
+          </Row>
         </section>
       );
     }

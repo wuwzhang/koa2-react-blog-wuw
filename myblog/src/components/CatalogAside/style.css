@@ -1,0 +1,40 @@
+.CatalogAside {
+  margin: 10px 0 0 16px;
+}
+.CatalogAsided-CatalogTitle {
+  font-size: 16px;
+  font-weight: bolder;
+  color: #3366cc;
+  text-shadow: #336699;
+  margin-bottom: 10px;
+}
+.CatalogAside ul {
+  list-style: none;
+  padding: 0 10px;
+}
+.CatalogAside ul a li span {
+  display: inline-block;
+}
+.catalogName {
+  margin-right: 5px;
+}
+.CatalogAside ul li {
+  border-bottom: 1px solid #eee;
+  padding: 5px 7px 0;
+}
+.CatalogAside ul a li {
+  font-size: 14px;
+  color: #999;
+
+}
+.CatalogAside ul a:hover {
+  cursor: pointer;
+}
+.CatalogAside ul a:hover span {
+  color: orange;
+}
+.catalogCount {
+  color: #ccc;
+  float: right;
+  margin-right: 40px;
+}

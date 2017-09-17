@@ -9,6 +9,7 @@ import {
 //   ListGroup,
 //   ListGroupItem
 // } from 'react-bootstrap';
+import './style.css';
 
 class CommentList extends Component {
   componentDidMount() {
@@ -17,18 +18,20 @@ class CommentList extends Component {
   render() {
     let { comments } = this.props;
     return (
-      <ul>
-        {
-          comments.map((comment, index) => (
-            <CommentItem
-              key = { index }
-              user = { comment.user }
-              content = { comment.content }
-              create_at = { comment.create_at }
-            />
-          ))
-        }
-      </ul>
+      <section className="comment-list">
+        <ul>
+          {
+            comments.map((comment, index) => (
+              <CommentItem
+                key = { index }
+                user = { comment.user }
+                content = { comment.content }
+                create_at = { comment.create_at }
+              />
+            ))
+          }
+        </ul>
+      </section>
     );
   }
 }

@@ -1,0 +1,8 @@
+export const POST_STARTED = 'POST/STARTED';
+export const POST_SUCCESS = 'POST/SUCCESS';
+export const POST_FAILURE = 'POST/FAILURE';
+
+export const POST_ALERT_INIT = 'POST/ALERT/INIT';
+export const POST_ALERT_FAIL = 'POST/ALERT/FAIL';
+export const POST_ALERT_SUCCESS = 'POST/ALERT/SUCCESS';
+

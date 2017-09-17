@@ -1,0 +1,9 @@
+.commnet {
+  border-top: 1px solid #ccc;
+  margin: 40px 0 0 0 ;
+  padding: 20px 0;
+}
+.commentButton {
+  width: 130px !important;
+  margin-top: 10px !important;
+}
