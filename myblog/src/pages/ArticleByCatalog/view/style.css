@@ -1,0 +1,17 @@
+.ArticleByCatalog-list {
+  margin-left: 16px;
+}
+.ArticleByCatalog-li {
+  color: #ccc;
+  border-bottom: 1px solid #999;
+  /*padding-right: 10px;*/
+  font-size: 14px;
+}
+.ArticleByCatalog-li .catalogName {
+  width: 50px;
+}
+.ArticleByCatalog-li:hover {
+  cursor: pointer;
+  color: #FF7E67;
+}
+

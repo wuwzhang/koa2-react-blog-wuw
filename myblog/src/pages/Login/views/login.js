@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import { login } from '../fetch';
 import { view as FieldGroup } from '../../../components/FieldGroup';
+import { view as TopMenu } from '../../../components/TopMenu/';
+
 import {
   startLogin,
   finishLogin,
@@ -17,6 +19,7 @@ import {
   FormGroup,
   Button,
   Form,
+  Grid,
   Col
 } from 'react-bootstrap';
 import { Alert } from 'antd';
@@ -80,67 +83,70 @@ class Login extends Component {
   render() {
     let { user, msgType } = this.props;
 
-    // if (user) {
-    //   return (
-    //     <Redirect
-    //       to = {{
-    //         pathname: '/home'
-    //       }}
-    //     />
-    //   );
-    // }
+    if (user) {
+      return (
+        <Redirect
+          to = {{
+            pathname: '/home'
+          }}
+        />
+      );
+    }
 
     return (
-      <section >
-        <Col className='login-container' md={8} xs={10} xsOffset={3} mdOffset={4}>
-          <h2>Sign In</h2>
-          <Form horizontal>
-            <FieldGroup
-              type='email'
-              label='Email Address'
-              placeholder='Email'
-              ref={(input)=>this.email=input}
-              onBlur={(event)=>this._checkAccount(event.target.value)}
-              onChange={(event)=>this.setState({account:event.target.value})}
-              validationState={this.state.accountValid}
-              help={this.state.accountHelp}
-            />
+      <Grid>
+        <TopMenu />
+        <section >
+          <Col className='login-container' md={8} xs={10} xsOffset={3} mdOffset={4}>
+            <h2>Sign In</h2>
+            <Form horizontal>
+              <FieldGroup
+                type='email'
+                label='Email Address'
+                placeholder='Email'
+                ref={(input)=>this.email=input}
+                onBlur={(event)=>this._checkAccount(event.target.value)}
+                onChange={(event)=>this.setState({account:event.target.value})}
+                validationState={this.state.accountValid}
+                help={this.state.accountHelp}
+              />
 
-            <FieldGroup
-              type='password'
-              label='Password Address'
-              placeholder='Password'
-              onChange={(event)=>this.setState({password:event.target.value})}
-              onBlur={(event)=>this._checkPassword(event.target.value)}
-              validationState={this.state.pwdValid}
-              help={this.state.pwdHelp}
-            />
-            {/*
+              <FieldGroup
+                type='password'
+                label='Password Address'
+                placeholder='Password'
+                onChange={(event)=>this.setState({password:event.target.value})}
+                onBlur={(event)=>this._checkPassword(event.target.value)}
+                validationState={this.state.pwdValid}
+                help={this.state.pwdHelp}
+              />
+              {/*
+                <FormGroup>
+                  <Col sm={10}>
+                    <Checkbox>Remember me</Checkbox>
+                  </Col>
+                </FormGroup>
+              */}
+
               <FormGroup>
-                <Col sm={10}>
-                  <Checkbox>Remember me</Checkbox>
+                <Col sm={2}>
+                  <Button
+                    block
+                    onClick={()=>this._signIn()}
+                  >Sign in</Button>
                 </Col>
               </FormGroup>
-            */}
 
-            <FormGroup>
-              <Col sm={2}>
-                <Button
-                  block
-                  onClick={()=>this._signIn()}
-                >Sign in</Button>
-              </Col>
-            </FormGroup>
-
-            {
-              msgType === 'warning' ? <Alert className="myAlert" message="用户名或密码错误" type="warning" showIcon closable/> : null
-            }
-            {
-              msgType === 'success' ? <Alert className="myAlert" message="登录成功" type="success" showIcon closable/> : null
-            }
-          </Form>
-        </Col>
-      </section>
+              {
+                msgType === 'warning' ? <Alert className="myAlert" message="用户名或密码错误" type="warning" showIcon closable/> : null
+              }
+              {
+                msgType === 'success' ? <Alert className="myAlert" message="登录成功" type="success" showIcon closable/> : null
+              }
+            </Form>
+          </Col>
+        </section>
+      </Grid>
     )
   }
 }

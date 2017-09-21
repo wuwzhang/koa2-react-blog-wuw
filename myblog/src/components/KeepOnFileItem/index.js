@@ -10,7 +10,7 @@ const SummaryView = ({ article }) => {
         <ul  className="keepOnFile-item">
           <li>{ article.created_at.slice(0, 10) }</li>
           <li>{ article.title }</li>
-          <li>{ article.catalog }</li>
+          <li className="keepOnFileItem-catalog">{ article.catalog }</li>
         </ul>
         <p> { article.content ? article.content.slice(0, 150) : article.content }</p>
       </div>

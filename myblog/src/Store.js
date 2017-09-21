@@ -13,6 +13,7 @@ import { reducer as articleEditReducer } from './pages/ArticleEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
 import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
 import { reducer as commentReducer } from './components/Comment/';
+import { reducer as catalogReducer } from './components/CatalogAside/';
 
 import Perf from 'react-addons-perf';
 
@@ -27,6 +28,7 @@ const reducer = combineReducers({
   articleList: articleListReducer,
   articleDetails: articleDetailsReducer,
   comment: commentReducer,
+  catalog: catalogReducer,
   routing: routerReducer
 });
 

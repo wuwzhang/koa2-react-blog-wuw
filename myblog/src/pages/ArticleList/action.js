@@ -16,10 +16,9 @@ export const successDelete = () => ({
   type: DELETE_SUCCESS
 })
 
-export const articleInit = ({count, articles}) => ({
+export const articleInit = ({articles}) => ({
   type: INIT_ARTICLE,
-  articles,
-  count
+  articles
 });
 
 export const startPostArticle = () => ({

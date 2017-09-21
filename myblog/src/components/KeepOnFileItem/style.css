@@ -17,7 +17,7 @@
 .keepOnFile-item {
   list-style: none;
   margin-left: 20px;
-  border-bottom: 1px solid #336699;
+  border-bottom: 1px solid #ccc;
   width: 95%;
   margin: 10px 0;
   padding-left: 10px;
@@ -25,13 +25,13 @@
 }
 
 .KeepOnFile-hover:hover li, .KeepOnFile-hover:hover .detail-time, .KeepOnFile-hover:hover p {
-  color: orange;
+  color: #FF7E67;
 }
 .KeepOnFile-hover p {
-  color: #336699;
+  color: #666;
 }
 .KeepOnFile-hover:hover .keepOnFile-item {
-  border-bottom: 1px solid orange;
+  border-bottom: 1px solid #FF7E67;
 }
 .keepOnFile-item li {
   display: inline-block;
@@ -42,5 +42,8 @@
   margin-right: 20px;
   color: #1470b3;
 }
-
+.keepOnFile-item .keepOnFileItem-catalog {
+  font-size: 14px;
+  color: #ccc;
+}
 

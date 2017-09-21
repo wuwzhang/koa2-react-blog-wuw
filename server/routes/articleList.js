@@ -62,8 +62,8 @@ router.post('/api/article_list/init', async(ctx, next) => {
   const { page, eachPageArticles } = ctx.request.body;
 
   try {
-    var count = await $Article.getArticleCount(),
-        result = await $Article.getPageArticle(page, eachPageArticles);
+    var result = await Promise.all([$Article.getArticleCount(),
+                                    $Article.getPageArticle(page, eachPageArticles)]);
 
   } catch (e) {
     code = '-1',
@@ -73,8 +73,8 @@ router.post('/api/article_list/init', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'count': count,
-    'articles': result
+    'count': result[0],
+    'articles': result[1]
   }
 });
 
@@ -121,4 +121,55 @@ router.post('/api/getArticlesByCatalog', async(ctx, next) => {
   }
 })
 
+/**
+ * 文章是否开放评论
+ */
+router.post('/api/article_toggle_Comments', async(ctx, next) => {
+
+  let { articleId, state } = ctx.request.body;
+
+  let code ='1', message = '修改成功';
+
+  console.log(articleId)
+  console.log(state)
+
+  try {
+    var result = await $Article.toggleComments(articleId, state);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message
+  }
+
+})
+
+/**
+ * 文章是否公开
+ */
+router.post('/api/article_toggle_ArticlePublic', async(ctx, next) => {
+
+  let { articleId, state } = ctx.request.body;
+
+  console.log(articleId)
+  console.log(state)
+
+  let code ='1', message = '修改成功';
+
+  try {
+    var result = await $Article.toggleArticlePublic(articleId, state);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message
+  }
+
+})
 module.exports = router;

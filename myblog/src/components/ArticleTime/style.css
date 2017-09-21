@@ -4,8 +4,6 @@
 .ArticleTime-TimeTitle {
   font-size: 16px;
   font-weight: bolder;
-  color: #3366cc;
-  text-shadow: #336699;
   margin-bottom: 10px;
 }
 .ArticleTime li span {
@@ -13,7 +11,6 @@
 }
 .ArticleTime li span.ArticleTime-time {
   font-size: 14px;
-  color: #336699;
   margin-right: 10px;
 }
 .ArticleTime-TimeTitle-icon {

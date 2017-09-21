@@ -7,8 +7,8 @@ router.get('/api/article_details/:articleId', async(ctx, next) => {
   const { articleId } = ctx.params;
 
   try {
-    var result = await $Article.getArticleById(articleId);
-    // console.log(result);
+    var result = await Promise.all([$Article.getArticleById(articleId),
+                                    $Article.incPv(articleId)]);
   } catch (e) {
     code = '-1',
     message = e.message
@@ -17,7 +17,7 @@ router.get('/api/article_details/:articleId', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'article': result
+    'article': result[0]
   }
 });
 
@@ -27,7 +27,6 @@ router.get('/api/article_edit/:articleId', async(ctx, next) => {
 
   try {
     var result = await $Article.getArticleById(articleId);
-    console.log(result);
   } catch (e) {
     code = '-1',
     message = e.message

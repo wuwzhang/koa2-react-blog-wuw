@@ -1,0 +1,15 @@
+.ArticleList {
+  /*background: #DDD;*/
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+.ArticleLi-head {
+  height: 35px;
+  line-height: 35px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+}
+.ArticleLi-head p span {
+  color: #999;
+}

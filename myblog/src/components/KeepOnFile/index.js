@@ -5,7 +5,7 @@ import { Badge, Timeline } from 'antd';
 import FontAwesome from 'react-fontawesome';
 import './style.css';
 
-const KeepOnFileList = ({ year, monthInfo }) => {
+const KeepOnFileList = ({ year, monthInfo, badgeColor='red' }) => {
   let Arr = ['Jan.', 'Feb.', 'Mar.', 'Apr.',
              'May', 'Jane', 'July', 'Aug.',
              'Sept.', 'Oct.', 'Nov.', 'Dec.' ]
@@ -18,7 +18,7 @@ const KeepOnFileList = ({ year, monthInfo }) => {
         monthInfo.map((item) => {
           return (
 
-            <p className="KeepOnFile-month">{ Arr[item.month-1] }<Badge style={{width:'20px', height: '20px'}} count={ item.count } overflowCount={10}></Badge></p>
+            <p className="KeepOnFile-month">{ Arr[item.month-1] }<Badge style={{width:'20px', height: '20px', background: badgeColor}} count={ item.count } overflowCount={10}></Badge></p>
           );
         })
       }
@@ -49,10 +49,11 @@ class KeepOnFile extends Component {
   render() {
 
     let result = this.state.result;
+    let { color='#369', badgeColor = 'red' } = this.props;
 
     return (
       <section className="keepOnFile">
-        <h6 className="KeepOnFile-AsideTitle"><Link to = "/Keep_On_File"><FontAwesome className="keepOnFileAside-Icon" name='files-o' /><span>Keep On File</span></Link></h6>
+        <h6 className="KeepOnFile-AsideTitle"><FontAwesome className="keepOnFileAside-Icon" name='file-text'  style = {{ color: color}} /><span>Keep On File</span></h6>
         <Timeline>
           {
             result.map((item, index) => {
@@ -62,6 +63,7 @@ class KeepOnFile extends Component {
                   key = { index }
                   year = { item._id.year }
                   monthInfo = { item.monthCount }
+                  badgeColor = { badgeColor }
                 />
               );
             })

@@ -7,9 +7,12 @@
 
   margin-bottom: 10px;
 }
+.TagsCloud-TagsTitle:hover a span {
+  color: #FF7E67;
+}
 .TagsCloud-TagsTitle a span {
-  color: #3366cc;
-  text-shadow: #336699;
+  /*color: #3366cc;
+  text-shadow: #336699;*/
 }
 .TagsCloud-icon {
   margin-right: 5px;

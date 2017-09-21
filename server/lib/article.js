@@ -21,19 +21,6 @@ exports.getArticles = () => {
                 .exec();
 };
 
-exports.getArticlesByType = (type) => {
-  const query = {}
-  if (type) {
-    query.type = type;
-  }
-  const sort = {
-    created_at: -1
-  };
-  return Article.find(query)
-                .sort(sort)
-                .exec();
-};
-
 /**
  * 通过文章id获取文章
  */
@@ -131,6 +118,11 @@ exports.getArticlesCountByMonth = () => {
  */
 exports.getArticleListByDate = () => {
   return Article.aggregate(
+                  {
+                    $match: {
+                      isPublic: true
+                    }
+                  },
                   { $group: {
                     _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
                     articles: { $push: {id: "$_id", title: '$title', content: '$content', catalog: '$catalog', created_at: "$created_at"} }
@@ -139,15 +131,29 @@ exports.getArticleListByDate = () => {
                 .sort({_id: -1});
 }
 
+/**
+ * 通过标签名查找文章
+ */
 exports.getArticlesByTag = (tag) => {
   return Article.find({ tags: { "$in": [tag] }})
                 .exec();
 }
+
+/**
+ * 通过分类名查询文章
+ */
 exports.getArticlesByCatalog = (catalog) => {
   return Article.find({ catalog: catalog })
                 .exec();
 }
 
+/**
+ * 返回分类和个分类所包含的文章书,按count数目由大到小排序
+ * [
+ *   {_id: '前端',count: 2},
+ *   { _id: string, count: num}
+ * ]
+ */
 exports.getArticleCatalogs = () => {
   return Article.aggregate(
                   {
@@ -157,4 +163,46 @@ exports.getArticleCatalogs = () => {
                     }
                   }
                 )
+                .sort({count: -1})
+                .exec();
+}
+
+/**
+ * 修改文章是否开放评论
+ * @param  {objectId} articleId 文章Id
+ * @param  {Boolean} state     [true为发放评论]
+ * @return null
+ */
+exports.toggleComments = (articleId, state) => {
+  return Article.update({ _id: articleId }, { isComment: state }, function(error) {
+    console.log(error);
+  })
+}
+
+/**
+ * 修改文章是否公开
+ * @param  {objectId} articleId 文章Id
+ * @param  {Boolean} state     [true为文章]
+ * @return null
+ */
+exports.toggleArticlePublic = (articleId, state) => {
+  return Article.update({ _id: articleId }, { isPublic: state }, function(error) {
+    console.log(error);
+  })
+}
+
+/**
+ * 阅读访问量+1
+ */
+exports.incPv = (articleId) => {
+  return Article.update({ _id: articleId }, { $inc: { pv: 1 } })
+                .exec();
+}
+
+/**
+ * 评论量+1
+ */
+exports.incComment = (articleId) => {
+  return Article.update({ _id: articleId }, { $inc: { commentCount: 1 } })
+                .exec();
 }

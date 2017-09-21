@@ -17,14 +17,14 @@ class ArticleTags extends Component {
     return arr[Math.floor(Math.random() * 7)];
   }
   render() {
-    let { tags } = this.props;
+    let { tags, color='#369' } = this.props;
 
     if (!tags) {
       tags = [];
     }
     return (
       <section className="ArticleTags">
-        <h6 className="ArticleTags-tagTitle"><FontAwesome className="ArticleTags-tagTitle-icon" name='tag' /><span>tags</span></h6>
+        <h6 className="ArticleTags-tagTitle" style={{ color: color }}><FontAwesome className="ArticleTags-tagTitle-icon" name='tag' /><span style={{ color: color}}>tags</span></h6>
         <ul>
           {
             tags.map((tag) => {

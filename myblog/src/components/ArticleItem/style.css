@@ -1,0 +1,26 @@
+.ArticleItem-title {
+  color: #FF7E67;
+}
+.ArticleItem {
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 10px;
+  background: #FAFAFA;
+}
+.ArticleItem-title {
+  border-bottom: 1px solid #eee;
+  margin: 5px 0;
+  padding-bottom: 5px;
+}
+.ArticleItem-title:hover {
+  color: rgba(255, 125, 104, 0.6);
+}
+.ArticleItem span {
+  display: inline-block;
+}
+.ArticleItem .ArticleItem-time {
+  margin-right: 5px;
+}
+.ArticleItem .ArticleItem-content {
+  margin: 5px 0;
+}

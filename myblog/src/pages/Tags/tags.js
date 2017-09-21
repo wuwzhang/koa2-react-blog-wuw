@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import TagItem from '../../components/TagItem/index.js';
+import { view as TopMenu } from '../../components/TopMenu/';
 
 import { getAllTags } from './fetch.js';
+import {
+  Grid
+} from 'react-bootstrap';
 
 class Tags extends Component {
   constructor(props) {
@@ -30,23 +34,25 @@ class Tags extends Component {
     let { tags } = this.state;
 
     return(
-      <section>
-        <h2>All Lables</h2>
-        <div>
-          <ul>
-            {
-              tags.map((tag, index) => {
-                return tag? <TagItem
-                              key = { index }
-                              content = { tag.tag }
-                              id = { tag._id }
-                            />
-                          : null
-              })
-            }
-          </ul>
-        </div>
-      </section>
+      <Grid>
+        <TopMenu />
+        <section>
+          <div>
+            <ul>
+              {
+                tags.map((tag, index) => {
+                  return tag? <TagItem
+                                key = { index }
+                                content = { tag.tag }
+                                id = { tag._id }
+                              />
+                            : null
+                })
+              }
+            </ul>
+          </div>
+        </section>
+      </Grid>
     );
   }
 }

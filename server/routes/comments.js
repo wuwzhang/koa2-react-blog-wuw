@@ -1,5 +1,7 @@
+const mongoose = require('mongoose');
 const router = require('koa-router')();
 const Models = require('../lib/core');
+const $Article = Models.$Article;
 const $Comments = Models.$Comments;
 const $User = Models.$User;
 
@@ -14,13 +16,15 @@ router.post('/api/article_details/:articleId/comment', async(ctx, next) => {
     commentModel = {
       userId: ctx.session.user._id || ctx.request.body.userId,
       articleId: articleId,
-      content: content
+      content: content,
+      _id: new mongoose.Types.ObjectId()
     };
   }
 
   try {
-    var result = await $Comments.create(commentModel);
-    var user = await $User.getUserById(commentModel.userId);
+    var result = await Promise.all([$Comments.create(commentModel),
+                                    $Article.incComment(commentModel.articleId),
+                                    $User.getUserById(commentModel.userId)])
   }catch (e) {
     code = '-1';
     message = e.message
@@ -30,8 +34,8 @@ router.post('/api/article_details/:articleId/comment', async(ctx, next) => {
     code: code,
     message: message,
     comment: {
-      user: user,
-      result
+      user: result[2],
+      result: result[0]
     }
   }
 });
@@ -64,5 +68,4 @@ router.post('/api/article_details/:articleId/get/comment', async(ctx, next) => {
     comments: comments
   }
 });
-
 module.exports = router;

@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import { actions as editActions } from '../../pages/ArticleEdit';
 import { fetchs as deleteFetchs, actions as deleteActions } from '../../pages/ArticleList/';
 
 // import {
 //   Redirect
 // } from 'react-router'
 
-import {
-  Alert,
-  Button
-} from 'react-bootstrap';
+import { Popconfirm, message } from 'antd';
 import './style.css';
 
 class ArticleOptionNav extends Component {
@@ -25,8 +21,8 @@ class ArticleOptionNav extends Component {
 
     this._deleteArticle = this._deleteArticle.bind(this);
 
-    this._handleDeleteAlertShow = this._handleDeleteAlertShow.bind(this);
-    this._handleDeleteAlertDismiss = this._handleDeleteAlertDismiss.bind(this);
+    this.cancel = this.cancel.bind(this);
+    this.confirm = this.confirm.bind(this);
 
   }
 
@@ -40,47 +36,36 @@ class ArticleOptionNav extends Component {
     })
   }
 
-  _handleDeleteAlertShow(event) {
-    event.preventDefault();
-    this.setState({
-      alertVisble: true
-    })
-
+  confirm (e) {
+    this._deleteArticle(e);
+    message.success('Click on Yes');
   }
 
-  _handleDeleteAlertDismiss(event) {
-    event.preventDefault();
-    this.setState({
-      alertVisble: false
-    })
+  cancel (e) {
+    message.error('Click on No');
   }
-
   render() {
 
-    if (this.state.alertVisble) {
-      return (
-        <Alert bsStyle="danger" onDismiss={this._handleDeleteAlertDismiss}>
-          <p>Confirm delete this items?</p>
-          <p>
-            <Button
-              bsStyle="danger"
-              onClick={this._deleteArticle}
-            >OK</Button>
-            <Button onClick={this._handleDeleteAlertDismiss}>Cancel</Button>
-          </p>
-        </Alert>
-      );
-    }
+    let { myStyle = {color: '#07689F'} } = this.props;
+
     return (
       <nav className="article-option-nav">
         <ul>
           <li>
-            <Link to={`/article_edit/${ this.props.articleId || this.props.id }`}><span>Edit</span></Link>
+            <Link to={`/article_edit/${ this.props.articleId || this.props.id }`}><span style = { myStyle }>Edit</span></Link>
           </li>
           <li>
-            <span
-              onClick = { this._handleDeleteAlertShow }
-            >Delete</span>
+            <Popconfirm
+              title="Are you sure delete this task?"
+              onConfirm={this.confirm}
+              onCancel={this.cancel}
+              okText="Yes"
+              cancelText="No"
+            >
+                <span
+                  style = { myStyle }
+                >Delete</span>
+            </Popconfirm>
           </li>
         </ul>
       </nav>
@@ -101,10 +86,6 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    // editPost: async () => {
-
-    //   dispatch(editActions.startEditArticle());
-    // },
     deletePost: async (articleId, index) => {
       let result = await deleteFetchs.deleteArticle(articleId);
 

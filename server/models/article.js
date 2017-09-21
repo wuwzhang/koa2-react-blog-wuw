@@ -9,7 +9,11 @@ const ArticleSchema = new Schema({
   tags: [{ type: String }],
   catalog: { type: String },
   created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now }
+  updated_at: { type: Date, default: Date.now },
+  isPublic: { type: Boolean, default: true },
+  isComment: { type: Boolean, default: true },
+  commentCount: { type: Number, default: 0 },
+  pv: { type: Number, default: 0 }
 }, { versionKey: false });
 
 ArticleSchema.index({title: 1})

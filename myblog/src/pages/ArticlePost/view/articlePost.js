@@ -8,6 +8,7 @@ import marked from 'marked';
 
 // import { view as FieldGroup } from '../../../components/FieldGroup';
 import redirect from '../../../components/Redirect';
+import { view as TopMenu } from '../../../components/TopMenu/';
 import './style.css';
 
 import {
@@ -30,10 +31,11 @@ import {
   ControlLabel,
   FormControl,
   HelpBlock,
+  Grid,
   Row,
   Col
 } from 'react-bootstrap';
-import { Alert, Button } from 'antd';
+import { Alert, Button, BackTop } from 'antd';
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -217,139 +219,145 @@ class ArticlePostOrEdit extends Component {
     let { msgType, msg } = this.props.articlePost;
 
     return(
-      <section>
-        <h2>Article Post</h2>
-        <Form horizontal>
-          <Row>
-            <Col md={6} ms={6} xs={12}>
-              <FormGroup
-                validationState={this.state.titleValid}
-              >
-                <ControlLabel>Title</ControlLabel>
-                <FormControl
+      <Grid>
+        <TopMenu />
+        <section>
+          <h2>Article Post</h2>
+          <Form horizontal>
+            <Row>
+              <Col md={6} ms={6} xs={12}>
+                <FormGroup
+                  validationState={this.state.titleValid}
+                >
+                  <ControlLabel>Title</ControlLabel>
+                  <FormControl
+                      type='text'
+                      placeholder='Enter title'
+                      value={title}
+                      onChange={(event)=>this.setState({title:event.target.value})}
+                      onBlur={(event)=>this._checkTitle(event.target.value)}
+                    />
+                  {this.state.titleHelp && <HelpBlock>{ this.state.titleHelp }</HelpBlock>}
+
+                </FormGroup>
+              </Col>
+
+              <Col md={6} ms={6} xsHidden>
+                <Button className="myButton previewButton" onClick={ this.handlePreview }>
+                  { this.state.isPreview ? '<  Hidden Preview' : 'Show Preview  >' }
+                </Button>
+              </Col>
+            </Row>
+            {
+              this.state.isPreview? <Row>
+                                      <Col sm={12} md={6}>
+                                        <FormGroup
+                                          validationState={this.state.contentValid}
+                                        >
+
+                                            <ControlLabel>Content</ControlLabel>
+                                            <FormControl
+                                              componentClass="textarea"
+                                              placeholder='Enter Content'
+                                              value={content}
+                                              onChange={(event)=>this.setState({content:event.target.value})}
+                                              onBlur={(event)=>this._checkContent(event.target.value)}
+                                              style={{ height: 800 }}
+                                            />
+                                            {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
+
+
+
+                                        </FormGroup>
+                                      </Col>
+                                      {
+                                          this.state.content? <Col sm={6} xsHidden md={6}>
+                                                                <ControlLabel>Preview</ControlLabel>
+                                                                <div
+                                                                  className="marked-preview edit-marked-preview"
+
+                                                                  dangerouslySetInnerHTML={{
+                                                                    __html: marked(this.state.content, {sanitize: true})
+                                                                  }}
+                                                                />
+                                                              </Col>
+                                                            : null
+                                        }
+                                    </Row>
+                                  : <Row>
+                                      <Col sm={12} md={12} xs={12}>
+                                        <FormGroup
+                                          validationState={this.state.contentValid}
+                                        >
+
+                                            <ControlLabel>Content</ControlLabel>
+                                            <FormControl
+                                              componentClass="textarea"
+                                              placeholder='Enter Content'
+                                              value={content}
+                                              onChange={(event)=>this.setState({content:event.target.value})}
+                                              onBlur={(event)=>this._checkContent(event.target.value)}
+                                              style={{ height: 800 }}
+                                            />
+                                            {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
+                                        </FormGroup>
+                                      </Col>
+                                    </Row>
+
+            }
+            <Row>
+              <Col sm={6} md={6}>
+                <FormGroup>
+                  <ControlLabel
+                    validationState={this.state.commentValid}
+                  >Input Tags</ControlLabel>
+                  <FormControl
                     type='text'
-                    placeholder='Enter title'
-                    value={title}
-                    onChange={(event)=>this.setState({title:event.target.value})}
-                    onBlur={(event)=>this._checkTitle(event.target.value)}
+                    label='tags'
+                    placeholder='不同标签之间由;间隔'
+                    value={ (tags instanceof Array) ? Array.from(tags).join(';') : tags }
+                    onChange={(event)=>this.setState({tags:event.target.value})}
+                    onBlur={(event)=>this._checkTags(event.target.value)}
                   />
-                {this.state.titleHelp && <HelpBlock>{ this.state.titleHelp }</HelpBlock>}
+                  {this.state.tagsHelp && <HelpBlock>{this.state.tagsHelp}</HelpBlock>}
+                </FormGroup>
+              </Col>
+              <Col sm={6} md={6}>
+                <FormGroup>
+                  <ControlLabel
+                    validationState={this.state.commentValid}
+                  >Input Catalog</ControlLabel>
+                  <FormControl
+                    type='text'
+                    label='catalog'
+                    placeholder='catalog'
+                    value={ catalog }
+                    onChange={(event)=>this.setState({catalog:event.target.value})}
+                    onBlur={(event)=>this._checkTags(event.target.value)}
+                  />
+                  {this.state.catalogHelp && <HelpBlock>{this.state.catalogHelp}</HelpBlock>}
+                </FormGroup>
+              </Col>
 
-              </FormGroup>
-            </Col>
-
-            <Col md={6} ms={6} xsHidden>
-              <Button className="myButton previewButton" onClick={ this.handlePreview }>{ this.state.isPreview ? '<  Hidden Preview' : 'Show Preview  >' }</Button>
-            </Col>
-          </Row>
-          {
-            this.state.isPreview? <Row>
-                                    <Col sm={12} md={6}>
-                                      <FormGroup
-                                        validationState={this.state.contentValid}
-                                      >
-
-                                          <ControlLabel>Content</ControlLabel>
-                                          <FormControl
-                                            componentClass="textarea"
-                                            placeholder='Enter Content'
-                                            value={content}
-                                            onChange={(event)=>this.setState({content:event.target.value})}
-                                            onBlur={(event)=>this._checkContent(event.target.value)}
-                                            style={{ height: 800 }}
-                                          />
-                                          {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
-
-
-
-                                      </FormGroup>
-                                    </Col>
-                                    {
-                                        this.state.content? <Col sm={6} xsHidden md={6}>
-                                                              <ControlLabel>Preview</ControlLabel>
-                                                              <div
-                                                                className="marked-preview edit-marked-preview"
-
-                                                                dangerouslySetInnerHTML={{
-                                                                  __html: marked(this.state.content, {sanitize: true})
-                                                                }}
-                                                              />
-                                                            </Col>
-                                                          : null
-                                      }
-                                  </Row>
-                                : <Row>
-                                    <Col sm={12} md={12} xs={12}>
-                                      <FormGroup
-                                        validationState={this.state.contentValid}
-                                      >
-
-                                          <ControlLabel>Content</ControlLabel>
-                                          <FormControl
-                                            componentClass="textarea"
-                                            placeholder='Enter Content'
-                                            value={content}
-                                            onChange={(event)=>this.setState({content:event.target.value})}
-                                            onBlur={(event)=>this._checkContent(event.target.value)}
-                                            style={{ height: 800 }}
-                                          />
-                                          {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
-                                      </FormGroup>
-                                    </Col>
-                                  </Row>
-
-          }
-          <Row>
-            <Col sm={6} md={6}>
-              <FormGroup>
-                <ControlLabel
-                  validationState={this.state.commentValid}
-                >Input Tags</ControlLabel>
-                <FormControl
-                  type='text'
-                  label='tags'
-                  placeholder='不同标签之间由;间隔'
-                  value={ (tags instanceof Array) ? Array.from(tags).join(';') : tags }
-                  onChange={(event)=>this.setState({tags:event.target.value})}
-                  onBlur={(event)=>this._checkTags(event.target.value)}
-                />
-                {this.state.tagsHelp && <HelpBlock>{this.state.tagsHelp}</HelpBlock>}
-              </FormGroup>
-            </Col>
-            <Col sm={6} md={6}>
-              <FormGroup>
-                <ControlLabel
-                  validationState={this.state.commentValid}
-                >Input Catalog</ControlLabel>
-                <FormControl
-                  type='text'
-                  label='catalog'
-                  placeholder='catalog'
-                  value={ catalog }
-                  onChange={(event)=>this.setState({catalog:event.target.value})}
-                  onBlur={(event)=>this._checkTags(event.target.value)}
-                />
-                {this.state.catalogHelp && <HelpBlock>{this.state.catalogHelp}</HelpBlock>}
-              </FormGroup>
-            </Col>
-
-          </Row>
-          <Row>
-            <Col xs={12} sm={2} md={2}>
-              <Button
-                className="myButton postButton"
-                onClick={()=>this._postArticle()}
-              >POST</Button>
-            </Col>
-          </Row>
-          {
-            msgType === 'warning' ? <Alert className="myAlert" message={ msg } type="warning" showIcon closable/> : null
-          }
-          {
-            msgType === 'success' ? <Alert className="myAlert" message={ msg } type="success" showIcon closable/> : null
-          }
-        </Form>
-      </section>
+            </Row>
+            <Row>
+              <Col xs={12} sm={2} md={2}>
+                <Button
+                  className="myButton postButton"
+                  onClick={()=>this._postArticle()}
+                >POST</Button>
+              </Col>
+            </Row>
+            {
+              msgType === 'warning' ? <Alert className="myAlert" message={ msg } type="warning" showIcon closable/> : null
+            }
+            {
+              msgType === 'success' ? <Alert className="myAlert" message={ msg } type="success" showIcon closable/> : null
+            }
+          </Form>
+          <BackTop />
+        </section>
+      </Grid>
     );
   }
 }

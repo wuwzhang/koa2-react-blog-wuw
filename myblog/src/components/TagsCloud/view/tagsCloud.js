@@ -6,6 +6,7 @@ import { getTags } from '../fetch.js';
 
 import FontAwesome from 'react-fontawesome';
 import './style.css';
+import { Tooltip } from 'antd';
 
 class TagsCloud extends Component {
   constructor(props) {
@@ -28,10 +29,18 @@ class TagsCloud extends Component {
   }
   render() {
     let tags = this.state.tags;
+    let { color='#369' } = this.props;
 
     return (
       <section className="TagsCloud">
-        <h6 className="TagsCloud-TagsTitle"><Link to='/tags_cloud'><FontAwesome className="TagsCloud-icon" name='cloud' /><span>cloud label</span></Link></h6>
+        <h6 className="TagsCloud-TagsTitle">
+          <Tooltip placement='top' title={ <span>click to show more</span> }>
+            <Link to='/tags_cloud' style={{ color: color }}>
+              <FontAwesome className="TagsCloud-icon" name='cloud' />
+              <span>cloud label >> </span>
+            </Link>
+          </Tooltip>
+        </h6>
         <section>
           <ul>
             {

@@ -21,8 +21,7 @@ export default (state, action) => {
     case INIT_ARTICLE: {
       return {
         ...state,
-        articles: action.articles,
-        count: action.count
+        articles: action.articles
       }
     }
     case DELETE_ARTICLE: {

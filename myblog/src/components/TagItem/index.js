@@ -1,18 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Tag } from 'antd';
 
-class TagItem extends Component {
+const TagItem = ({ content, color = 'blue' }) => {
 
-  render() {
-
-    const { content }  = this.props;
-
-    return (
-      <Link to={ `/article_by_tag/${content}` }><Tag style={{ marginBottom: 3 }} color="blue"> { content } </Tag> </Link>
-    );
-  }
+  return (
+    <Link to={ `/article_by_tag/${content}` }>
+      <Tag style={{ marginBottom: 3 }} color={ color }> { content } </Tag>
+    </Link>
+  );
 }
 
 export default TagItem;

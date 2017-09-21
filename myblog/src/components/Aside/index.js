@@ -5,18 +5,21 @@ import { ArticleCatalog } from '../ArticleCatalog/index.js';
 import { view as TagsCloud } from '../TagsCloud/';
 import './style.css';
 
-export const Aside = ({tags, create_time, catalog, update_time }) => {
+export const Aside = ({tags, color, create_time, catalog, update_time }) => {
   return (
     <section className="aside">
       <div>
         <ArticleTime
+          color = { color }
           create_time = { create_time }
           update_time = { update_time }
         />
         <ArticleTags
+          color = { color }
           tags = {tags}
         />
         <ArticleCatalog
+          color = { color }
           catalog = { catalog }
         />
         <TagsCloud />
