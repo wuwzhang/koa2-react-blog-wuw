@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { view as ArticlTagItem } from '../../../components/ArticleItem/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as CatalogAside } from '../../../components/CatalogAside/';
+import { view as SearchBox } from '../../../components/ArticleSearch/';
 
 import { fetchs as TagsFetch } from '../../../components/TagsCloud/';
 import { getArticlesByTag } from '../fetch.js';
@@ -72,7 +73,8 @@ class ArticleByTag extends Component {
 
           <Row>
             <Col  md={2} sm={2} xs={12}>
-              <section  className="TagsCloud" style={{ marginLeft: '16px'}}>
+              <SearchBox />
+              <section  className="TagsCloud">
                 <h6 className="TagsCloud-TagsTitle">
                   <Tooltip placement='top' title={ <span>click to show more</span> }>
                     <Link to='/tags_cloud' style={{ color: '#07689f' }}>
@@ -97,14 +99,14 @@ class ArticleByTag extends Component {
                     })
                   }
                 </ul>
-                <CatalogAside
-                  color='#07689f'
-                />
               </section>
+              <CatalogAside
+                color='#07689f'
+              />
             </Col>
             <Col  md={10} sm={10} xs={12}>
               <p>
-                <span>Search By Catalog > </span>
+                <span>Search By Tag > </span>
                 <span>{ tagContent }</span>
               </p>
               <ul>

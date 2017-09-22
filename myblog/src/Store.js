@@ -11,10 +11,10 @@ import { reducer as registReducer } from './pages/Register/';
 import { reducer as articlePostReducer } from './pages/ArticlePost/';
 import { reducer as articleEditReducer } from './pages/ArticleEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
-import { reducer as articleSearchReducer } from './pages/Home/';
 import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
 import { reducer as commentReducer } from './components/Comment/';
 import { reducer as catalogReducer } from './components/CatalogAside/';
+import { reducer as articleSearchReducer } from './components/ArticleSearch/';
 
 import Perf from 'react-addons-perf';
 

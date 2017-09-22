@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 
-import { searchStart, searchSuccess, searchFail, successSearch, failSearch } from '../action.js';
-import { getArticleBySearch } from '../fetch.js';
+// import { searchStart, searchSuccess, searchFail, successSearch, failSearch } from '../action.js';
+import { fetchs, actions } from '../../../components/ArticleSearch/';
 
 import FontAwesome from 'react-fontawesome';
 import QueueAnim from 'rc-queue-anim';
@@ -21,6 +21,8 @@ class Home extends Component {
       value: '',
       redirectToReferrer: false
     }
+
+    this._handleKeyPress = this._handleKeyPress.bind(this);
   }
 
   async _clickToSearchArtciles() {
@@ -29,7 +31,7 @@ class Home extends Component {
 
     let { value } = this.state;
 
-    let result = await getArticleBySearch(value);
+    let result = await fetchs.getArticleBySearch(value);
 
     if (result.code === '1') {
       this.setState({
@@ -41,6 +43,12 @@ class Home extends Component {
 
       this.props.failSearch(result.message);
       console.log(result);
+    }
+  }
+
+  _handleKeyPress(event) {
+    if(event.key === 'Enter'){
+      this._clickToSearchArtciles();
     }
   }
 
@@ -88,7 +96,8 @@ class Home extends Component {
                   <input
                     type="text"
                     value={ this.state.value }
-                    onChange={ (event) => this.setState({ value: event.target.value }) }
+                    onChange={ (event) => this.setState({ value: event.target.value })}
+                    onKeyPress={this._handleKeyPress}
                   />
                   <Button
                     shape="circle"
@@ -134,15 +143,15 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     startSearch: () => {
-      dispatch(searchStart());
+      dispatch(actions.searchStart());
     },
     successSearch: (articles) => {
-      dispatch(searchSuccess());
-      dispatch(successSearch(articles));
+      dispatch(actions.searchSuccess());
+      dispatch(actions.successSearch(articles));
     },
     failSearch: (error) => {
-      dispatch(searchFail());
-      dispatch(failSearch(error));
+      dispatch(actions.searchFail());
+      dispatch(actions.failSearch(error));
     }
   }
 }

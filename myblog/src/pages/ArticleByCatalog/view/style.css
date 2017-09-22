@@ -1,9 +1,10 @@
 .ArticleByCatalog-list {
   margin-left: 16px;
+  margin-top: 10px;
 }
 .ArticleByCatalog-li {
   color: #999;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #eee;
   /*padding-right: 10px;*/
   font-size: 14px;
 }

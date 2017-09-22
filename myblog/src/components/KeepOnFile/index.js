@@ -52,7 +52,7 @@ class KeepOnFile extends Component {
 
     return (
       <section className="keepOnFile">
-        <h6 className="KeepOnFile-AsideTitle"><FontAwesome className="keepOnFileAside-Icon" name='file-text'  style = {{ color: color}} /><span>Keep On File</span></h6>
+        <h6 className="KeepOnFile-AsideTitle" style = {{ color: color}}><FontAwesome className="keepOnFileAside-Icon" name='file-text' /><span>Keep On File</span></h6>
         <Timeline>
           {
             result.map((item, index) => {

@@ -6,6 +6,7 @@ import KeepOnFile from '../../../components/KeepOnFile/index.js'
 import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TopMenu } from '../../../components/TopMenu/';
+import { view as SearchBox } from '../../../components/ArticleSearch/';
 
 import { Timeline, Radio } from 'antd';
 import FontAwesome from 'react-fontawesome';
@@ -80,6 +81,9 @@ class KeepOnFileList extends Component {
             <Col md={2} sm={2} xsHidden>
               <section className="aside">
                 <div>
+                  <SearchBox
+                    color = '#07689f'
+                  />
                   <KeepOnFile
                     color = '#07689f'
                     badgeColor = '#FF7E67'

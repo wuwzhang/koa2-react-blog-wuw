@@ -6,6 +6,7 @@ import { view as ArticlSearchItem } from '../../../components/ArticleItem/';
 import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as TopMenu } from '../../../components/TopMenu/';
+import { view as SearchBox } from '../../../components/ArticleSearch/';
 
 import {
   Grid,
@@ -26,7 +27,7 @@ class ArticleBySearch extends Component {
 
           <Row>
             <Col md={2} sm={2} xs={12}>
-
+              <SearchBox />
               <TagsCloud
                 color = '#07689f'
               />

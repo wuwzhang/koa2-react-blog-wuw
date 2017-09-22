@@ -6,6 +6,7 @@ import { getArticlesByCatalog } from '../fetch.js'
 import { view as ArticlCatalogItem } from '../../../components/ArticleItem/';
 import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as TopMenu } from '../../../components/TopMenu/';
+import { view as SearchBox } from '../../../components/ArticleSearch/';
 
 import FontAwesome from 'react-fontawesome';
 
@@ -67,6 +68,7 @@ class ArticleByCatalog extends Component {
 
           <Row>
             <Col md={2} sm={2} xs={12}>
+              <SearchBox />
               <section className='ArticleByCatalog-list'>
                 <h6 className="CatalogAsided-CatalogTitle" style={{ color: '#07689f'}}>
                   <FontAwesome className="CatalogAside-icon" name='th' />

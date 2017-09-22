@@ -1,0 +1,5 @@
+import * as actions from './action.js';
+import view from './view/articleSearch.js';
+import reducer from './reducer.js';
+import * as fetchs from './fetch.js';
+export { view, fetchs, actions, reducer };
