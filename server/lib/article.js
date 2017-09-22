@@ -46,19 +46,6 @@ exports.getArticleCount = () => {
 }
 
 /**
- * 获取当前页的文章
- * @param  {number} page  第几页
- * @param  {number} range 每页显示的文章数
- */
-exports.getPageArticle = (page, range) => {
-  return Article.find({})
-                .sort({created_at: -1})
-                .skip(range * (page - 1))
-                .limit(range)
-                .exec();
-}
-
-/**
  * 修改文章
  * @param  {number} articleId 文章id
  * @param  {object} data      修改的内容
@@ -125,25 +112,64 @@ exports.getArticleListByDate = () => {
                   },
                   { $group: {
                     _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
-                    articles: { $push: {id: "$_id", title: '$title', content: '$content', catalog: '$catalog', created_at: "$created_at"} }
+                    articles: {
+                      $push: {
+                        id: "$_id",
+                        title: '$title',
+                        content: '$content',
+                        catalog: '$catalog',
+                        created_at: "$created_at"
+                      }
+                    }
                   }}
                 )
                 .sort({_id: -1});
 }
 
 /**
+ * 获取当前页的文章
+ * @param  {number} page  第几页
+ * @param  {number} range 每页显示的文章数
+ */
+exports.getPageArticle = (page, range) => {
+  return Article.find({})
+                .sort({created_at: -1})
+                .skip(range * (page - 1))
+                .limit(range)
+                .exec();
+}
+
+exports.getArticlesTagsCount = (tag) => {
+  return Article.find({ tags: { "$in": [tag] }})
+                .count()
+                .exec();
+}
+
+exports.getArticlesCatalogCount = (catalog) => {
+  return Article.find({ catalog: catalog })
+                .count()
+                .exec();
+}
+
+/**
  * 通过标签名查找文章
  */
-exports.getArticlesByTag = (tag) => {
+exports.getArticlesByTag = (tag, page, range) => {
   return Article.find({ tags: { "$in": [tag] }})
+                .sort({created_at: -1})
+                .skip(range * (page - 1))
+                .limit(range)
                 .exec();
 }
 
 /**
  * 通过分类名查询文章
  */
-exports.getArticlesByCatalog = (catalog) => {
+exports.getArticlesByCatalog = (catalog, page, range) => {
   return Article.find({ catalog: catalog })
+                .sort({created_at: -1})
+                .skip(range * (page - 1))
+                .limit(range)
                 .exec();
 }
 

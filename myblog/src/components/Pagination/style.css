@@ -7,19 +7,19 @@
   padding: 6px 18px;
   margin-left: -2px;
   line-height: 1.42857143;
-  color: #428bca;
+  color: #07689f;
   text-decoration: none;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: #FAFAFA;
+  border: 1px solid #A2D5F2;
 }
 .pagination .active span {
-  color: #fff;
-  background-color: #0275d8;
-  border-color: #0275d8;
+  color: #FAFAFA;
+  background-color: #FF7E67;
+  border-color: #FF7E67;
 }
 .pagination .disabled span {
   color: #777;
   cursor: not-allowed;
-  background-color: #fff;
-  border-color: #ddd;
+  background-color: #FAFAFA;
+  border-color: #A2D5F2;
 }

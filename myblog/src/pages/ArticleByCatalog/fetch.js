@@ -1,8 +1,9 @@
 export const DOMAIN = '';
 const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
 
-export const getArticlesByCatalog = async(content) => {
+export const getArticlesByCatalog = async(content, page, eachPageArticles) => {
   let url = DOMAIN + '/api/getArticlesByCatalog';
+
   try {
     var result = await fetch(url, {
       method: 'POST',
@@ -11,7 +12,9 @@ export const getArticlesByCatalog = async(content) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        catalog: content
+        catalog: content,
+        page,
+        eachPageArticles
       }),
       credentials: CREDENTIALS
     })

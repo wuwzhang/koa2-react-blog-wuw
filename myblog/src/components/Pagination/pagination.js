@@ -60,11 +60,7 @@ class Pagination extends Component {
   }
 
   handleChange(value) {
-    console.log('click');
-    console.log(this.props)
     if (this.props.onChange) {
-      console.log('handleChange')
-      console.log(value)
       this.props.onChange(value);
     }
   }
@@ -77,13 +73,13 @@ class Pagination extends Component {
     items.push(
       <li
         key="previous"
-        className={ currentPage <= 1 ? "disabled" : '' }
+        className={ currentPage <= 1 ? 'disabled' : '' }
         onClick={ currentPage <= 1 ? null : () => this.handleChange(currentPage - 1) }
       >
         <span>&lt;</span>
       </li>
     );
-    pages.forEach((value, index) => {
+    pages.forEach((value) => {
       if (value === '<..' || value === '..>') {
         items.push(<li key={ value }><span>...</span></li>);
       } else {
@@ -101,7 +97,7 @@ class Pagination extends Component {
     items.push(
       <li
         key="next"
-        className={ currentPage >= totalPages ? "disabled" : '' }
+        className={ currentPage >= totalPages ? 'disabled' : '' }
         onClick={ currentPage >= totalPages ? null : () => this.handleChange(currentPage + 1) }
       >
         <span>&gt;</span>

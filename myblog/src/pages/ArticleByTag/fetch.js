@@ -1,7 +1,7 @@
 export const DOMAIN = '';
 const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
 
-export const getArticlesByTag = async(content) => {
+export const getArticlesByTag = async(content, page, eachPageArticles) => {
   let url = DOMAIN + '/api/getArticlesByTag';
 
   try {
@@ -12,7 +12,9 @@ export const getArticlesByTag = async(content) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        tag: content
+        tag: content,
+        page,
+        eachPageArticles
       }),
       credentials: CREDENTIALS
     })

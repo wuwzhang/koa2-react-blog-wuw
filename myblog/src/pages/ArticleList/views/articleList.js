@@ -22,7 +22,6 @@ class ArticleList extends Component {
     this.handlePage = this.handlePage.bind(this);
     this.state = {
       currentPage: 1,
-      // articles: this.props.articles || [],
       pageArticleCount: 1
     }
   }

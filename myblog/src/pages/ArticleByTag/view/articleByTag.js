@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { view as TagsCloud } from '../../../components/TagsCloud/';
 
 import { view as ArticlTagItem } from '../../../components/ArticleItem/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
+import Pagination from '../../../components/Pagination/pagination';
 
 import { fetchs as TagsFetch } from '../../../components/TagsCloud/';
 import { getArticlesByTag } from '../fetch.js';
@@ -16,46 +17,62 @@ import {
   Col,
   Row
 } from 'react-bootstrap';
-import { Tag, Tooltip } from 'antd';
-import FontAwesome from 'react-fontawesome';
 
 class ArticleByTag extends Component {
 
   constructor(props) {
     super(props);
 
+    this.handlePage = this.handlePage.bind(this);
+
     this.state = {
       articles: [],
-      tags: [],
-      tagContent: this.props.tagContent
+      tagContent: this.props.tagContent,
+      currentPage: 1,
+      pageArticleCount: 1
     }
   }
 
   async componentDidMount() {
-
-    let result = await Promise.all([getArticlesByTag(this.props.tagContent),
+    let result = await Promise.all([getArticlesByTag(this.props.tagContent, 1, 4),
                                     TagsFetch.getTags()]);
 
     if (result[0].code === '1' || result[1].code === '1') {
       this.setState({
         articles: result[0].articles,
-        tags: result[1].tags
+        tags: result[1].tags,
+        pageArticleCount: result[0].count
       })
     } else {
       console.log(result);
     }
   }
 
-  async _handleTags(content) {
-
-    let result = await getArticlesByTag(content);
-
-    console.log(result)
+  async handlePage(curPage) {
+    this.setState({
+      currentPage: curPage
+    })
+    let result = await getArticlesByTag(this.props.tagContent, curPage, 4);
 
     if (result.code === '1') {
       this.setState({
         articles: result.articles,
-        tagContent: content
+        pageArticleCount: result.count
+      })
+    } else {
+      console.log(result)
+    }
+  }
+
+  async _handleTags(content) {
+
+    let result = await getArticlesByTag(content, 1, 4);
+
+    if (result.code === '1') {
+      this.setState({
+        articles: result.articles,
+        tagContent: content,
+        pageArticleCount: result.count
       })
     } else {
       console.log(result);
@@ -64,8 +81,13 @@ class ArticleByTag extends Component {
 
   render() {
 
-    let { articles, tags = [], tagContent = this.props.tagContent } = this.state;
+    let { articles, tagContent = this.props.tagContent, currentPage, pageArticleCount } = this.state;
+    let { route } = this.props;
+    if (tagContent !== this.props.tagContent) {
+      this._handleTags(this.props.tagContent);
+    }
 
+    let totalPages = Math.ceil(pageArticleCount / 4);
     return (
       <Grid>
         <TopMenu />
@@ -74,32 +96,9 @@ class ArticleByTag extends Component {
           <Row>
             <Col  md={2} sm={2} xs={12}>
               <SearchBox />
-              <section  className="TagsCloud">
-                <h6 className="TagsCloud-TagsTitle">
-                  <Tooltip placement='top' title={ <span>click to show more</span> }>
-                    <Link to='/tags_cloud' style={{ color: '#07689f' }}>
-                      <FontAwesome className="TagsCloud-icon" name='cloud' />
-                      <span>cloud label >> </span>
-                    </Link>
-                  </Tooltip>
-                </h6>
-                <ul>
-                  {
-                    tags.map((tag, index) => {
-                      return (
-
-                        tag ? <Tag
-                                key={ index }
-                                style={{ marginBottom: 3 }}
-                                color='blue'
-                                onClick={ this._handleTags.bind(this, tag.tag) }
-                              > { tag.tag } </Tag>
-                            : null
-                      );
-                    })
-                  }
-                </ul>
-              </section>
+              <TagsCloud
+                color = '#07689f'
+              />
               <CatalogAside
                 color='#07689f'
               />
@@ -115,11 +114,18 @@ class ArticleByTag extends Component {
                     return article? <ArticlTagItem
                                       key = { index }
                                       article = { article }
+                                      route = { route }
                                     />
                                   : null
                   })
                 }
               </ul>
+              <Pagination
+                totalPages={ totalPages }
+                currentPage={ currentPage }
+                range={ 5 }
+                onChange={ this.handlePage }
+              />
             </Col>
           </Row>
 
@@ -131,10 +137,11 @@ class ArticleByTag extends Component {
 
 const mapStateToProps = (state) => {
   let pathname = state.routing.location.pathname,
-      tagContent = pathname.split('/')[2];
-
+      tagContent = pathname.split('/')[2],
+      route = pathname.split('/')[1];
   return {
-    tagContent: tagContent
+    tagContent: tagContent,
+    route: route
   }
 }
 

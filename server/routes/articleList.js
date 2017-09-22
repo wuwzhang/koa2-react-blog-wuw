@@ -59,7 +59,7 @@ router.post('/api/article_date_list', async(ctx, next) => {
 
 router.post('/api/article_list/init', async(ctx, next) => {
   let code = '1', message = 'ok';
-  const { page, eachPageArticles } = ctx.request.body;
+  const { page = 1, eachPageArticles = 5 } = ctx.request.body;
 
   try {
     var result = await Promise.all([$Article.getArticleCount(),
@@ -84,31 +84,35 @@ router.post('/api/article_list/init', async(ctx, next) => {
 router.post('/api/getArticlesByTag', async(ctx, next) => {
   let code = '1', message = 'ok';
 
-  const { tag } = ctx.request.body;
+  const { tag, page = 1, eachPageArticles = 5 } = ctx.request.body;
 
   try {
-    var result = await $Article.getArticlesByTag(tag);
+    var result = await Promise.all([$Article.getArticlesTagsCount(tag),
+                                    $Article.getArticlesByTag(tag, page, eachPageArticles)]);
   } catch(e) {
     code = '-1',
     message = e.message
   }
 
+
   ctx.response.body = {
     'code': code,
     'message': message,
-    'articles': result
+    'count': result[0],
+    'articles': result[1]
   }
 })
 /**
- *   通过标签查找文章
+ *   通过分类查找文章
  */
 router.post('/api/getArticlesByCatalog', async(ctx, next) => {
   let code = '1', message = 'ok';
 
-  const { catalog } = ctx.request.body;
+  const { catalog, page = 1, eachPageArticles = 5 } = ctx.request.body;
 
   try {
-    var result = await $Article.getArticlesByCatalog(catalog);
+    var result = await Promise.all([$Article.getArticlesCatalogCount(catalog),
+                                    $Article.getArticlesByCatalog(catalog, page, eachPageArticles)]);
   } catch(e) {
     code = '-1',
     message = e.message
@@ -117,7 +121,8 @@ router.post('/api/getArticlesByCatalog', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'articles': result
+    'count': result[0],
+    'articles': result[1]
   }
 })
 

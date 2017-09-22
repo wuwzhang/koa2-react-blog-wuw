@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { getArticlesByCatalog } from '../fetch.js'
 import { view as ArticlCatalogItem } from '../../../components/ArticleItem/';
+import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
+import Pagination from '../../../components/Pagination/pagination';
 
-import FontAwesome from 'react-fontawesome';
+import { getArticlesByCatalog } from '../fetch.js'
 
 import {
   Grid,
@@ -22,35 +23,58 @@ class ArticleByCatalog extends Component {
   constructor(props) {
     super(props);
 
+    this.handlePage = this.handlePage.bind(this);
+
     this.state = {
-      articles: []
+      articles: [],
+      catalogCotent: this.props.catalogCotent,
+      currentPage: 1,
+      pageArticleCount: 1
     }
   }
 
   async componentDidMount() {
 
-    let result = await getArticlesByCatalog(this.props.catalogCotent);
+    let result = await getArticlesByCatalog(this.props.catalogCotent, 1, 4);
 
     if (result.code === '1') {
-      let articles = result.articles;
 
       this.setState({
-        articles: articles
+        articles: result.articles,
+        pageArticleCount: result.count
       })
     } else {
       console.log(result);
     }
   }
 
+  async handlePage(curPage) {
+    this.setState({
+      currentPage: curPage
+    })
+    let result = await getArticlesByCatalog(this.props.catalogCotent, curPage, 4);
+
+    if (result.code === '1') {
+      this.setState({
+        articles: result.articles,
+        pageArticleCount: result.count
+      })
+    } else {
+      console.log(result)
+    }
+  }
+
   async _handleCatalog(content) {
 
-    let result = await getArticlesByCatalog(content);
+    let result = await getArticlesByCatalog(content, 1, 4);
 
     if (result.code === '1') {
       let articles = result.articles;
 
       this.setState({
-        articles: articles
+        articles: articles,
+        catalogCotent: content,
+        pageArticleCount: result.count
       })
     } else {
       console.log(result);
@@ -59,8 +83,13 @@ class ArticleByCatalog extends Component {
 
   render() {
 
-    let { articles } = this.state;
-    let { catalogs } = this.props;
+    let { articles, catalogCotent = this.props.tagContent, currentPage, pageArticleCount } = this.state;
+
+    if (catalogCotent !== this.props.catalogCotent) {
+      this._handleCatalog(this.props.catalogCotent);
+    }
+
+    let totalPages = Math.ceil(pageArticleCount / 4);
     return (
       <Grid>
         <TopMenu />
@@ -69,7 +98,10 @@ class ArticleByCatalog extends Component {
           <Row>
             <Col md={2} sm={2} xs={12}>
               <SearchBox />
-              <section className='ArticleByCatalog-list'>
+              <CatalogAside
+                color = '#07689f'
+              />
+              {/*<section className='ArticleByCatalog-list'>
                 <h6 className="CatalogAsided-CatalogTitle" style={{ color: '#07689f'}}>
                   <FontAwesome className="CatalogAside-icon" name='th' />
                   <span>Catalog List</span>
@@ -85,7 +117,7 @@ class ArticleByCatalog extends Component {
                     })
                   }
                 </ul>
-              </section>
+              </section>*/}
               <TagsCloud
                 color = '#07689f'
               />
@@ -106,6 +138,12 @@ class ArticleByCatalog extends Component {
                   })
                 }
               </ul>
+              <Pagination
+                totalPages={ totalPages }
+                currentPage={ currentPage }
+                range={ 5 }
+                onChange={ this.handlePage }
+              />
             </Col>
           </Row>
         </section>
