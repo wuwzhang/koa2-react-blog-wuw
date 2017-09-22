@@ -61,7 +61,7 @@ class ArticleByCatalog extends Component {
     let { articles } = this.state;
     let { catalogs } = this.props;
     return (
-      <Grid style={{ backgeound: '#FAFAFA' }}>
+      <Grid>
         <TopMenu />
         <section>
 

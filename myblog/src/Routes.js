@@ -4,7 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux'
 import createHistory from 'history/createBrowserHistory';
 
-import Home from './pages/Home/index.js';
+import { view as Home } from './pages/Home/';
 import About from './pages/About/index.js';
 import Article from './pages/Article.js';
 import NotFound from './pages/NotFound.js';
@@ -19,6 +19,7 @@ import { view as ArticleDetails } from './pages/ArticleDetails/';
 import { view as KeepOnFileList } from './pages/keepOnFileList/';
 import { view as ArticleByTag } from './pages/ArticleByTag/'
 import { view as ArticleByCatalog } from './pages/ArticleByCatalog/'
+import { view as ArticleBySearch } from './pages/ArticleBySearch/'
 
 const history = createHistory();
 const Routes = () => (
@@ -40,6 +41,7 @@ const Routes = () => (
       <Route path="/Keep_On_File" component={ KeepOnFileList }></Route>
       <Route path="/article_by_tag" component={ ArticleByTag }></Route>
       <Route path="/article_by_catalog" component={ ArticleByCatalog }></Route>
+      <Route path="/article_by_search" component={ ArticleBySearch }></Route>
       <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
       <Route component={ NotFound }></Route>
     </Switch>

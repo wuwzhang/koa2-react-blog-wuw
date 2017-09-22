@@ -24,7 +24,8 @@ const redirect = (WrappedComponent) => (props) => {
         redirectState,
         path
       } = this.state;
-
+      console.log(redirectState)
+      console.log(path);
       return(
         (redirectState && path) ? <Redirect
                                     to = {{pathname: path, state: redirectState}}

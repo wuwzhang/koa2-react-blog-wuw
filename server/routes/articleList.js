@@ -122,6 +122,30 @@ router.post('/api/getArticlesByCatalog', async(ctx, next) => {
 })
 
 /**
+ *   通过关键词查找文章
+ */
+router.post('/api/getArticleBySearch', async(ctx, next) => {
+  let code = '1', message = 'ok';
+
+  const { value } = ctx.request.body;
+
+  console.log(value)
+
+  try {
+    var result = await $Article.getArticleBySearch(value);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'articles': result
+  }
+})
+
+/**
  * 文章是否开放评论
  */
 router.post('/api/article_toggle_Comments', async(ctx, next) => {
@@ -129,9 +153,6 @@ router.post('/api/article_toggle_Comments', async(ctx, next) => {
   let { articleId, state } = ctx.request.body;
 
   let code ='1', message = '修改成功';
-
-  console.log(articleId)
-  console.log(state)
 
   try {
     var result = await $Article.toggleComments(articleId, state);
@@ -153,9 +174,6 @@ router.post('/api/article_toggle_Comments', async(ctx, next) => {
 router.post('/api/article_toggle_ArticlePublic', async(ctx, next) => {
 
   let { articleId, state } = ctx.request.body;
-
-  console.log(articleId)
-  console.log(state)
 
   let code ='1', message = '修改成功';
 

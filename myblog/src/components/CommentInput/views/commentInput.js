@@ -71,7 +71,7 @@ class CommentInput extends Component {
 
   _login() {
     let pathname ='/login',
-    redirectState = { from: this.props.location };
+        redirectState = { from: this.props.location };
     redirect(pathname, redirectState)
   }
   render() {

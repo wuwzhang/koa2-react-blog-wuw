@@ -1,0 +1,127 @@
+#Home {
+  width: 100%;
+  background: rgba(53, 125, 215, 0.9);
+  height: 100vh;
+}
+.Home-header {
+  width: 100%;
+  height: 30%;
+  background: #FAFAFA;
+}
+.Home-avatar img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: absolute;
+  top: 10vh;
+  left: calc(50% - 30px);
+}
+.Home-title h1 {
+  width: 180px;
+  position: absolute;
+  top: calc(10vh + 80px);
+  left: calc(50% - 80px);
+}
+.Home-title h1 span {
+  display: inline-block;
+  font-size: 30px;
+  color: #369;
+  font-style: italic;
+  font-weight: bolder;
+  text-shadow: 1px 1px #999;
+}
+.Home-title h1 span:first-child {
+  margin-right: 10px;
+}
+.Home-container {
+  width: 100%;
+  height: 70%;
+}
+.Home-signtuare {
+  height: 60%;
+  padding: 5%;
+}
+.Home-signtuare-small, .Home-signtuare-large {
+  color: #fff;
+  text-align: center;
+  margin: 5% 0 0;
+}
+.Home-signtuare-small {
+  font-size: 1.5em;
+  font-weight: 100;
+  font-style: italic;
+}
+.Home-signtuare-small span {
+  font-weight: 300;
+  width: 100%;
+}
+.Home-signtuare-large {
+  font-weight: 300;
+  font-family: 'Open Sans', sans-serif;
+  max-width: 895px;
+  font-size: 3em
+}
+.Home-search {
+  height: 30%;
+}
+.Home-search input {
+  width: 90%;
+  height: 45px;
+  border: 0;
+  border-radius: 15px;
+  text-indent: 10px;
+  line-height: 46px;
+  outline: none;
+  font: 16px;
+  margin: 0 5%;
+  color: #999;
+}
+.Home-search button {
+  position: absolute;
+  top: calc(30% - 2px);
+  left: calc(95% - 35px);
+  cursor: pointer;
+  border: 0;
+}
+.Home-foot {
+  width: 100%;
+  height: 10%;
+  margin-top: 5%;
+}
+.Home-foot ul li{
+  display: inline-block;
+
+}
+.Home-foot li a, .Home-foot p {
+  color: #fff;
+  font-size: 14px;
+  line-height: 30px;
+  font-weight: 100;
+  text-align: center;
+}
+.Home-foot li a:hover {
+  color: #eee;
+}
+.Home-fontLink {
+  margin: 0 auto;
+  width: 150px;
+}
+.Home-fontLink li {
+  text-align: center;
+  margin: 0 10px;
+}
+.Home-fontLink li a {
+  font-size: 26px;
+}
+
+.Home-search span:hover {
+  color: orange;
+}
+.Home-nav {
+  width: 150px;
+  text-indent: center;
+  margin: 0 auto;
+}
+.Home-nav li {
+  margin: 0 10px;
+}

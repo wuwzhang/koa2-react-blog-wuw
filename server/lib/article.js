@@ -147,6 +147,21 @@ exports.getArticlesByCatalog = (catalog) => {
                 .exec();
 }
 
+exports.getArticleBySearch = (keyword) => {
+  const regex = { $regex: new RegExp(keyword, 'i')};
+
+  return Article.find({
+                    $or: [
+                      { title: regex },
+                      { catalog: regex },
+                      { tags: { $in: [new RegExp(keyword, 'i')] }}
+                    ]
+                  }).sort({updated_at: -1})
+                    .limit(20)
+                    .exec();
+
+}
+
 /**
  * 返回分类和个分类所包含的文章书,按count数目由大到小排序
  * [

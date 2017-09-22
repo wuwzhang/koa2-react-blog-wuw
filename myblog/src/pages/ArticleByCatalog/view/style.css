@@ -2,8 +2,8 @@
   margin-left: 16px;
 }
 .ArticleByCatalog-li {
-  color: #ccc;
-  border-bottom: 1px solid #999;
+  color: #999;
+  border-bottom: 1px solid #ccc;
   /*padding-right: 10px;*/
   font-size: 14px;
 }
