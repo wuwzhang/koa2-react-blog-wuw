@@ -19,6 +19,9 @@ router.post('/api/article_list', async(ctx, next) => {
   }
 });
 
+/**
+ * 通过文章id删除文章
+ */
 router.post('/api/article_delete/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { articleId } = ctx.params;
@@ -132,12 +135,11 @@ router.post('/api/getArticlesByCatalog', async(ctx, next) => {
 router.post('/api/getArticleBySearch', async(ctx, next) => {
   let code = '1', message = 'ok';
 
-  const { value } = ctx.request.body;
-
-  console.log(value)
+  const { value, page = 1, eachPageArticle = 5 } = ctx.request.body;
 
   try {
-    var result = await $Article.getArticleBySearch(value);
+    var result = await Promise.all([$Article.getArticlesSearchCount(value),
+                                    $Article.getArticleBySearch(value, page, eachPageArticle)]);
   } catch(e) {
     code = '-1',
     message = e.message
@@ -146,7 +148,8 @@ router.post('/api/getArticleBySearch', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'articles': result
+    'count': result[0],
+    'articles': result[1]
   }
 })
 

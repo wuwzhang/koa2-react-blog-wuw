@@ -151,10 +151,24 @@ exports.getArticlesCatalogCount = (catalog) => {
                 .exec();
 }
 
+exports.getArticlesSearchCount = (keyword) => {
+  const regex = { $regex: new RegExp(keyword, 'i')};
+  return Article.find({
+                    $or: [
+                      { title: regex },
+                      { catalog: regex },
+                      { tags: { $in: [new RegExp(keyword, 'i')] }}
+                    ]
+                  })
+                .count()
+                .exec();
+}
+
 /**
  * 通过标签名查找文章
  */
 exports.getArticlesByTag = (tag, page, range) => {
+
   return Article.find({ tags: { "$in": [tag] }})
                 .sort({created_at: -1})
                 .skip(range * (page - 1))
@@ -173,7 +187,7 @@ exports.getArticlesByCatalog = (catalog, page, range) => {
                 .exec();
 }
 
-exports.getArticleBySearch = (keyword) => {
+exports.getArticleBySearch = (keyword, page, range) => {
   const regex = { $regex: new RegExp(keyword, 'i')};
 
   return Article.find({
@@ -183,7 +197,8 @@ exports.getArticleBySearch = (keyword) => {
                       { tags: { $in: [new RegExp(keyword, 'i')] }}
                     ]
                   }).sort({updated_at: -1})
-                    .limit(20)
+                    .skip(range * (page - 1))
+                    .limit(range)
                     .exec();
 
 }
@@ -246,4 +261,27 @@ exports.incPv = (articleId) => {
 exports.incComment = (articleId) => {
   return Article.update({ _id: articleId }, { $inc: { commentCount: 1 } })
                 .exec();
+}
+
+exports.redComment = (articleId) => {
+  return Article.update({ _id: articleId }, { $inc: { commentCount: -1 } })
+                .exec();
+}
+
+/**
+ * 获取当前文章的上一篇文章
+ * @param  {[ObjectId]} articleId [当前文章的Id]
+ * @return {[object]}           [文章信息]
+ */
+exports.getPreArticleById = (articleId) => {
+  return Article.findOne({_id: {$lt: articleId}}).sort({_id: -1 }).exec()
+}
+
+/**
+ * 获取当前文章的下一篇文章
+ * @param  {[ObjectId]} articleId [当前文章的Id]
+ * @return {[object]}           [文章信息]
+ */
+exports.getNextArticleById = (articleId) => {
+  return Article.findOne({_id: {$gt: articleId}}).sort({_id: 1 }).exec()
 }

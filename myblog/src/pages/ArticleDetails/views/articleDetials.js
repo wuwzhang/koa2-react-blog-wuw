@@ -12,26 +12,76 @@ import { Aside } from '../../../components/Aside/index.js';
 import { view as TopMenu } from '../../../components/TopMenu/';
 
 import { actions as deleteActions } from '../../ArticleList/';
+
 import {
   Grid,
   Col,
   Row
 } from 'react-bootstrap';
+import FontAwesome from 'react-fontawesome';
 
 import './style.css';
 
 const marked = require('marked');
 
 class ArticleDetails extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
 
-  componentDidMount() {
-    (async function () {
-      let articleId = this.props.match.params.articleId;
-      await this.props.getDetails(articleId);
-    }.bind(this))()
+    this.state = {
+      preArticle: {},
+      nextArticle: {}
+    }
+
+    import('highlight').then(({hljs}) => {
+      marked.setOptions({
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: true,
+        smartLists: true,
+        smartypants: true,
+        highlight: (code) => hljs.highlightAuto(code).value,
+        math: true
+      });
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  async componentDidMount() {
+    let articleId = this.props.match.params.articleId;
+    let result = await detailArticle(articleId);
+
+    if (result.code === '1') {
+
+      this.props.getDetails(result.article);
+
+      this.setState({
+        preArticle: result.preArticle,
+        nextArticle: result.nextArticle
+      })
+    } else {
+      console.log(result)
+    }
+
+  }
+
+  async _getNewArticle(articleId) {
+    let result = await detailArticle(articleId);
+
+    if (result.code === '1') {
+      this.props.getDetails(result.article);
+
+      this.setState({
+        preArticle: result.preArticle,
+        nextArticle: result.nextArticle
+      })
+    } else {
+      console.log(result)
+    }
   }
 
   render() {
@@ -46,60 +96,86 @@ class ArticleDetails extends Component {
       );
     }
     let { article } = this.props;
+    let { preArticle, nextArticle } = this.state;
 
     if (article) {
       return(
-        <Grid>
-          <TopMenu />
-          <section>
-
-            <Row>
-              <section className='ArticleDetials-titleContainer'>
-                <Col md={6} sm={6} xs={6}>
-                  <h3 className='ArticleDetails-articleTitle'>{ article.title }</h3>
+        <section>
+          <section className='All-Nav'>
+            <TopMenu />
+          </section>
+          <Grid>
+            <section>
+              <Row>
+                <section className='ArticleDetials-titleContainer'>
+                  <Col md={6} sm={6} xs={6}>
+                    <h3 className='ArticleDetails-articleTitle'>{ article.title }</h3>
+                  </Col>
+                  <Col md={6} sm={6}  xs={6}>
+                    <ArticleOptionNav
+                      myStyle = { { color: '#FF7E67', fontSize: '16px', marginRight: '15px' } }
+                    />
+                  </Col>
+                </section>
+              </Row>
+              <Row>
+                <Col md={10} sm={10} xs={12}>
+                  {
+                    article.content ? <div
+                                        className="article-content marked-preview"
+                                        dangerouslySetInnerHTML={{
+                                          __html: marked(article.content)
+                                        }}
+                                      />
+                                    : null
+                  }
                 </Col>
-                <Col md={6} sm={6}  xs={6}>
-                  <ArticleOptionNav
-                    myStyle = { { color: '#FF7E67', fontSize: '16px' } }
+                <Col md={2} sm={2} xsHidden>
+                  <Aside
+                    color='#07689f'
+                    tags = {article.tags}
+                    catalog = { article.catalog }
+                    create_time = { article.created_at ? article.created_at.slice(0, 10) : '' }
+                    update_time = { article.updated_at ? article.updated_at.slice(0, 10) : '' }
                   />
                 </Col>
-              </section>
-            </Row>
+              </Row>
+              <Row>
 
+                <section className="pre-next">
+                  <ul>
+                    {
+                      preArticle? <li onClick={()=>this._getNewArticle(preArticle._id)}>
+                                    <FontAwesome name='angle-left'/>
+                                    <span>&nbsp;&nbsp;{preArticle.title}</span>
+                                  </li>
+                                : null
 
-            <Row>
-              <Col md={10} sm={10} xs={12}>
-                {
-                  article.content ? <div
-                                      className="article-content marked-preview"
-                                      dangerouslySetInnerHTML={{
-                                        __html: marked(article.content, {sanitize: true})
-                                      }}
-                                    />
+                    }
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    {
+                      nextArticle ? <li onClick={()=>this._getNewArticle(nextArticle._id)}>
+                                      <span>{nextArticle.title}&nbsp;&nbsp;</span>
+                                      <FontAwesome name='angle-right'/>
+                                    </li>
                                   : null
+                    }
+                  </ul>
+                </section>
+
+              </Row>
+              <Row>
+                {
+                  article.isComment ? <Col md={10} ms={10} xs={10}>
+                                        <Comment />
+                                      </Col>
+                                    : <p>此篇文章暂不开放评论</p>
                 }
-              </Col>
-              <Col md={2} sm={2} xsHidden>
-                <Aside
-                  color='#07689f'
-                  tags = {article.tags}
-                  catalog = { article.catalog }
-                  create_time = { article.created_at ? article.created_at.slice(0, 10) : '' }
-                  update_time = { article.updated_at ? article.updated_at.slice(0, 10) : '' }
-                />
-              </Col>
-            </Row>
-            <Row>
-              {
-                article.isComment ? <Col md={10} ms={10} xs={10}>
-                                      <Comment />
-                                    </Col>
-                                  : <p>此篇文章暂不开放评论</p>
-              }
-            </Row>
-          <BackTop />
-          </section>
-        </Grid>
+              </Row>
+            <BackTop />
+            </section>
+          </Grid>
+        </section>
       );
     }
     return null;
@@ -117,19 +193,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getDetails: async (articleId) => {
-      let result = await detailArticle(articleId)
-
-      if (result.code === '1') {
-        // console.log('-----article details-----')
-        // console.log(result.article);
-
-        dispatch(articleInitDetails({
-          article: result.article
-        }))
-      } else {
-        console.log(result);
-      }
+    getDetails: (article) => {
+      dispatch(articleInitDetails({
+        article: article
+      }))
     },
     endDelete: () => {
       dispatch(deleteActions.successDelete())

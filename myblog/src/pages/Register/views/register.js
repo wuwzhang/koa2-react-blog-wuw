@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import qs from 'qs';
+
 import { view as FieldGroup } from '../../../components/FieldGroup';
 import { view as TopMenu } from '../../../components/TopMenu/';
 
@@ -15,7 +17,7 @@ import {
   faileRegist
 } from '../action';
 
-// import redirect from '../../../components/Redirect';
+import QueueAnim from 'rc-queue-anim';
 
 import {
   FormGroup,
@@ -27,6 +29,8 @@ import {
 import { Alert } from 'antd';
 
 import './style.css';
+
+import { FormattedMessage } from 'react-intl';
 
 class Register extends Component {
 
@@ -161,8 +165,6 @@ class Register extends Component {
               && confirmPwdValid === 'success');
     }
 
-    // console.log(accountValid + ' ' + usernameValid + ' ' + passwordValid + ' ' + confirmPwdValid);
-    // console.log(_checkComplete())
     if (_checkComplete()) {
       this.props.loginUp({ account, username, password });
     }
@@ -172,81 +174,100 @@ class Register extends Component {
   render() {
     let { msgType } = this.props;
 
-    console.log(msgType)
-
     return (
-      <Grid>
-        <TopMenu />
-        <section>
-          <Col className='register-container' md={8} xs={10} xsOffset={3} mdOffset={4}>
-            <h2>Register</h2>
-            <Form horizontal>
-              <FieldGroup
-                type='email'
-                label='Account'
-                placeholder="Enter Email"
-                ref={(input)=>this.email=input}
-                onChange={(event)=>this.setState({account: event.target.value})}
-                onBlur={(event)=>this._checkAccount(event.target.value)}
-                validationState={this.state.accountValid}
-                help={this.state.accountHelp}
-              />
-              <FieldGroup
-                type='text'
-                label='Username'
-                placeholder='Enter Username'
-                onChange={(event)=>this.setState({username: event.target.value})}
-                onBlur={(event)=>this._checkUsername(event.target.value)}
-                validationState={this.state.usernameValid}
-                help={this.state.usernameHelp}
-              />
-              <FieldGroup
-                type='password'
-                label='Password'
-                placeholder='Enter Password'
-                onChange={(event)=>this.setState({password: event.target.value})}
-                onBlur={(event)=>this._checkPassword(event.target.value)}
-                validationState={this.state.passwordValid}
-                help={this.state.passwordHelp}
-              />
-              <FieldGroup
-                type='password'
-                label='Confirm password'
-                placeholder='Enter password again'
-                onChange={(event)=>this.setState({confirmPwd: event.target.value})}
-                onBlur={(event)=>this._checkConfirmPwd(event.target.value)}
-                validationState={this.state.confirmPwdValid}
-                help={this.state.confirmPwdHelp}
-              />
-
-              {/*
-                <FormGroup>
-                  <Col sm={12}>
-                    <ControlLabel>Upload display photo</ControlLabel>
-                    <Button
-                      bsClass='btn-upload'
-                    >Upload</Button>
-                  </Col>
-                </FormGroup>
-              */}
-              <FormGroup>
-                <Col sm={2}>
-                  <Button
-                    block
-                    onClick={()=>this._regist()}
-                  >Sign Up</Button>
-                </Col>
-              </FormGroup>
-              {
-                msgType === 'warning' ? <Alert className="myAlert" message="注册失败" type="warning" showIcon closable/> : null
-              }
-              {
-                msgType === 'success' ? <Alert className="myAlert" message="注册成功" type="success" showIcon closable/> : null
-              }
-            </Form>
-          </Col>
+      <section className='Regist-Bg'>
+        <section className='All-Nav'>
+          <TopMenu />
         </section>
-      </Grid>
+        <Grid>
+          <section>
+            <Col className='register-container' md={4} xs={10} sm={4} mdOffset={4} smOffset={4}>
+              <QueueAnim className="demo-content">
+                <h2 key="a">
+                  <FormattedMessage
+                    id="Regist"
+                    defaultMessage="Sign Up"
+                  />
+                </h2>
+                <Form key="b" horizontal>
+                  <FieldGroup
+                    type='email'
+                    label='labelEmail'
+                    defaultMessage= 'Email'
+                    labelColor='#07689f'
+                    ref={(input)=>this.email=input}
+                    onChange={(event)=>this.setState({account: event.target.value})}
+                    onBlur={(event)=>this._checkAccount(event.target.value)}
+                    validationState={this.state.accountValid}
+                    help={this.state.accountHelp}
+                  />
+                  <FieldGroup
+                    type='text'
+                    label='labelUserName'
+                    labelColor='#07689f'
+                    defaultMessage='User Name'
+                    onChange={(event)=>this.setState({username: event.target.value})}
+                    onBlur={(event)=>this._checkUsername(event.target.value)}
+                    validationState={this.state.usernameValid}
+                    help={this.state.usernameHelp}
+                  />
+                  <FieldGroup
+                    type='password'
+                    label='labelPassword'
+                    labelColor='#07689f'
+                    defaultMessage='Password'
+                    onChange={(event)=>this.setState({password: event.target.value})}
+                    onBlur={(event)=>this._checkPassword(event.target.value)}
+                    validationState={this.state.passwordValid}
+                    help={this.state.passwordHelp}
+                  />
+                  <FieldGroup
+                    type='password'
+                    label='labelComfirmPassword'
+                    labelColor='#07689f'
+                    defaultMessage='Comfirm Password'
+                    onChange={(event)=>this.setState({confirmPwd: event.target.value})}
+                    onBlur={(event)=>this._checkConfirmPwd(event.target.value)}
+                    validationState={this.state.confirmPwdValid}
+                    help={this.state.confirmPwdHelp}
+                  />
+
+                  {/*
+                    <FormGroup>
+                      <Col sm={12}>
+                        <ControlLabel>Upload display photo</ControlLabel>
+                        <Button
+                          bsClass='btn-upload'
+                        >Upload</Button>
+                      </Col>
+                    </FormGroup>
+                  */}
+                  <FormGroup>
+                    <Col sm={4} md={5} xs={10}>
+                      <Button
+                        className='submit-btn'
+                        block
+                        onClick={()=>this._regist()}
+                      >
+                      <FormattedMessage
+                        id="Regist"
+                        defaultMessage="Sign Up"
+                      />
+                      </Button>
+                    </Col>
+                  </FormGroup>
+                  {
+                    msgType === 'warning' ? <Alert className="myAlert registAlert" message="注册失败" type="warning" showIcon closable/> : null
+                  }
+                  {
+                    msgType === 'success' ? <Alert className="myAlert registAlert" message="注册成功" type="success" showIcon closable/> : null
+                  }
+                </Form>
+              </QueueAnim>
+            </Col>
+          </section>
+        </Grid>
+      </section>
     );
   }
 }

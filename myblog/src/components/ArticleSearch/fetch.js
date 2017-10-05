@@ -1,7 +1,7 @@
 export const DOMAIN = '';
 const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
 
-export const getArticleBySearch = async (value) => {
+export const getArticleBySearch = async (value, page, eachPageArticle) => {
   let url = DOMAIN + '/api/getArticleBySearch';
   try {
     var result = await fetch(url, {
@@ -11,7 +11,9 @@ export const getArticleBySearch = async (value) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        value: value
+        value: value,
+        page,
+        eachPageArticle
       }),
       credentials: CREDENTIALS
     })

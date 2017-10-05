@@ -1,0 +1,6 @@
+.comment-checked {
+  color: #ccc;
+}
+.comment-checked:hover {
+  cursor: default;
+}

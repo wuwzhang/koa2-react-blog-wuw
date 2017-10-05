@@ -8,15 +8,23 @@ import {
   Col
 } from 'react-bootstrap';
 
-const view = ({label, help, validationState, ...props}) => {
+import { FormattedMessage } from 'react-intl';
+
+const view = ({label, labelColor, defaultMessage, help, validationState, ...props}) => {
   return (
     <FormGroup
+      style={{color: labelColor}}
       validationState={validationState}
     >
       <Col sm={12}>
-        <ControlLabel>{label}</ControlLabel>
+        <ControlLabel>
+          <FormattedMessage
+            id={label}
+            defaultMessage={defaultMessage}
+          />
+        </ControlLabel>
       </Col>
-      <Col sm={6}>
+      <Col sm={12}>
         <FormControl {...props} />
       </Col>
       <Col sm={12}>

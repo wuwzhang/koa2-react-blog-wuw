@@ -7,6 +7,10 @@ import {
   Grid
 } from 'react-bootstrap';
 
+import './style.css';
+
+import { FormattedMessage } from 'react-intl';
+
 class Tags extends Component {
   constructor(props) {
     super(props);
@@ -34,25 +38,35 @@ class Tags extends Component {
     let { tags } = this.state;
 
     return(
-      <Grid>
-        <TopMenu />
-        <section>
-          <div>
-            <ul>
-              {
-                tags.map((tag, index) => {
-                  return tag? <TagItem
-                                key = { index }
-                                content = { tag.tag }
-                                id = { tag._id }
-                              />
-                            : null
-                })
-              }
-            </ul>
-          </div>
+      <section>
+        <section className='All-Nav'>
+          <TopMenu />
         </section>
-      </Grid>
+        <Grid>
+          <section className='TagCloud TagCloud-bg'>
+            <h2 className='TagCloud-Title'>
+              <FormattedMessage
+                id="AllTags"
+                defaultMessage="All Tags"
+              />
+            </h2>
+            <div>
+              <ul>
+                {
+                  tags.map((tag, index) => {
+                    return tag? <TagItem
+                                  key = { index }
+                                  content = { tag.tag }
+                                  id = { tag._id }
+                                />
+                              : null
+                  })
+                }
+              </ul>
+            </div>
+          </section>
+        </Grid>
+      </section>
     );
   }
 }

@@ -25,7 +25,6 @@ export default (state, action) => {
       }
     }
     case DELETE_ARTICLE: {
-
       return {
         ...state,
         deleted: true,

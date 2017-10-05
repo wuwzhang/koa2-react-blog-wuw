@@ -8,6 +8,8 @@ import { setCatalog } from '../action.js';
 import FontAwesome from 'react-fontawesome';
 import './style.css';
 
+import { FormattedMessage } from 'react-intl';
+
 class CatalogAside extends Component {
 
   constructor(props) {
@@ -41,7 +43,15 @@ class CatalogAside extends Component {
     let { color } = this.props;
     return (
       <section className="CatalogAside">
-        <h6 className="CatalogAsided-CatalogTitle" style={{ color: color}}><FontAwesome className="CatalogAside-icon" name='th' /><span>Catalog List</span></h6>
+        <h6 className="CatalogAsided-CatalogTitle" style={{ color: color}}>
+          <FontAwesome className="CatalogAside-icon" name='th' />
+          <span>
+            <FormattedMessage
+              id="CatalogList"
+              defaultMessage="Catalog List"
+            />
+          </span>
+        </h6>
         <ul>
         {
           catalogs ? catalogs.map((catalog) => {

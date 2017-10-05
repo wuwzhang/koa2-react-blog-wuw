@@ -4,6 +4,7 @@ import createHistory from 'history/createBrowserHistory';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 
 import thunk from 'redux-thunk';
+import resetEnhancer from './enhancers/reset.js';
 
 import { reducer as loginReducer } from './pages/Login/';
 import { reducer as registReducer } from './pages/Register/';
@@ -14,7 +15,9 @@ import { reducer as articleListReducer } from './pages/ArticleList/';
 import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
 import { reducer as commentReducer } from './components/Comment/';
 import { reducer as catalogReducer } from './components/CatalogAside/';
+// import { reducer as localesReducer } from './components/ConnectedIntlProvider/';
 import { reducer as articleSearchReducer } from './components/ArticleSearch/';
+
 
 import Perf from 'react-addons-perf';
 
@@ -32,6 +35,7 @@ const reducer = combineReducers({
   comment: commentReducer,
   catalog: catalogReducer,
   routing: routerReducer
+  // locales: localesReducer
 });
 
 const win = window;
@@ -39,18 +43,18 @@ win.Perf = Perf;
 
 const middlewares = [thunk, histroyMiddleware];
 
-// if (process.env.NODE_ENV !== 'production') {
-//   middlewares.push(require('redux-immutable-state-invariant').default());
-// }
+if (process.env.NODE_ENV !== 'production') {
+  middlewares.push(require('redux-immutable-state-invariant').default());
+}
 
 
 const storeEnhancers = compose(
-  (win && win.devToolsExtension) ? win.devToolsExtension() : (f) => f,
-  applyMiddleware(...middlewares)
+  resetEnhancer,
+  applyMiddleware(...middlewares),
+  (win && win.devToolsExtension) ? win.devToolsExtension() : (f) => f
 );
 
-const initialState = {
+const store =  createStore(reducer, storeEnhancers);
+store._reducers = { routing: routerReducer }
 
-};
-
-export default createStore(reducer, initialState, storeEnhancers);
+export default store;

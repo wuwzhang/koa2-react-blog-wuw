@@ -100,13 +100,12 @@ class CommentInput extends Component {
             <Col md={2} mdOffset={10}>
               {
                 this.props.user ? <Button
-
-                                    className="myButton commentButton"
+                                    className="myButton commentButton submit-btn"
                                     onClick={()=>this._addComment()}
                                   >submit</Button>
                                 : <Button
 
-                                    className="myButton commentButton"
+                                    className="myButton commentButton submit-btn"
                                     onClick={()=>this._login()}
                                   >login</Button>
               }
@@ -144,12 +143,14 @@ const mapDispatchToProps = (dispatch) => {
 
       if (result.code === '1') {
         let comment = result.comment;
-        let commentDet = comment.result;
+
         dispatch(CommentAction.commentAdd({
           user: comment.user,
-          articleId: commentDet.articleId,
-          content: commentDet.content,
-          create_at: commentDet.created_at
+          articleId: comment.articleId,
+          articleTitle: comment.articleTitle,
+          id: comment.id,
+          content: comment.content,
+          create_at: comment.created_at
         }))
       } else {
         console.log(result.code);

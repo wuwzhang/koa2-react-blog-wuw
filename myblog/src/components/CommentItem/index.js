@@ -8,7 +8,7 @@ import './style.css';
 const marked = require('marked');
 
 const CommentItem = ({user, content, create_at}) => {
-  create_at = create_at.slice(0, 10);
+  create_at = create_at ?  create_at.slice(0, 10) : create_at;
   return (
     <Row>
       <li>

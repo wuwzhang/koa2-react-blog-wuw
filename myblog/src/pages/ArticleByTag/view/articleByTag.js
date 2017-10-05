@@ -12,11 +12,14 @@ import Pagination from '../../../components/Pagination/pagination';
 import { fetchs as TagsFetch } from '../../../components/TagsCloud/';
 import { getArticlesByTag } from '../fetch.js';
 
+import QueueAnim from 'rc-queue-anim';
 import {
   Grid,
   Col,
   Row
 } from 'react-bootstrap';
+import './style.css';
+import { FormattedMessage } from 'react-intl';
 
 class ArticleByTag extends Component {
 
@@ -89,48 +92,59 @@ class ArticleByTag extends Component {
 
     let totalPages = Math.ceil(pageArticleCount / 4);
     return (
-      <Grid>
-        <TopMenu />
-        <section>
-
-          <Row>
-            <Col  md={2} sm={2} xs={12}>
-              <SearchBox />
-              <TagsCloud
-                color = '#07689f'
-              />
-              <CatalogAside
-                color='#07689f'
-              />
-            </Col>
-            <Col  md={10} sm={10} xs={12}>
-              <p>
-                <span>Search By Tag > </span>
-                <span>{ tagContent }</span>
-              </p>
-              <ul>
-                {
-                  articles.map((article, index) => {
-                    return article? <ArticlTagItem
-                                      key = { index }
-                                      article = { article }
-                                      route = { route }
-                                    />
-                                  : null
-                  })
-                }
-              </ul>
-              <Pagination
-                totalPages={ totalPages }
-                currentPage={ currentPage }
-                range={ 5 }
-                onChange={ this.handlePage }
-              />
-            </Col>
-          </Row>
-
+      <section>
+        <section className='All-Nav'>
+          <TopMenu />
         </section>
-      </Grid>
+        <Grid>
+          <section className="articleByxx-container articleByTag-bg">
+            <Row>
+              <Col  md={2} sm={2} xs={12}>
+                <section className="articleByxx-Aside">
+                  <SearchBox />
+                  <TagsCloud
+                    color = '#07689f'
+                  />
+                  <CatalogAside
+                    color='#07689f'
+                  />
+                </section>
+              </Col>
+              <Col  md={10} sm={10} xs={12}>
+                <p>
+                  <span><FormattedMessage
+                    id="SearchByTag"
+                    defaultMessage='Search By Tag'
+                    /> > </span>
+                  <span>{ tagContent }</span>
+                </p>
+                <ul>
+                  <QueueAnim className="demo-content">
+                  {
+                    articles.map((article, index) => {
+                      return article? <ArticlTagItem
+                                        key = { index }
+                                        ind = { index }
+                                        article = { article }
+                                        route = { route }
+                                      />
+                                    : null
+                    })
+                  }
+                  </QueueAnim>
+                </ul>
+                <Pagination
+                  totalPages={ totalPages }
+                  currentPage={ currentPage }
+                  range={ 5 }
+                  onChange={ this.handlePage }
+                />
+              </Col>
+            </Row>
+
+          </section>
+        </Grid>
+      </section>
     );
   }
 }

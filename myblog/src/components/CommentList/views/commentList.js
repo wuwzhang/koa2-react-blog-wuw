@@ -5,10 +5,7 @@ import {
   fetchs as commentFetchs,
   actions as commentActions
 } from '../../Comment/';
-// import {
-//   ListGroup,
-//   ListGroupItem
-// } from 'react-bootstrap';
+
 import './style.css';
 
 class CommentList extends Component {
@@ -16,19 +13,21 @@ class CommentList extends Component {
     this.props.initComment(this.props.articleId);
   }
   render() {
-    let { comments } = this.props;
+    let { comments = [] } = this.props;
     return (
       <section className="comment-list">
         <ul>
           {
-            comments.map((comment, index) => (
-              <CommentItem
-                key = { index }
-                user = { comment.user }
-                content = { comment.content }
-                create_at = { comment.create_at }
-              />
-            ))
+            comments.map((comment, index) => {
+              return comment ? <CommentItem
+                                key = { index }
+                                user = { comment.user }
+                                content = { comment.content }
+                                create_at = { comment.create_at }
+                              />
+                              : null
+            }
+            )
           }
         </ul>
       </section>
@@ -39,7 +38,7 @@ const mapStateToProps = (state) => {
   let pathname = state.routing.location.pathname,
       articleId = pathname.split('/')[2];
   return {
-    comments: state.comment,
+    comments: state.comment.comment,
     articleId: articleId
   }
 };

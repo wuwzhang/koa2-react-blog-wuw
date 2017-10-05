@@ -1,0 +1,9 @@
+.footer {
+  height: 54px;
+  border-top: 1px solid #07689f;
+}
+.footer p {
+  text-align: center;
+  line-height: 54px;
+  height: 54px;
+}

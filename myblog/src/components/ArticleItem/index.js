@@ -5,9 +5,9 @@ import TagItem from '../TagItem/index.js';
 
 import './style.css';
 
-const view = ({ article }) => {
+const view = ({ article, ind }) => {
   return (
-    <li>
+    <li key={ind} >
       <section className="ArticleItem">
         <Link to={`/article_details/${article._id}`}><h5 className="ArticleItem-title">{ article.title }</h5></Link>
         <div>

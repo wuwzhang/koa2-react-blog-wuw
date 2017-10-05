@@ -1,23 +1,23 @@
 .register-container {
   margin-top: 60px;
-  border-left: 1px solid #336699;
+  border-left: 1px solid #A2D5F2;
+  background: #FAFAFA;
+  padding: 10px 20px;
 }
 
 .register-container h2 {
-  color: #336699;
+  color: #07689f;
   text-shadow: 1px 1px #3399cc;
-  /*margin-left: 40px;*/
   margin-bottom: 50px;
 }
-
-.btn-upload {
-  background: #3366aa;
-  margin-left: 10px;
-  border: 1px solid #3366ff;
-  padding: 5px;
-  border-radius: 3px;
-  color: #fff;
-  font-size: 16px;
-  box-shadow: 1px 1px 0px 0px #3399cc;
+.Regist-Bg {
+  width: 100%;
+  height: 100vh;
+  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.1) 0%, rgba(256, 256, 256, 0.4) 100%), url(../../../media/regist-bg.png) no-repeat;
+  background-size: 90% 70vh;
+  background-position: right bottom;
 }
-
+.registAlert {
+  top: -150px;
+  left: calc(100% - 50px);
+}

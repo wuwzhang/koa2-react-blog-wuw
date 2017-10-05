@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import qs from 'qs';
+
 import TagItem from '../../TagItem/index.js';
 import { getTags } from '../fetch.js';
 
 import FontAwesome from 'react-fontawesome';
 import './style.css';
 import { Tooltip } from 'antd';
+import { FormattedMessage } from 'react-intl';
 
 class TagsCloud extends Component {
   constructor(props) {
@@ -31,13 +34,29 @@ class TagsCloud extends Component {
     let tags = this.state.tags;
     let { color='#369' } = this.props;
 
+    const languages = navigator.languages;
+    const browserLanguage = languages[0];
+
+    const locale = qs.parse(document.location.search && document.location.search.slice(1)).locale || browserLanguage || 'en-US';
+
+    let cliclTip = 'click to show more';
+
+    cliclTip = (locale === 'zh-CN')
+             ? '点击查看更多标签'
+             : 'click to show more';
+
+
     return (
       <section className="TagsCloud">
         <h6 className="TagsCloud-TagsTitle">
-          <Tooltip placement='top' title={ <span>click to show more</span> }>
+          <Tooltip placement='top' title={ <span>{ cliclTip }</span> }>
             <Link to='/tags_cloud' style={{ color: color }}>
               <FontAwesome className="TagsCloud-icon" name='cloud' />
-              <span>cloud label >> </span>
+              <span>
+                <FormattedMessage
+                  id="CloudLabel"
+                  defaultMessage="Cloud Label"
+                /> >> </span>
             </Link>
           </Tooltip>
         </h6>

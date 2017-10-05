@@ -26,12 +26,12 @@ router.post('/api/article_post', async(ctx, next) => {
     const articleModel = {
       title: article.title,
       content: article.content,
-      tags: tagsArr,
-      catalog: article.catalog
+      tags: tagsArr.length === 0 ? ['其他'] : tagsArr,
+      catalog: article.catalog || '其他'
     };
 
     var result = await $Article.create(articleModel);
-    if (article.catalog) {
+    if (articleModel.catalog) {
       var exist = await $Catalog.getCatalogrByCatalogName(article.catalog);
       if (!exist) {
         let res = await $Catalog.create({ catalog: article.catalog });

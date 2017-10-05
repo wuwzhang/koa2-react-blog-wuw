@@ -6,6 +6,8 @@ import { withRouter, Redirect } from 'react-router-dom';
 import { login } from '../fetch';
 import { view as FieldGroup } from '../../../components/FieldGroup';
 import { view as TopMenu } from '../../../components/TopMenu/';
+import { fetchs as commentFetch, actions as commentAction } from '../../../components/Comment/';
+import { FormattedMessage } from 'react-intl';
 
 import {
   startLogin,
@@ -23,6 +25,7 @@ import {
   Col
 } from 'react-bootstrap';
 import { Alert } from 'antd';
+import QueueAnim from 'rc-queue-anim';
 
 import './style.css';
 
@@ -40,7 +43,22 @@ class Login extends Component {
 
   async _signIn() {
     const { account, password } = this.state;
-    await this.props.loginIn({account, password});
+    // await this.props.loginIn({account, password});
+    this.props.startLogin();
+    let result = await login({account, password});
+
+    if (result.code === '1') {
+      this.props.successLogin(result.user, result.message);
+
+      let res = await commentFetch.getNotCheckedComments();
+      if (res.code === '1') {
+        this.props.initNotCheckedComment(res.comments.length)
+      } else {
+
+      }
+    } else {
+      this.props.failLogin(result.message)
+    }
   }
 
   _checkAccount(value) {
@@ -83,70 +101,82 @@ class Login extends Component {
   render() {
     let { user, msgType } = this.props;
 
-    if (user) {
-      return (
-        <Redirect
-          to = {{
-            pathname: '/home'
-          }}
-        />
-      );
-    }
-
     return (
-      <Grid>
-        <TopMenu />
-        <section >
-          <Col className='login-container' md={8} xs={10} xsOffset={3} mdOffset={4}>
-            <h2>Sign In</h2>
-            <Form horizontal>
-              <FieldGroup
-                type='email'
-                label='Email Address'
-                placeholder='Email'
-                ref={(input)=>this.email=input}
-                onBlur={(event)=>this._checkAccount(event.target.value)}
-                onChange={(event)=>this.setState({account:event.target.value})}
-                validationState={this.state.accountValid}
-                help={this.state.accountHelp}
-              />
-
-              <FieldGroup
-                type='password'
-                label='Password Address'
-                placeholder='Password'
-                onChange={(event)=>this.setState({password:event.target.value})}
-                onBlur={(event)=>this._checkPassword(event.target.value)}
-                validationState={this.state.pwdValid}
-                help={this.state.pwdHelp}
-              />
-              {/*
-                <FormGroup>
-                  <Col sm={10}>
-                    <Checkbox>Remember me</Checkbox>
-                  </Col>
-                </FormGroup>
-              */}
-
-              <FormGroup>
-                <Col sm={2}>
-                  <Button
-                    block
-                    onClick={()=>this._signIn()}
-                  >Sign in</Button>
-                </Col>
-              </FormGroup>
-
-              {
-                msgType === 'warning' ? <Alert className="myAlert" message="用户名或密码错误" type="warning" showIcon closable/> : null
-              }
-              {
-                msgType === 'success' ? <Alert className="myAlert" message="登录成功" type="success" showIcon closable/> : null
-              }
-            </Form>
-          </Col>
+      <section className='Login-Bg'>
+        <section className='All-Nav'>
+          <TopMenu />
         </section>
-      </Grid>
+        <Grid>
+          <section className='login-cover'>
+            <Col className='login-container' md={4} xs={10} sm={3} mdOffset={4} smOffset={4}>
+              <QueueAnim className="demo-content">
+                <h2 key='a'>
+                  <FormattedMessage
+                    id="Login"
+                    defaultMessage="Sign In"
+                  />
+                </h2>
+                <Form key='b' horizontal>
+                  <FieldGroup
+                    autofocus
+                    type='email'
+                    label='labelEmail'
+                    labelColor='#07689f'
+                    defaultMessage='Email'
+                    ref={(input)=>this.email=input}
+                    onBlur={(event)=>this._checkAccount(event.target.value)}
+                    onChange={(event)=>this.setState({account:event.target.value})}
+                    validationState={this.state.accountValid}
+                    help={this.state.accountHelp}
+                  />
+
+                  <FieldGroup
+                    type='password'
+                    label='labelPassword'
+                    labelColor='#07689f'
+                    defaultMessage='Password'
+                    onChange={(event)=>this.setState({password:event.target.value})}
+                    onBlur={(event)=>this._checkPassword(event.target.value)}
+                    validationState={this.state.pwdValid}
+                    help={this.state.pwdHelp}
+                  />
+                  {/*
+                    <FormGroup>
+                      <Col sm={10}>
+                        <Checkbox>Remember me</Checkbox>
+                      </Col>
+                    </FormGroup>
+                  */}
+
+                  <FormGroup>
+                    <Col sm={4} md={5} xs={10}>
+                      <Button
+                        className='submit-btn'
+                        block
+                        onClick={()=>this._signIn()}
+                      >
+                        <FormattedMessage
+                          id="Login"
+                          defaultMessage="Sign In"
+                        />
+                      </Button>
+                    </Col>
+                  </FormGroup>
+
+                  {
+                    msgType === 'warning' ? <Alert className="myAlert registAlert" message="用户名或密码错误" type="warning" showIcon closable/>
+                                          : null
+                  }
+                  {
+                    msgType === 'success' ? <Alert className="myAlert registAlert" message="登录成功" type="success" showIcon closable/>
+                                          : null
+                  }
+                </Form>
+              </QueueAnim>
+            </Col>
+          </section>
+        </Grid>
+      </section>
     )
   }
 }
@@ -154,7 +184,9 @@ class Login extends Component {
 
 Login.propTypes = {
   user: PropTypes.object,
-  loginIn: PropTypes.func
+  startLogin: PropTypes.func,
+  successLogin: PropTypes.func,
+  failLogin: PropTypes.func
 }
 
 
@@ -164,18 +196,19 @@ const mapStateToProps = (state)=> (
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loginIn: async (user) => {
+    startLogin: () => {
       dispatch(startLogin());
-
-      let result = await login(user);
-
-      if (result.code === '1') {
-        dispatch(finishLogin(user));
-        dispatch(loginSuccess(result.message));
-      } else {
-        dispatch(failLogin(result.message));
-        dispatch(loginFail(result.message));
-      }
+    },
+    successLogin: (user, message) => {
+      dispatch(finishLogin(user));
+      dispatch(loginSuccess(message));
+    },
+    failLogin: (message) => {
+      dispatch(failLogin(message));
+      dispatch(loginFail(message));
+    },
+    initNotCheckedComment: (count) => {
+      dispatch(commentAction.commentNotChecked(count))
     }
   }
 }

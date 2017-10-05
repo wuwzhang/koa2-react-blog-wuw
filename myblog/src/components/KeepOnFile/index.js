@@ -3,6 +3,7 @@ import { getArticleDateList } from './fetch.js'
 import { Badge, Timeline } from 'antd';
 import FontAwesome from 'react-fontawesome';
 import './style.css';
+import { FormattedMessage } from 'react-intl';
 
 const KeepOnFileList = ({ year, monthInfo, badgeColor='red' }) => {
   let Arr = ['Jan.', 'Feb.', 'Mar.', 'Apr.',
@@ -52,7 +53,15 @@ class KeepOnFile extends Component {
 
     return (
       <section className="keepOnFile">
-        <h6 className="KeepOnFile-AsideTitle" style = {{ color: color}}><FontAwesome className="keepOnFileAside-Icon" name='file-text' /><span>Keep On File</span></h6>
+        <h6 className="KeepOnFile-AsideTitle" style = {{ color: color}}>
+          <FontAwesome className="keepOnFileAside-Icon" name='file-text' />
+          <span>
+            <FormattedMessage
+              id="KeepOnFile"
+              defaultMessage="Keep On File"
+            />
+          </span>
+        </h6>
         <Timeline>
           {
             result.map((item, index) => {

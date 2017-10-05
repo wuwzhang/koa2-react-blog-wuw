@@ -1,19 +1,20 @@
 import React from 'react';
+import { view as TopMenu } from '../../components/TopMenu/';
 
 import {
-  Col,
-  Row
+  Grid
 } from 'react-bootstrap';
 
-// import './style.css'
+import './style.css';
 
 const About = () => (
-  <section>
-    <Row>
-      <Col md={12} sm={12} xs={12}>
-        <section className='background'></section>
-      </Col>
-    </Row>
+  <section className='About'>
+    <section className='All-Nav'>
+      <TopMenu />
+    </section>
+    <Grid>
+      jjjj
+    </Grid>
   </section>
 );
 

@@ -21,6 +21,7 @@ export default (state, action) => {
 
       return {
         articles: action.articles,
+        count: action.count,
         msgType: action.msgType,
         msg: action.msg
       }

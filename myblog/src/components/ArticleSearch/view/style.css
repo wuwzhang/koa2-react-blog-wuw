@@ -3,17 +3,18 @@
 }
 .ArticleSearch input {
   height: 28px;
-  width: 100%;
+  width: 98%;
   text-indent: 5px;
   outline: none;
 }
 .ArticleSearch button {
   border: 0;
   position: absolute;
-  left: 78%;
+  left: 77%;
   margin-top: 1px;
   width: 26px;
   height: 26px;
+  color: #FF7E67;
 }
 .ArticleSearch-SearchTitle {
   font-size: 16px;

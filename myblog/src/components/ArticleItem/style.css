@@ -5,7 +5,7 @@
   border: 1px solid #ccc;
   margin: 10px 0;
   padding: 10px;
-  background: #FAFAFA;
+  background: rgba(250, 250, 250, .9);
 }
 .ArticleItem-title {
   border-bottom: 1px solid #eee;

@@ -38,11 +38,11 @@ class ArticleOptionNav extends Component {
 
   confirm (e) {
     this._deleteArticle(e);
-    message.success('Click on Yes');
+    message.success('Delete the article');
   }
 
-  cancel (e) {
-    message.error('Click on No');
+  cancel () {
+    message.error('Cancle delete');
   }
   render() {
 
@@ -52,7 +52,11 @@ class ArticleOptionNav extends Component {
       <nav className="article-option-nav">
         <ul>
           <li>
-            <Link to={`/article_edit/${ this.props.articleId || this.props.id }`}><span style = { myStyle }>Edit</span></Link>
+            <Link to={`/article_edit/${ this.props.articleId || this.props.id }`}>
+              <span style = { myStyle }>
+                Edit
+              </span>
+            </Link>
           </li>
           <li>
             <Popconfirm
@@ -88,7 +92,6 @@ const mapDispatchToProps = (dispatch) => {
   return {
     deletePost: async (articleId, index) => {
       let result = await deleteFetchs.deleteArticle(articleId);
-
       if (result.code === '1') {
         dispatch(deleteActions.artcileDelete(index));
       } else {

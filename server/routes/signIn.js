@@ -18,14 +18,16 @@ router.post('/api/signIn', async(ctx, next) => {
 
   password = crypto.createHash('md5').update(password).digest('hex');
 
-  // console.log("user: " + user.password + ' ' + password);
   if (user && (password == user.password)) {
     delete user.password;
-    ctx.session.user = user;
+    // ctx.session.user = user;
     ctx.response.body = {
       'code': code,
       'message': message,
-      'user': user
+      'user': {
+        level: user.level,
+        ...ctx.session.user
+      }
     }
   } else {
     code = '-1',

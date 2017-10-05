@@ -16,7 +16,10 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
+import QueueAnim from 'rc-queue-anim';
 import './style.css';
+
+import { FormattedMessage } from 'react-intl';
 
 class ArticleByCatalog extends Component {
 
@@ -91,63 +94,57 @@ class ArticleByCatalog extends Component {
 
     let totalPages = Math.ceil(pageArticleCount / 4);
     return (
-      <Grid>
-        <TopMenu />
-        <section>
-
-          <Row>
-            <Col md={2} sm={2} xs={12}>
-              <SearchBox />
-              <CatalogAside
-                color = '#07689f'
-              />
-              {/*<section className='ArticleByCatalog-list'>
-                <h6 className="CatalogAsided-CatalogTitle" style={{ color: '#07689f'}}>
-                  <FontAwesome className="CatalogAside-icon" name='th' />
-                  <span>Catalog List</span>
-                </h6>
-                <ul>
+      <section>
+        <section className='All-Nav'>
+          <TopMenu />
+        </section>
+        <Grid>
+          <section className="articleByxx-container ArticleBySearch-bg">
+            <Row>
+              <Col md={2} sm={2} xs={12}>
+                <section className='articleByxx-Aside'>
+                  <SearchBox />
+                  <CatalogAside
+                    color = '#07689f'
+                  />
+                  <TagsCloud
+                    color = '#07689f'
+                  />
+                </section>
+              </Col>
+              <Col md={10} sm={10} xs={12}>
+                <p>
+                  <span><FormattedMessage
+                    id="SearchByCatalog"
+                    defaultMessage='Search By Catalog'
+                    /> > </span>
+                  <span>{ this.props.catalogCotent }</span>
+                </p>
+                <ul className="ArticleByCatalog-article">
+                  <QueueAnim className="demo-content">
                   {
-                    catalogs.map((item) => {
-                      return item ? <li className="ArticleByCatalog-li" onClick={ this._handleCatalog.bind(this, item._id) }>
-                                      <span className="catalogName">{item._id}</span>
-                                      <span className="catalogCount">({item.count})</span>
-                                    </li>
-                                  : null
+                    articles.map((article, index) => {
+                      return article? <ArticlCatalogItem
+                                        ind = { index }
+                                        key = { index }
+                                        article = { article }
+                                      />
+                                    : null
                     })
                   }
+                  </QueueAnim>
                 </ul>
-              </section>*/}
-              <TagsCloud
-                color = '#07689f'
-              />
-            </Col>
-            <Col md={10} sm={10} xs={12}>
-              <p>
-                <span>Search By Catalog > </span>
-                <span>{ this.props.catalogCotent }</span>
-              </p>
-              <ul className="ArticleByCatalog-article">
-                {
-                  articles.map((article, index) => {
-                    return article? <ArticlCatalogItem
-                                      key = { index }
-                                      article = { article }
-                                    />
-                                  : null
-                  })
-                }
-              </ul>
-              <Pagination
-                totalPages={ totalPages }
-                currentPage={ currentPage }
-                range={ 5 }
-                onChange={ this.handlePage }
-              />
-            </Col>
-          </Row>
-        </section>
-      </Grid>
+                <Pagination
+                  totalPages={ totalPages }
+                  currentPage={ currentPage }
+                  range={ 5 }
+                  onChange={ this.handlePage }
+                />
+              </Col>
+            </Row>
+          </section>
+        </Grid>
+      </section>
     );
   }
 }

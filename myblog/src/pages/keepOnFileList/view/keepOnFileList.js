@@ -10,6 +10,8 @@ import { view as SearchBox } from '../../../components/ArticleSearch/';
 
 import { Timeline, Radio } from 'antd';
 import FontAwesome from 'react-fontawesome';
+import { FormattedMessage } from 'react-intl';
+import QueueAnim from 'rc-queue-anim';
 import './style.css';
 import {
   Grid,
@@ -48,59 +50,81 @@ class KeepOnFileList extends Component {
     let { articleList, catalogView } = this.state;
 
     return(
-      <Grid>
-        <TopMenu />
-        <section className="keepOnFile-page">
-          <Col md={3} mdOffset={7} sm={3} smOffset={7} xsHidden>
-            <section className="KeepOnFile-View">
-              <Radio.Group value={ catalogView } onChange={ this.handleView }>
-                <Radio.Button value="catalog" ><FontAwesome className="KeepOnFile-ViewIcon" name='list' /><span>Catalog</span></Radio.Button>
-                <Radio.Button value="summary"><FontAwesome className="KeepOnFile-ViewIcon" name='list-alt' /><span>Summary</span></Radio.Button>
-              </Radio.Group>
-            </section>
-          </Col>
-          <Row>
-            <Col md={10} sm={10} xs={12}>
-              <section className="timeline">
-                <Timeline>
-                  {
-                    articleList.map((article, index) => {
-                      return article? <Timeline.Item>
-                                        <KeepOnFileItem
-                                          key = { index }
-                                          article = { article }
-                                          catalogView = { (catalogView === 'catalog' || !catalogView) ? true : false }
-                                        />
-                                      </Timeline.Item>
-                                    : null
-                    })
-                  }
-                </Timeline>
-              </section>
-            </Col>
-            <Col md={2} sm={2} xsHidden>
-              <section className="aside">
-                <div>
-                  <SearchBox
-                    color = '#07689f'
-                  />
-                  <KeepOnFile
-                    color = '#07689f'
-                    badgeColor = '#FF7E67'
-                  />
-                  <TagsCloud
-                    color = '#07689f'
-                  />
-                  <CatalogAside
-                    color = '#07689f'
-                  />
-                </div>
-              </section>
-            </Col>
-          </Row>
-
+      <section>
+        <section className='All-Nav'>
+          <TopMenu />
         </section>
-      </Grid>
+        <Grid>
+          <section className="keepOnFile-page">
+            <Col md={3} mdOffset={7} sm={3} smOffset={7} xsHidden>
+              <section className="KeepOnFile-View">
+                <Radio.Group value={ catalogView } onChange={ this.handleView }>
+                  <Radio.Button value="catalog">
+                    <FontAwesome className="KeepOnFile-ViewIcon" name='list' />
+                    <span>
+                      <FormattedMessage
+                        id="ArticleList"
+                        defaultMessage="List"
+                      />
+                    </span>
+                  </Radio.Button>
+                  <Radio.Button value="summary">
+                    <FontAwesome className="KeepOnFile-ViewIcon" name='list-alt' />
+                    <span>
+                      <FormattedMessage
+                        id="Summary"
+                        defaultMessage="Summary"
+                      />
+                    </span>
+                  </Radio.Button>
+                </Radio.Group>
+              </section>
+            </Col>
+            <Row>
+              <Col md={10} sm={10} xs={12}>
+                <section className="timeline">
+                  <Timeline>
+                    <QueueAnim>
+                    {
+                      articleList.map((article, index) => {
+                        return article? <Timeline.Item key={index}>
+                                          <KeepOnFileItem
+                                            key = { index }
+                                            article = { article }
+                                            catalogView = { (catalogView === 'catalog' || !catalogView) ? true : false }
+                                          />
+                                        </Timeline.Item>
+                                      : null
+                      })
+                    }
+                    </QueueAnim>
+                  </Timeline>
+                </section>
+              </Col>
+              <Col md={2} sm={2} xsHidden>
+                <section className="aside">
+                  <div>
+                    <SearchBox
+                      color = '#07689f'
+                    />
+                    <KeepOnFile
+                      color = '#07689f'
+                      badgeColor = '#FF7E67'
+                    />
+                    <TagsCloud
+                      color = '#07689f'
+                    />
+                    <CatalogAside
+                      color = '#07689f'
+                    />
+                  </div>
+                </section>
+              </Col>
+            </Row>
+
+          </section>
+        </Grid>
+      </section>
     );
   }
 }

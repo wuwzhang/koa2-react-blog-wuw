@@ -6,16 +6,16 @@
 }
 .base-item {
   display: inline;
-  margin: 10px;
-  color: #336699;
+  margin: 8px;
+  color: #FAFAFA;
   font-size: 16px;
 }
 .base-item a {
-  color: #336699;
+  color: #FAFAFA;
 }
 .base-item a:hover, .base-item:hover {
   text-decoration: none;
-  color: orange;
+  color: #FF7E67;
 }
 .base-item span {
   display: inline-block;
@@ -23,10 +23,18 @@
   }
 .base-item:hover {
   padding-bottom: 2px;
-  border-bottom: 2px solid orange;
   cursor: pointer;
 }
 .logout:hover {
   cursor: pointer;
   text-decoration:underline;
+}
+.All-Nav {
+  background: #07689f;
+  min-height: 54px;
+  /*margin-bottom: 20px;*/
+}
+.TopMenu-language li a {
+  color: #FAFAFA;
+  line-height: 34px;
 }

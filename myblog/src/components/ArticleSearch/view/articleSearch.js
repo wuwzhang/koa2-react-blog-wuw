@@ -9,6 +9,7 @@ import FontAwesome from 'react-fontawesome';
 import { Button, Spin } from 'antd';
 
 import './style.css';
+import { FormattedMessage } from 'react-intl';
 
 class ArticleSearch extends Component {
 
@@ -29,13 +30,13 @@ class ArticleSearch extends Component {
 
     let { value } = this.state;
 
-    let result = await getArticleBySearch(value);
+    let result = await getArticleBySearch(value, 1, 4);
 
     if (result.code === '1') {
       this.setState({
         redirectToReferrer: true
       })
-      this.props.successSearch(result.articles);
+      this.props.successSearch(result.articles, result.count);
 
     } else {
 
@@ -52,18 +53,23 @@ class ArticleSearch extends Component {
 
   render() {
     let { route, color='#07689f' } = this.props;
-    let { redirectToReferrer } = this.state;
+    let { redirectToReferrer, value } = this.state;
 
     if (route !== '/article_by_search/' && redirectToReferrer) {
       return (
-        <Redirect to='/article_by_search/'/>
+        <Redirect to= {`/article_by_search/${value}`} />
       );
     }
     return (
       <section className='ArticleSearch'>
         <h6 className="ArticleSearch-SearchTitle" style={{ color: color }}>
           <FontAwesome className="ArticleSearch-SearchTitle-icon" name='search' />
-          <span>Search</span>
+          <span>
+            <FormattedMessage
+              id="Search"
+              defaultMessage="Search"
+            />
+          </span>
         </h6>
         <from>
           <input
@@ -80,7 +86,8 @@ class ArticleSearch extends Component {
           />
         </from>
         {
-          this.props.searching ? <Spin spinning={this.state.loading} delay={500} size = 'large' /> : null
+          this.props.searching ? <Spin spinning={this.state.loading} delay={500} size = 'large' />
+                               : null
         }
       </section>
     );
@@ -88,7 +95,7 @@ class ArticleSearch extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  route: state.routing.location.pathname,
+  route: state.routing.location.pathname.split('/')[1],
   searching: state.articleSearch.searching
 })
 
@@ -97,9 +104,9 @@ const mapDispatchToProps = (dispatch) => {
     startSearch: () => {
       dispatch(searchStart());
     },
-    successSearch: (articles) => {
+    successSearch: (articles, count) => {
       dispatch(searchSuccess());
-      dispatch(successSearch(articles));
+      dispatch(successSearch(articles, count));
     },
     failSearch: (error) => {
       dispatch(searchFail());

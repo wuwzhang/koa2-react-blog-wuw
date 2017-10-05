@@ -4,14 +4,14 @@
   height: 24px;
   line-height: 24px;
   border-radius: 12px;
-  background: rgb(51, 102, 153, .7);
+  background: #A2D5F2;
   margin-left: -12px;
 }
 .keepOnFile-date span {
   display: inline-block;
   font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
-  color: #fff;
-  text-shadow: 1px 1px #eee;
+  color: #fafafa;
+  /*text-shadow: 1px 1px #eee;*/
   margin-left: 10px;
 }
 .keepOnFile-item {
@@ -40,10 +40,19 @@
   height: 37px;
   text-align: center;
   margin-right: 20px;
-  color: #1470b3;
+  color: #07689f;
 }
 .keepOnFile-item .keepOnFileItem-catalog {
   font-size: 14px;
-  color: #ccc;
+  color: #FF7E67;
 }
-
+.ant-radio-button-wrapper {
+  background: #FAFAFA !important;
+  border-color: #EEEEEE !important;
+  color: ##1b83ce !important;
+}
+.ant-radio-button-wrapper-checked {
+  background: #FFF !important;
+  border-color: #ccc !important;
+  color: #07689f !important;
+}

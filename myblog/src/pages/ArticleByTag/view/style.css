@@ -1,0 +1,7 @@
+.articleByTag-bg {
+  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/searchByTag.png) no-repeat;
+  background: -o-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/searchByTag.png) no-repeat;
+  background: linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/searchByTag.png) no-repeat;
+  background-size: 65% 80vh;
+  background-position: right bottom;
+}

@@ -6,11 +6,12 @@ import {
   FAILURE_SEARCH
 } from './actionType.js';
 
-export const successSearch = (articles) => ({
+export const successSearch = (articles, count) => ({
   type: SUCCESS_SEARCH,
   msgType: 'success',
   msg: 'search success',
-  articles: articles
+  articles: articles,
+  count: count
 })
 export const failSearch = (error) => ({
   type: FAILURE_SEARCH,
