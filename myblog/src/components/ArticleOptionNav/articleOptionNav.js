@@ -10,6 +10,8 @@ import { fetchs as deleteFetchs, actions as deleteActions } from '../../pages/Ar
 import { Popconfirm, message } from 'antd';
 import './style.css';
 
+import { FormattedMessage } from 'react-intl';
+
 class ArticleOptionNav extends Component {
 
   constructor(props) {
@@ -54,7 +56,10 @@ class ArticleOptionNav extends Component {
           <li>
             <Link to={`/article_edit/${ this.props.articleId || this.props.id }`}>
               <span style = { myStyle }>
-                Edit
+                <FormattedMessage
+                  id="Edit"
+                  defaultMessage="Edit"
+                />
               </span>
             </Link>
           </li>
@@ -66,9 +71,12 @@ class ArticleOptionNav extends Component {
               okText="Yes"
               cancelText="No"
             >
-                <span
-                  style = { myStyle }
-                >Delete</span>
+              <span style = { myStyle }>
+                <FormattedMessage
+                  id="Delete"
+                  defaultMessage="Delete"
+                />
+              </span>
             </Popconfirm>
           </li>
         </ul>

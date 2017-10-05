@@ -30,6 +30,11 @@ const zh_CN = {
   labelEmail: '邮箱',
   labelPassword: '密码',
   labelComfirmPassword: '确认密码',
-  labelUserName: '用户名'
+  labelUserName: '用户名',
+  Submitu: '提交',
+  Edit: '编辑',
+  Delete: '删除',
+  Checked: '已确认',
+  Check: '确认'
 }
 export default zh_CN;

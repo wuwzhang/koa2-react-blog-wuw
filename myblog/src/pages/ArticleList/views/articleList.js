@@ -53,6 +53,7 @@ class ArticleList extends Component {
     let result = await listPageArticle(curPage, 10);
 
     if (result.code === '1') {
+      this.props.initArticles(result.articles);
       this.setState({
         // articles: result.articles,
         pageArticleCount: result.count

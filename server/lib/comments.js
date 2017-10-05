@@ -14,10 +14,23 @@ exports.getAllComment = () => {
   const sort = {
     created_at: -1
   };
-  return Comments.find()
+  return Comments.find({})
                  .populate({ path: 'userId'})
                  .populate({ path: 'articleId' })
                  .sort(sort)
+                 .exec()
+}
+
+exports.getPageComments = (page, range) => {
+  const sort = {
+    created_at: -1
+  };
+  return Comments.find({})
+                 .populate({ path: 'userId'})
+                 .populate({ path: 'articleId' })
+                 .sort(sort)
+                 .skip(range * (page - 1))
+                 .limit(range)
                  .exec()
 }
 
@@ -31,6 +44,11 @@ exports.getCommentsByArticleId = (articleId) => {
                  .sort(sort)
                  .exec();
 };
+
+exports.getAllCommentsCount = () => {
+  return Comments.count()
+                 .exec();
+}
 
 exports.getCommentsCount = (articleId) => {
   return Comments.count({articleId: articleId}).exec();

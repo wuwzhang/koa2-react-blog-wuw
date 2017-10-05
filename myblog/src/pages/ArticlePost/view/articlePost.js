@@ -238,7 +238,7 @@ class ArticlePostOrEdit extends Component {
                   <FormGroup
                     validationState={this.state.titleValid}
                   >
-                    <ControlLabel style={{color: '#07689f'}}>Title</ControlLabel>
+                    <ControlLabel>Title</ControlLabel>
                     <FormControl
                         type='text'
                         placeholder='Enter title'
@@ -264,7 +264,7 @@ class ArticlePostOrEdit extends Component {
                                             validationState={this.state.contentValid}
                                           >
 
-                                              <ControlLabel style={{color: '#07689f'}}>Content</ControlLabel>
+                                              <ControlLabel>Content</ControlLabel>
                                               <FormControl
                                                 componentClass="textarea"
                                                 placeholder='Enter Content'

@@ -78,15 +78,19 @@ router.post('/api/article_details/:articleId/get/comment', async(ctx, next) => {
 router.post('/api/comment_admin/getAll/comment', async(ctx, next) => {
 
   let code = '1', message = '发表成功';
+  const { page = 1, eachPageArticles = 5 } = ctx.request.body;
 
   try {
-    var result = await $Comments.getAllComment();
+    var result = await Promise.all([$Comments.getAllCommentsCount(),
+                                    $Comments.getPageComments(page, eachPageArticles)]);
   }catch (e) {
     code = '-1';
     message = e.message
   }
 
-  let comments = result.map((comment, index) => (
+  let thisComments = result[1];
+
+  let comments = thisComments.map((comment, index) => (
     {
       user: comment.userId,
       id: comment._id,
@@ -102,7 +106,8 @@ router.post('/api/comment_admin/getAll/comment', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'comments': comments
+    'comments': comments,
+    'count': result[0]
   }
 });
 

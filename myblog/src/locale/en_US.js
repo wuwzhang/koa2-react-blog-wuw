@@ -30,6 +30,11 @@ const en_US = {
   labelEmail: 'Email Address',
   labelPassword: 'Password Address',
   labelComfirmPassword: 'Password Comfirm',
-  labelUserName: 'User Name'
+  labelUserName: 'User Name',
+  Submitu: 'Submit',
+  Edit: 'Edit',
+  Delete: 'Delete',
+  Checked: 'Checked',
+  Check: 'Check'
 }
 export default en_US;

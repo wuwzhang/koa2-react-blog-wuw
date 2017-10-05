@@ -66,7 +66,7 @@ export const getComment = async (articleId) => {
   }
 }
 
-export const getAllComment = async () => {
+export const getAllComment = async (page, eachPageArticles) => {
   let url = DOMAIN + '/api/comment_admin/getAll/comment';
 
   try {
@@ -76,6 +76,10 @@ export const getAllComment = async () => {
         'Accept': 'application/json',
         'Content-type': 'application/json'
       },
+      body: JSON.stringify({
+        page,
+        eachPageArticles
+      }),
       credentials: CREDENTIALS
     })
   } catch(e) {

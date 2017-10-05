@@ -5,7 +5,9 @@ import { fetchs as commentFetch, actions as commentAction } from '../Comment/'
 
 import { Popconfirm, message } from 'antd';
 
-import './style.css'
+import './style.css';
+
+import { FormattedMessage } from 'react-intl';
 
 class ArticleOptionNav extends Component {
 
@@ -83,14 +85,22 @@ class ArticleOptionNav extends Component {
               okText="Yes"
               cancelText="No"
             >
-              <span
-                style = { myStyle }
-              >Delete</span>
+              <span style = { myStyle }>
+                  <FormattedMessage
+                    id="Delete"
+                    defaultMessage="Delete"
+                  />
+              </span>
             </Popconfirm>
           </li>
           <li>
             {
-              isChecked ? <span className='comment-checked'>checked</span>
+              isChecked ? <span className='comment-checked'>
+                              <FormattedMessage
+                                id="Checked"
+                                defaultMessage="Checked"
+                              />
+                          </span>
                         : <span>
                             <Popconfirm
                               title="Are you sure delete this task?"
@@ -99,9 +109,12 @@ class ArticleOptionNav extends Component {
                               okText="Yes"
                               cancelText="No"
                             >
-                              <span
-                                style = { myStyle }
-                              >Check</span>
+                              <span style = { myStyle }>
+                                <FormattedMessage
+                                  id="Check"
+                                  defaultMessage="Check"
+                                />
+                              </span>
                             </Popconfirm>
                           </span>
             }

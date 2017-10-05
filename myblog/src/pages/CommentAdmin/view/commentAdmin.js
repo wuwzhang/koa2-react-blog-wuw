@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as CommentLi } from '../../../components/CommentLi/';
+import Pagination from '../../../components/Pagination/pagination';
+
 import {
   Grid,
   Row
@@ -14,19 +16,51 @@ import { fetchs as commentFetch, actions as commentAction } from '../../../compo
 
 class CommentAdmin extends Component {
 
+  constructor(props) {
+    super(props);
+    this.handlePage = this.handlePage.bind(this);
+    this.state = {
+      currentPage: 1,
+      pageArticleCount: 1
+    }
+  }
+
   async componentDidMount() {
-    let result = await commentFetch.getAllComment();
+    let result = await commentFetch.getAllComment(1, 10);
 
     if (result.code === '1') {
       this.props.initAllComment(result.comments);
+      this.setState({
+        pageArticleCount: result.count
+      })
     } else {
       console.log(result);
+    }
+  }
+
+  async handlePage(curPage) {
+
+    this.setState({
+      currentPage: curPage
+    })
+
+    let result = await commentFetch.getAllComment(curPage, 10);
+
+    if (result.code === '1') {
+      this.props.initAllComment(result.comments);
+      this.setState({
+        pageArticleCount: result.count
+      })
+    } else {
+      console.log(result)
     }
   }
 
   render() {
 
     let { comments = [] } = this.props;
+    let { currentPage, pageArticleCount } = this.state;
+    let totalPages = Math.ceil(pageArticleCount / 10);
 
     return (
       <section>
@@ -59,6 +93,12 @@ class CommentAdmin extends Component {
                 </QueueAnim>
               </ul>
             </section>
+            <Pagination
+              totalPages={ totalPages }
+              currentPage={ currentPage }
+              range={ 5 }
+              onChange={ this.handlePage }
+            />
           </section>
         </Grid>
       </section>
