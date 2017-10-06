@@ -7,6 +7,7 @@ import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
+import Footer from '../../../components/Footer/index.js'
 
 import { Timeline, Radio } from 'antd';
 import FontAwesome from 'react-fontawesome';
@@ -124,6 +125,7 @@ class KeepOnFileList extends Component {
 
           </section>
         </Grid>
+        <Footer />
       </section>
     );
   }

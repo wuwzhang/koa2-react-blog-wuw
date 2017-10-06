@@ -191,6 +191,7 @@ class Register extends Component {
                 </h2>
                 <Form key="b" horizontal>
                   <FieldGroup
+                    autoFocus
                     type='email'
                     label='labelEmail'
                     defaultMessage= 'Email'

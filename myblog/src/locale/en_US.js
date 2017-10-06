@@ -10,6 +10,7 @@ const en_US = {
   UpdateTime:'Update Time',
   Preview: 'Preview',
   Comment: 'Comment',
+  Message: 'Message',
   Public: 'Public',
   Option: 'option',
   AddArticle: 'Add An Article',
@@ -24,10 +25,12 @@ const en_US = {
   SearchByCatalog: 'Search By Catalog',
   HomeHeadingTop: 'HA HA HA HA HA HA! PA BU SHI GE SHEN JIN BIN BA',
   HomeHeadingCenter: 'SHI HUA GAO SU NI! TA JIU SHI YI GE SHEN JIN BIN! HA HA HA',
-  ArticleListHeading: 'WO DE JIANG HU, SHUI DE TIAN XIA',
+  ArticleListHeading: 'Article Admin',
+  CommentListHeading: 'Comment Admin',
   AllTags: 'All tags',
   ArticleList: 'Article List',
   labelEmail: 'Email Address',
+  labelContent: 'Content',
   labelPassword: 'Password Address',
   labelComfirmPassword: 'Password Comfirm',
   labelUserName: 'User Name',
@@ -35,6 +38,8 @@ const en_US = {
   Edit: 'Edit',
   Delete: 'Delete',
   Checked: 'Checked',
-  Check: 'Check'
+  Check: 'Check',
+  All: 'All',
+  OK: 'OK'
 }
 export default en_US;

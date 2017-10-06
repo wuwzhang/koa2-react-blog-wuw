@@ -8,8 +8,10 @@ import {
   Col
 } from 'react-bootstrap';
 
-const view = ({articleId, articleTitle, isChecked, content, id, create_time, index}) => {
+const view = ({articleId, user, articleTitle, isChecked, content, id, create_time, index}) => {
   create_time = create_time.slice(0, 10);
+  content = content.length > 15 ? content.slice(0, 15) + '...'
+                                : content
 
   return (
     <section className="ArticleLi">
@@ -21,6 +23,7 @@ const view = ({articleId, articleTitle, isChecked, content, id, create_time, ind
             </Col>
             <Col md={5}>
               <span>{ content }</span>
+              <span style={{color: '#999'}} className="ArticleLi-UpdateTime">( { user }) </span>
             </Col>
             <Col md={2}>
               <span>{ create_time }</span>

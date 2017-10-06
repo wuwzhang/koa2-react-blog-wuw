@@ -2,6 +2,7 @@ import {
   INIT_COMMENT,
   INIT_ALL_COMMENT,
   ADD_COMMENT,
+  SET_COMMENT_FILTER,
   CHECK_COMMENT,
   DELETE_COMMENT,
   NOTCHECKED_COMMENT
@@ -12,7 +13,8 @@ export default (state, action) => {
     state = {
       comment: [],
       allComment: [],
-      NotCheckCount: 0
+      NotCheckedCount: 0,
+      filter: 'ALL'
     }
   }
 
@@ -37,7 +39,7 @@ export default (state, action) => {
           action.comment,
           ...state.comment
         ],
-        NotCheckCount: state.NotCheckCount + 1
+        NotCheckedCount: state.NotCheckedCount + 1
       }
     }
     case CHECK_COMMENT: {
@@ -47,13 +49,13 @@ export default (state, action) => {
           ...state.allComment[action.commentIndex].isChecked = true,
           ...state.allComment
         ],
-        NotCheckCount: state.NotCheckCount - 1
+        NotCheckedCount: state.NotCheckedCount - 1
       }
     }
     case DELETE_COMMENT: {
 
-      let count = action.isChecked? this.state.NotCheckCount
-                                  : state.NotCheckCount - 1
+      let count = action.isChecked? state.NotCheckedCount
+                                  : state.NotCheckedCount - 1
 
       return {
         ...state,
@@ -61,13 +63,19 @@ export default (state, action) => {
           ...state.allComment.slice(0, action.commentIndex),
           ...state.allComment.slice(action.commentIndex + 1)
         ],
-        NotCheckCount: count
+        NotCheckedCount: count
       }
     }
     case NOTCHECKED_COMMENT: {
       return {
         ...state,
-        NotCheckCount: action.NotCheckCount
+        NotCheckedCount: action.NotCheckedCount
+      }
+    }
+    case SET_COMMENT_FILTER: {
+      return {
+        ...state,
+        filter: action.filter
       }
     }
     default: {

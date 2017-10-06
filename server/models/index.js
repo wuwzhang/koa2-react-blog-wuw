@@ -11,5 +11,6 @@ mongoose.connect(config.mongodb, function (err) {
 exports.User = require('./user');
 exports.Article = require('./article');
 exports.Comments = require('./comments');
+exports.Messages = require('./message');
 exports.Tags = require('./tags.js');
-exports.Catalog = require('./catalog.js');
+exports.Catalog = require('./catalog');

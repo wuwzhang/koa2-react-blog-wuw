@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { login } from '../fetch';
 import { view as FieldGroup } from '../../../components/FieldGroup';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { fetchs as commentFetch, actions as commentAction } from '../../../components/Comment/';
+import { fetchs as messageFetch, actions as messageAction } from '../../../components/Contact/';
 import { FormattedMessage } from 'react-intl';
 
 import {
@@ -52,7 +53,14 @@ class Login extends Component {
 
       let res = await commentFetch.getNotCheckedComments();
       if (res.code === '1') {
-        this.props.initNotCheckedComment(res.comments.length)
+        this.props.initNotCheckedComment(res.result)
+      } else {
+
+      }
+
+      let res1 = await messageFetch.getNotCheckedMessages();
+      if (res1.code === '1') {
+        this.props.initNotCheckedMessage(res1.result);
       } else {
 
       }
@@ -118,7 +126,7 @@ class Login extends Component {
                 </h2>
                 <Form key='b' horizontal>
                   <FieldGroup
-                    autofocus
+                    autoFocus
                     type='email'
                     label='labelEmail'
                     labelColor='#07689f'
@@ -209,6 +217,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     initNotCheckedComment: (count) => {
       dispatch(commentAction.commentNotChecked(count))
+    },
+    initNotCheckedMessage: (count) => {
+      dispatch(messageAction.messageNotChecked(count))
     }
   }
 }

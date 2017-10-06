@@ -32,7 +32,7 @@ class Topmenu extends Component {
   }
 
   render() {
-    // console.log(this.props.user)
+    let { commentcommentNotCheckedCount, messagecommentNotCheckedCount } = this.props;
     return (
       <Grid>
 
@@ -89,22 +89,23 @@ class Topmenu extends Component {
                                     {
                                       this.props.user.level === 0 ? <li className="base-item">
                                                                       {
-                                                                        this.props.NotCheckCount > 0 ? <Dropdown overlay={menu}>
-                                                                                                          <Link className="ant-dropdown-link" to='/article_admim'>
-                                                                                                            <Badge dot>
-                                                                                                              <Icon type="bell" style={{ color: '#FAFAFA' }}/>
-                                                                                                            </Badge>
-                                                                                                            &nbsp;&nbsp;&nbsp;
-                                                                                                            <Icon type="down" />
-                                                                                                          </Link>
-                                                                                                        </Dropdown>
-                                                                                                        : <Dropdown overlay={menu}>
-                                                                                                            <Link className="ant-dropdown-link" to='/Keep_On_File'>
-                                                                                                              <Icon type="bell" style={{ color: '#FAFAFA' }}/>
-                                                                                                              &nbsp;&nbsp;&nbsp;
-                                                                                                              <Icon type="down" />
-                                                                                                            </Link>
-                                                                                                          </Dropdown>
+                                                                        commentcommentNotCheckedCount > 0 || messagecommentNotCheckedCount > 0
+                                                                          ? <Dropdown overlay={menu}>
+                                                                              <Link className="ant-dropdown-link" to='/article_admim'>
+                                                                                <Badge dot>
+                                                                                  <Icon type="bell" style={{ color: '#FAFAFA' }}/>
+                                                                                </Badge>
+                                                                                &nbsp;&nbsp;&nbsp;
+                                                                                <Icon type="down" />
+                                                                              </Link>
+                                                                            </Dropdown>
+                                                                          :  <Dropdown overlay={menu}>
+                                                                              <Link className="ant-dropdown-link" to='/Keep_On_File'>
+                                                                                <Icon type="bell" style={{ color: '#FAFAFA' }}/>
+                                                                                &nbsp;&nbsp;&nbsp;
+                                                                                <Icon type="down" />
+                                                                              </Link>
+                                                                            </Dropdown>
                                                                       }
                                                                     </li>
                                                                   : null
@@ -180,6 +181,14 @@ const menu = (
         />
       </Link>
     </Menu.Item>
+    <Menu.Item>
+      <Link to='/message_admin'>
+        <FormattedMessage
+          id="Message"
+          defaultMessage="Message"
+        />
+      </Link>
+    </Menu.Item>
   </Menu>
 );
 
@@ -192,7 +201,8 @@ Topmenu.propTypes = {
 const mapStateToProps = (state)=> (
   {
     user: state.login.user,
-    NotCheckCount: state.comment.NotCheckCount
+    commentcommentNotCheckedCount: state.comment.NotCheckedCount,
+    messagecommentNotCheckedCount: state.message.NotCheckedCount
   }
 );
 

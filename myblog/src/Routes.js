@@ -16,6 +16,7 @@ import { view as ArticleEdit } from './pages/ArticleEdit/';
 import { view as ArticleDetails } from './pages/ArticleDetails/';
 import { view as ArticleList } from './pages/ArticleList/';
 import { view as CommentAdmin } from './pages/CommentAdmin/';
+import { view as MessageAdmin } from './pages/MessageAdmin/';
 import { view as KeepOnFileList } from './pages/keepOnFileList/';
 import { view as ArticleByTag } from './pages/ArticleByTag/'
 import { view as ArticleByCatalog } from './pages/ArticleByCatalog/'
@@ -58,6 +59,7 @@ const Routes = () => (
       <Route path="/article_details/:articleId" component={ ArticleDetails }></Route>
       <Route path="/article_admin" component={ ArticleList }></Route>
       <Route path="/comment_admin" component={ CommentAdmin }></Route>
+      <Route path="/message_admin" component={ MessageAdmin }></Route>
       <Route path="/Keep_On_File" component={ KeepOnFileList }></Route>
       <Route path="/article_by_tag" component={ ArticleByTag }></Route>
       <Route path="/article_by_catalog" component={ ArticleByCatalog }></Route>

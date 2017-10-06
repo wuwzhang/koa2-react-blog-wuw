@@ -1,0 +1,10 @@
+.MessageLi-li div>span {
+  color: #108ee9;
+}
+.subContent {
+  display: inline-block;
+  height: 40px;
+}
+.subContent:hover {
+  cursor: pointer;
+}

@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { view as FieldGroup } from '../components/FieldGroup';
+import { postContact } from '../fetch.js';
+import { addMessage } from '../action.js';
 
 import {
   FormGroup,
   Button,
+  ControlLabel,
+  FormControl,
+  HelpBlock,
   Form,
   Col
 } from 'react-bootstrap';
+import { message } from 'antd';
+
+import './style.css';
+
+import { FormattedMessage } from 'react-intl';
 
 class Contact extends Component {
 
@@ -87,59 +97,86 @@ class Contact extends Component {
     }
 
     if (_checkComplete()) {
-      // this.props.loginUp({ account, content });
+      let result = await postContact(account, content);
+
+      if (result.code === '1') {
+        this.props.postContactMessage(result.result);
+        message.success('Sent success');
+      } else {
+        message.error('Sorry');
+      }
     }
 
   }
 
   render() {
     return (
-      <Form>
-        <FieldGroup
-          autofocus
-          type='email'
-          label='labelEmail'
-          labelColor='#07689f'
-          defaultMessage='Email'
-          ref={(input)=>this.email=input}
-          onBlur={(event)=>this._checkAccount(event.target.value)}
-          onChange={(event)=>this.setState({account:event.target.value})}
-          validationState={this.state.accountValid}
-          help={this.state.accountHelp}
-        />
-        <Col sm={12} md={12} xs={12}>
-          <FormGroup
-            validationState={this.state.contentValid}
-          >
-
-              <ControlLabel>Content</ControlLabel>
-              <FormControl
-                componentClass="textarea"
-                placeholder='Enter Content'
-                onChange={(event)=>this.setState({content:event.target.value})}
-                onBlur={(event)=>this._checkContent(event.target.value)}
-                style={{ height: 800 }}
-              />
-              {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
-          </FormGroup>
-        </Col>
-        <FormGroup>
-          <Col sm={4} md={5} xs={12}>
-            <Button
-              className='submit-btn'
-              block
-              onClick={()=>this._contact()}
+      <section className='Contact'>
+        <Form horizontal>
+          <Col sm={10} md={10} xs={12}>
+            <FormGroup
+              validationState={this.state.accountValid}
             >
-            <FormattedMessage
-              id="Submit"
-              defaultMessage="Submit"
-            />
-            </Button>
+              <ControlLabel style={{color: '#FAFAFA'}}>
+                <FormattedMessage
+                  id="labelEmail"
+                  defaultMessage="Email"
+                />
+              </ControlLabel>
+              <FormControl
+                type="email"
+                onChange={(event)=>this.setState({account:event.target.value})}
+                onBlur={(event)=>this._checkAccount(event.target.value)}
+              />
+              {this.state.accountHelp && <HelpBlock>{this.state.accountHelp}</HelpBlock>}
+            </FormGroup>
           </Col>
-        </FormGroup>
-      </Form>
+          <Col sm={10} md={10} xs={12}>
+            <FormGroup
+              validationState={this.state.contentValid}
+            >
+
+                <ControlLabel style={{color: '#FAFAFA'}}>
+                  <FormattedMessage
+                    id="labelContent"
+                    defaultMessage="Conent"
+                  />
+                </ControlLabel>
+                <FormControl
+                  componentClass="textarea"
+                  onChange={(event)=>this.setState({content:event.target.value})}
+                  onBlur={(event)=>this._checkContent(event.target.value)}
+                  style={{ height: 150 }}
+                />
+                {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
+            </FormGroup>
+          </Col>
+          <FormGroup>
+            <Col sm={4} md={5} xs={12}>
+              <Button
+                className='submit-btn'
+                block
+                onClick={()=>this._contact()}
+              >
+              <FormattedMessage
+                id="Submit"
+                defaultMessage="Submit"
+              />
+              </Button>
+            </Col>
+          </FormGroup>
+        </Form>
+      </section>
     );
   }
 }
 
-export default Contact;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    postContactMessage: (message) => {
+      dispatch(addMessage(message));
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(Contact);

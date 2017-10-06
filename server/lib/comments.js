@@ -1,14 +1,13 @@
 const Comments = require('../models/').Comments;
 
-exports.create = (data) => (
-  Comments.create(data)
+exports.create = (data) => {
+  return Comments.create(data)
+};
 
-);
-
-exports.getCommentById = (id) => (
-  Comments.findOne({_id: id})
+exports.getCommentById = (id) => {
+  return Comments.findOne({_id: id})
           .exec()
-);
+};
 
 exports.getAllComment = () => {
   const sort = {
@@ -60,13 +59,7 @@ exports.deleteCommentsByArticleId = (articleId) => {
 };
 
 exports.getCommentsByNotChecked = () => {
-  const sort = {
-    created_at: -1
-  };
-  return Comments.find({isChecked: false})
-                 .populate({ path: 'userId'})
-                 .populate({ path: 'articleId' })
-                 .sort(sort)
+  return Comments.count({isChecked: false})
                  .exec()
 };
 

@@ -3,4 +3,5 @@
 }
 .comment-checked:hover {
   cursor: default;
+  color: #FF7E67;
 }

@@ -9,7 +9,7 @@ import './style.css';
 
 import { FormattedMessage } from 'react-intl';
 
-class ArticleOptionNav extends Component {
+class CommentOptionNav extends Component {
 
   constructor(props) {
     super(props);
@@ -34,7 +34,7 @@ class ArticleOptionNav extends Component {
     let result = await commentFetch.deleteComment(this.props.id, this.props.articleId);
 
     if (result.code === '1') {
-      this.props.deleteComment(this.props.index);
+      this.props.deleteComment(this.props.index, this.props.isChecked);
       message.success('Delete the comment');
     } else {
       message.error('Fail');
@@ -47,10 +47,10 @@ class ArticleOptionNav extends Component {
     let result = await commentFetch.changeCommentCheck(this.props.id);
 
     if (result.code === '1') {
-      this.props.setCommentChecked(this.props.index, this.props.isChecked);
-      message.success('Cancle the comment');
+      this.props.setCommentChecked(this.props.index);
+      message.success('Checked the comment');
     } else {
-      message.error('Fail');
+      message.error('Failure');
     }
   }
 
@@ -103,7 +103,7 @@ class ArticleOptionNav extends Component {
                           </span>
                         : <span>
                             <Popconfirm
-                              title="Are you sure delete this task?"
+                              title="Are you sure checked this task?"
                               onConfirm={this.confirmCheck}
                               onCancel={this.cancelCheck}
                               okText="Yes"
@@ -136,4 +136,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(ArticleOptionNav);
+export default connect(null, mapDispatchToProps)(CommentOptionNav);

@@ -1,9 +1,22 @@
 .footer {
-  height: 54px;
-  border-top: 1px solid #07689f;
+  background: #07689f;
+  padding-top: 20px;
+  color: #FAFAFA;
 }
 .footer p {
   text-align: center;
   line-height: 54px;
   height: 54px;
+  width: 100%;
+  color: #FAFAFA;
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+}
+.Footer-fontLink li {
+  display: inline-block;
+  margin: 0 10px;
+}
+.Footer-fontLink li a {
+  color: #FAFAFA;
+  font-size: 22px;
 }

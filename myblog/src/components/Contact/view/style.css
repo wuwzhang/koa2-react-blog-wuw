@@ -1,0 +1,6 @@
+.Contact .has-error .help-block {
+  color: #FF7E67 !important;
+}
+.Contact .has-success .help-block {
+  color: #A2D5F2 !important;
+}

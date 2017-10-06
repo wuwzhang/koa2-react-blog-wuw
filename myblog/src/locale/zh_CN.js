@@ -10,6 +10,7 @@ const zh_CN = {
   UpdateTime:'更新时间',
   Preview: '浏览',
   Comment: '评论',
+  Message: '消息',
   Public: '公开',
   Option: '操作',
   AddArticle: '写文章',
@@ -25,9 +26,11 @@ const zh_CN = {
   HomeHeadingTop: '哈哈哈哈哈哈哈哈哈哈哈！怕不是个神经病吧',
   HomeHeadingCenter: '实话告诉你，他就是个神经病！哈哈哈哈哈哈哈哈哈哈哈哈哈哈',
   ArticleListHeading: '我的江湖，谁的天下',
+  CommentListHeading: '剑在手，跟我走',
   AllTags: '所有标签',
   ArticleList: '文章列表',
   labelEmail: '邮箱',
+  labelContent: '内容',
   labelPassword: '密码',
   labelComfirmPassword: '确认密码',
   labelUserName: '用户名',
@@ -35,6 +38,8 @@ const zh_CN = {
   Edit: '编辑',
   Delete: '删除',
   Checked: '已确认',
-  Check: '确认'
+  Check: '确认',
+  All: '全部',
+  Ok: '确认'
 }
 export default zh_CN;

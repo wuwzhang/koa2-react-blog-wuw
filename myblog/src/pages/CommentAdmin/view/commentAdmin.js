@@ -6,22 +6,29 @@ import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as CommentLi } from '../../../components/CommentLi/';
 import Pagination from '../../../components/Pagination/pagination';
 
+import { fetchs as commentFetch, actions as commentAction } from '../../../components/Comment/';
+
 import {
   Grid,
+  Col,
   Row
 } from 'react-bootstrap';
+import { Radio } from 'antd';
 import QueueAnim from 'rc-queue-anim';
-
-import { fetchs as commentFetch, actions as commentAction } from '../../../components/Comment/';
+import { FormattedMessage } from 'react-intl';
 
 class CommentAdmin extends Component {
 
   constructor(props) {
     super(props);
+
     this.handlePage = this.handlePage.bind(this);
+    this.handleView = this.handleView.bind(this);
+
     this.state = {
       currentPage: 1,
-      pageArticleCount: 1
+      pageArticleCount: 1,
+      filter: 'ALL'
     }
   }
 
@@ -56,10 +63,18 @@ class CommentAdmin extends Component {
     }
   }
 
+  handleView(e) {
+    this.setState({
+      filter: e.target.value
+    });
+
+    this.props.setFilter(e.target.value);
+  }
+
   render() {
 
     let { comments = [] } = this.props;
-    let { currentPage, pageArticleCount } = this.state;
+    let { currentPage, pageArticleCount, filter } = this.state;
     let totalPages = Math.ceil(pageArticleCount / 10);
 
     return (
@@ -72,14 +87,90 @@ class CommentAdmin extends Component {
             <section className="ArticleList">
               <ul>
                 <QueueAnim className="demo-content">
-                  <Row key = 'a'></Row>
-                  <Row key = 'b'></Row>
+                  <Row key = 'a'>
+                    <Col md={9} sm={9} xs={12}>
+                      <h2>
+                        <FormattedMessage
+                          id="CommentListHeading"
+                          defaultMessage='Comment Management'
+                        />
+                      </h2>
+                    </Col>
+                    <Col md={3} sm={3} xs={12}>
+                      <section>
+                        <Radio.Group value={ filter } onChange={ this.handleView }>
+                          <Radio.Button value="ALL">
+                            <span>
+                              <FormattedMessage
+                                id="All"
+                                defaultMessage="All"
+                              />
+                            </span>
+                          </Radio.Button>
+                          <Radio.Button value="CHECK">
+                            <span>
+                              <FormattedMessage
+                                id="Check"
+                                defaultMessage="Check"
+                              />
+                            </span>
+                          </Radio.Button>
+                          <Radio.Button value="CHECKED">
+                            <span>
+                              <FormattedMessage
+                                id="Checked"
+                                defaultMessage="Checked"
+                              />
+                            </span>
+                          </Radio.Button>
+
+                        </Radio.Group>
+                      </section>
+                    </Col>
+                  </Row>
+                  <Row key = 'b'>
+                    <section className='ArticleLi-head' style={{color: '#999'}}>
+                      <Col md={3}>
+                        <span>
+                          <FormattedMessage
+                            id='Title'
+                            defaultMessage='Title'
+                          />
+                        </span>
+                      </Col>
+                      <Col md={5}>
+                        <span>
+                          <FormattedMessage
+                            id='Comment'
+                            defaultMessage='Comment'
+                          />
+                        </span>
+                      </Col>
+                      <Col md={2}>
+                        <span>
+                          <FormattedMessage
+                            id="CreateTime"
+                            defaultMessage="Create Time"
+                          />
+                        </span>
+                      </Col>
+                      <Col md={2}>
+                        <span>
+                          <FormattedMessage
+                            id="Option"
+                            defaultMessage="Option"
+                          />
+                        </span>
+                      </Col>
+                    </section>
+                  </Row>
                   <section key = 'c'>
                     {
                       comments.map((comment, index) => {
                         return comment? <CommentLi
                                           id = {comment.id}
                                           index = {index}
+                                          user = { comment.user.account}
                                           isChecked = {comment.isChecked}
                                           articleTitle = {comment.articleTitle}
                                           articleId = {comment.articleId}
@@ -106,9 +197,22 @@ class CommentAdmin extends Component {
   }
 }
 
+const selectVisibleComment = (comments, filter) => {
+  switch (filter) {
+    case 'ALL':
+      return comments;
+    case 'CHECKED':
+      return comments.filter(item => item.isChecked);
+    case 'CHECK':
+      return comments.filter(item => !item.isChecked);
+    default:
+      throw new Error('unsupported filter');
+  }
+}
+
 const mapStateToProps = (state) => {
   return {
-    comments: state.comment.allComment
+    comments: selectVisibleComment(state.comment.allComment, state.comment.filter)
   }
 }
 
@@ -116,6 +220,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     initAllComment: (comments) => {
       dispatch(commentAction.commentAllInit(comments))
+    },
+    setFilter: (filter) => {
+      dispatch(commentAction.setFilter(filter))
     }
   }
 }

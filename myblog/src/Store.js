@@ -14,6 +14,7 @@ import { reducer as articleEditReducer } from './pages/ArticleEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
 import { reducer as articleDetailsReducer } from './pages/ArticleDetails/';
 import { reducer as commentReducer } from './components/Comment/';
+import { reducer as messageReducer } from './components/Contact/';
 import { reducer as catalogReducer } from './components/CatalogAside/';
 // import { reducer as localesReducer } from './components/ConnectedIntlProvider/';
 import { reducer as articleSearchReducer } from './components/ArticleSearch/';
@@ -33,6 +34,7 @@ const reducer = combineReducers({
   articleDetails: articleDetailsReducer,
   articleSearch: articleSearchReducer,
   comment: commentReducer,
+  message:messageReducer,
   catalog: catalogReducer,
   routing: routerReducer
   // locales: localesReducer
