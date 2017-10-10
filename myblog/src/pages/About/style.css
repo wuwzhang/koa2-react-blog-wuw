@@ -1,0 +1,70 @@
+.about-container {
+  background: #fafafa;
+}
+.about-me {
+  padding: 20px 0;
+  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../media/about-1.png) no-repeat;
+  background: -o-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../media/about-1.png) no-repeat;
+  background: linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../media/about-1.png) no-repeat;
+  background-position: 10%;
+  background-size: 25% 90%;
+  height: 55vh;
+}
+.about-me-container {
+  height: 50vh;
+}
+.random-facts .col-md-4 {
+  padding: 0;
+}
+.about-me-container, .random-facts-container {
+  padding: 20px 20px;
+  background: #fafafa;
+}
+.random-facts-container {
+  height: 40vh;
+}
+.about-me-container h3, .skill h4, .random-facts h3 {
+  color: #1c669f;
+  text-shadow: 1px 1px #A2D5F2;
+}
+.about-me-container h3 {
+  font-size: 40px;
+  font-weight: 600;
+}
+.about-me-container h4 {
+  padding-bottom: 20px;
+  color: #aaa;
+  font-size: 24px;
+}
+.about-me-container p {
+  font-size: 16px;
+}
+.skill {
+  padding: 30px 0;
+  background: rgba(162, 213, 242, 0.3);
+}
+.skill h4 {
+  padding: 10px 0;
+  font-size: 20px;
+  font-weight: 400;
+}
+.skill p, .random-facts-container p {
+  padding: 5px 0;
+  font-size: 14px;
+}
+.random-facts-container h3 {
+  margin-bottom: 10px;
+}
+.random-facts {
+  padding: 20px 0;
+  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../media/about-3.png) no-repeat;
+  background: -o-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../media/about-3.png) no-repeat;
+  background: linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../media/about-3.png) no-repeat;
+  background-position: right bottom;
+  background-size: 25% 80%;
+  height: 45vh;
+}
+.random-fact h3 {
+
+}
+

@@ -77,8 +77,8 @@ class Topmenu extends Component {
                                         onClick = { this.handleSignOut }
                                       >
                                         <FontAwesome
+                                          style={{color: '#FF7E67'}}
                                           name='user-circle-o'
-                                          style={{ color: '#FF7E67' }}
                                         />
                                         <FormattedMessage
                                           id="Logout"
@@ -87,28 +87,29 @@ class Topmenu extends Component {
                                       </p>
                                     </li>
                                     {
-                                      this.props.user.level === 0 ? <li className="base-item">
-                                                                      {
-                                                                        commentcommentNotCheckedCount > 0 || messagecommentNotCheckedCount > 0
-                                                                          ? <Dropdown overlay={menu}>
-                                                                              <Link className="ant-dropdown-link" to='/article_admim'>
-                                                                                <Badge dot>
-                                                                                  <Icon type="bell" style={{ color: '#FAFAFA' }}/>
-                                                                                </Badge>
-                                                                                &nbsp;&nbsp;&nbsp;
-                                                                                <Icon type="down" />
-                                                                              </Link>
-                                                                            </Dropdown>
-                                                                          :  <Dropdown overlay={menu}>
-                                                                              <Link className="ant-dropdown-link" to='/Keep_On_File'>
-                                                                                <Icon type="bell" style={{ color: '#FAFAFA' }}/>
-                                                                                &nbsp;&nbsp;&nbsp;
-                                                                                <Icon type="down" />
-                                                                              </Link>
-                                                                            </Dropdown>
-                                                                      }
-                                                                    </li>
-                                                                  : null
+                                      this.props.user.level === 0
+                                        ? <li className="base-item">
+                                          {
+                                            commentcommentNotCheckedCount > 0 || messagecommentNotCheckedCount > 0
+                                              ? <Dropdown overlay={menu}>
+                                                  <Link className="ant-dropdown-link" to='/article_admim'>
+                                                    <Badge dot>
+                                                      <Icon type="bell" style={{ color: '#FAFAFA' }}/>
+                                                    </Badge>
+                                                    &nbsp;&nbsp;&nbsp;
+                                                    <Icon type="down" />
+                                                  </Link>
+                                                </Dropdown>
+                                              :  <Dropdown overlay={menu}>
+                                                  <Link className="ant-dropdown-link" to='/Keep_On_File'>
+                                                    <Icon type="bell" style={{ color: '#FAFAFA' }}/>
+                                                    &nbsp;&nbsp;&nbsp;
+                                                    <Icon type="down" />
+                                                  </Link>
+                                                </Dropdown>
+                                          }
+                                        </li>
+                                      : <li className="login-tip" style={{fontWight: 100}}>Hi! {this.props.user.username}~</li>
                                     }
                                   </ul>
                                 : <ul className="base-option">

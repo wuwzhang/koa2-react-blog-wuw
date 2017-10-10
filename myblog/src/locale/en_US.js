@@ -34,12 +34,15 @@ const en_US = {
   labelPassword: 'Password Address',
   labelComfirmPassword: 'Password Comfirm',
   labelUserName: 'User Name',
-  Submitu: 'Submit',
+  Submit: 'Submit',
   Edit: 'Edit',
   Delete: 'Delete',
   Checked: 'Checked',
   Check: 'Check',
   All: 'All',
-  OK: 'OK'
+  OK: 'OK',
+  Contact: 'Contact Me',
+  Location: 'Ningbo China',
+  Links: 'Links'
 }
 export default en_US;

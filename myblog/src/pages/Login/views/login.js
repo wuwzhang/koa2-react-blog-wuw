@@ -40,6 +40,8 @@ class Login extends Component {
       password: '',
       loading: false
     }
+
+    this._handleKeyPress = this._handleKeyPress.bind(this);
   }
 
   async _signIn() {
@@ -66,6 +68,12 @@ class Login extends Component {
       }
     } else {
       this.props.failLogin(result.message)
+    }
+  }
+
+  _handleKeyPress(event) {
+    if(event.key === 'Enter'){
+      this._signIn();
     }
   }
 
@@ -143,6 +151,7 @@ class Login extends Component {
                     label='labelPassword'
                     labelColor='#07689f'
                     defaultMessage='Password'
+                    onKeyPress={this._handleKeyPress}
                     onChange={(event)=>this.setState({password:event.target.value})}
                     onBlur={(event)=>this._checkPassword(event.target.value)}
                     validationState={this.state.pwdValid}

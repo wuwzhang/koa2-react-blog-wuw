@@ -231,7 +231,11 @@ class ArticlePostOrEdit extends Component {
         </section>
         <Grid>
           <section>
-            <h2>Article Post</h2>
+            <Row>
+              <Col md={6} ms={6} xs={12}>
+                <h2 className='articlePost-title'>Article Post</h2>
+              </Col>
+            </Row>
             <Form horizontal>
               <Row>
                 <Col md={6} ms={6} xs={12}>

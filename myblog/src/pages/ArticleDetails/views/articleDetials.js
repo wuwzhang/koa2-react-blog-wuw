@@ -10,6 +10,7 @@ import ArticleOptionNav from '../../../components/ArticleOptionNav/articleOption
 import { Comment } from '../../../components/Comment/'
 import { Aside } from '../../../components/Aside/index.js';
 import { view as TopMenu } from '../../../components/TopMenu/';
+import Footer from '../../../components/Footer/index.js';
 
 import { actions as deleteActions } from '../../ArticleList/';
 
@@ -90,7 +91,7 @@ class ArticleDetails extends Component {
       return (
         <Redirect
           to = {{
-            pathname: '/article_list'
+            pathname: '/article_admin'
           }}
         />
       );
@@ -112,9 +113,13 @@ class ArticleDetails extends Component {
                     <h3 className='ArticleDetails-articleTitle'>{ article.title }</h3>
                   </Col>
                   <Col md={6} sm={6}  xs={6}>
-                    <ArticleOptionNav
-                      myStyle = { { color: '#FF7E67', fontSize: '16px', marginRight: '15px' } }
-                    />
+                    {
+                      this.props.user && this.props.user.level === 0
+                      ? <ArticleOptionNav
+                          myStyle = { { color: '#FF7E67', fontSize: '16px', marginRight: '15px' } }
+                        />
+                      : null
+                    }
                   </Col>
                 </section>
               </Row>
@@ -175,6 +180,7 @@ class ArticleDetails extends Component {
             <BackTop />
             </section>
           </Grid>
+          <Footer />
         </section>
       );
     }
@@ -183,9 +189,9 @@ class ArticleDetails extends Component {
 }
 
 const mapStateToProps = (state) => {
-  // console.log('state');
-  // console.log(state.articleDetails.article)
+
   return {
+    user: state.login.user,
     article: state.articleDetails.article,
     deleted: state.articleList.deleted
   }

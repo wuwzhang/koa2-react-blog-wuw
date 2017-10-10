@@ -117,10 +117,13 @@
   text-align: center;
   margin: 0 10px;
 }
-.Home-fontLink li a {
+.Home-fontLink li a, .Home-fontLink li span {
   font-size: 26px;
+  color: #FAFAFA;
 }
-
+.Home-fontLink li span:hover {
+  cursor: pointer;
+}
 .Home-search span:hover {
   color: #FF7E67;
 }

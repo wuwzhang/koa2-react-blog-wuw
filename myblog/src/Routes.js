@@ -6,7 +6,6 @@ import createHistory from 'history/createBrowserHistory';
 
 import { view as Home } from './pages/Home/';
 import About from './pages/About/index.js';
-import Article from './pages/Article.js';
 import NotFound from './pages/NotFound.js';
 import { view as Tags } from './pages/Tags/';
 import { view as Login } from './pages/Login/';
@@ -48,7 +47,6 @@ const Routes = () => (
     <Switch>
       <Route exact path="/" component={ Home } ></Route>
       <Route path="/home" component={ Home } ></Route>
-      <Route path="/article" component={ Article } ></Route>
       <Route path="/tags_cloud" component={ Tags } ></Route>
       <Route path="/about" component={ About }></Route>
       <Route path="/login" component={ Login }></Route>

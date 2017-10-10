@@ -11,7 +11,7 @@ const CommentItem = ({user, content, create_at}) => {
   create_at = create_at ?  create_at.slice(0, 10) : create_at;
   return (
     <Row>
-      <li>
+      <li className='commentItem-li'>
         <Col md={1}><span className="comment-user">{ user.username }: </span></Col>
         <Col md={9}>
           {

@@ -50,6 +50,7 @@ class Register extends Component {
       confirmPwdValid: null
     }
 
+    this._handleKeyPress = this._handleKeyPress.bind(this);
   }
 
   async _checkAccount(value) {
@@ -171,6 +172,12 @@ class Register extends Component {
 
   }
 
+  _handleKeyPress(event) {
+    if(event.key === 'Enter'){
+      this._regist();
+    }
+  }
+
   render() {
     let { msgType } = this.props;
 
@@ -227,6 +234,7 @@ class Register extends Component {
                     label='labelComfirmPassword'
                     labelColor='#07689f'
                     defaultMessage='Comfirm Password'
+                    onKeyPress={this._handleKeyPress}
                     onChange={(event)=>this.setState({confirmPwd: event.target.value})}
                     onBlur={(event)=>this._checkConfirmPwd(event.target.value)}
                     validationState={this.state.confirmPwdValid}

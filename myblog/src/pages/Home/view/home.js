@@ -7,9 +7,10 @@ import { fetchs, actions } from '../../../components/ArticleSearch/';
 
 import FontAwesome from 'react-fontawesome';
 import QueueAnim from 'rc-queue-anim';
-import avatar from './avatar.jpg';
+import avatar from '../../../media/avatar.jpg';
+import wechat from '../../../media/wechat.jpg';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { Button, Spin } from 'antd';
+import { Button, Spin, Popover } from 'antd';
 
 import './style.css';
 
@@ -128,6 +129,7 @@ class Home extends Component {
                 <section key="1" className="Home-search">
                   <from>
                     <input
+                      autoFocus
                       type="text"
                       value={ this.state.value }
                       onChange={ (event) => this.setState({ value: event.target.value })}
@@ -146,8 +148,8 @@ class Home extends Component {
                     <Col md={4} sm={12} xs={12}><p>© 2017 wuw All rights reserved.</p></Col>
                     <Col md={4} sm={12} xs={12}>
                       <ul className='Home-fontLink'>
-                        <li><a href=''><FontAwesome name='github' /></a></li>
-                        <li><a href=''><FontAwesome name='wechat' /></a></li>
+                        <li><a href='https://github.com/wuwzhang'><FontAwesome name='github' /></a></li>
+                        <li><span><Popover content={content} title={null} trigger="hover"><FontAwesome name='wechat' /></Popover></span></li>
                         <li><a href=''><FontAwesome name='google-plus' /></a></li>
                       </ul>
                     </Col>
@@ -187,6 +189,12 @@ class Home extends Component {
     )
   }
 }
+
+const content = (
+  <div>
+    <img src={wechat} alt="" height='150'/>
+  </div>
+);
 
 const mapStateToProps = (state) => ({
   searching: state.articleSearch.searching

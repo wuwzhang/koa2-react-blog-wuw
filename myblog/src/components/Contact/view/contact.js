@@ -113,7 +113,7 @@ class Contact extends Component {
     return (
       <section className='Contact'>
         <Form horizontal>
-          <Col sm={10} md={10} xs={12}>
+          <Col sm={10} smOffset={2} md={10} mdOffset={2} xs={12}>
             <FormGroup
               validationState={this.state.accountValid}
             >
@@ -131,7 +131,7 @@ class Contact extends Component {
               {this.state.accountHelp && <HelpBlock>{this.state.accountHelp}</HelpBlock>}
             </FormGroup>
           </Col>
-          <Col sm={10} md={10} xs={12}>
+          <Col sm={10} smOffset={2} md={10} mdOffset={2} xs={12}>
             <FormGroup
               validationState={this.state.contentValid}
             >
@@ -152,7 +152,7 @@ class Contact extends Component {
             </FormGroup>
           </Col>
           <FormGroup>
-            <Col sm={4} md={5} xs={12}>
+            <Col sm={4} smOffset={2} mdOffset={2} md={5} xs={12}>
               <Button
                 className='submit-btn'
                 block

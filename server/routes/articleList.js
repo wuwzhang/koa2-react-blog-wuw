@@ -105,6 +105,28 @@ router.post('/api/getArticlesByTag', async(ctx, next) => {
     'articles': result[1]
   }
 })
+
+router.get('/api/getArticlesByTag', async(ctx, next) => {
+  let code = '1', message = 'ok';
+
+  const { tag, page = 1, eachPageArticles = 5 } = ctx.request.body;
+
+  try {
+    var result = await Promise.all([$Article.getArticlesTagsCount(tag),
+                                    $Article.getArticlesByTag(tag, page, eachPageArticles)]);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'count': result[0],
+    'articles': result[1]
+  }
+})
 /**
  *   通过分类查找文章
  */
@@ -128,7 +150,26 @@ router.post('/api/getArticlesByCatalog', async(ctx, next) => {
     'articles': result[1]
   }
 })
+router.get('/api/getArticlesByCatalog', async(ctx, next) => {
+  let code = '1', message = 'ok';
 
+  const { catalog, page = 1, eachPageArticles = 5 } = ctx.request.body;
+
+  try {
+    var result = await Promise.all([$Article.getArticlesCatalogCount(catalog),
+                                    $Article.getArticlesByCatalog(catalog, page, eachPageArticles)]);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'count': result[0],
+    'articles': result[1]
+  }
+})
 /**
  *   通过关键词查找文章
  */
@@ -152,7 +193,26 @@ router.post('/api/getArticleBySearch', async(ctx, next) => {
     'articles': result[1]
   }
 })
+router.get('/api/getArticleBySearch', async(ctx, next) => {
+  let code = '1', message = 'ok';
 
+  const { value, page = 1, eachPageArticle = 5 } = ctx.request.body;
+
+  try {
+    var result = await Promise.all([$Article.getArticlesSearchCount(value),
+                                    $Article.getArticleBySearch(value, page, eachPageArticle)]);
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'count': result[0],
+    'articles': result[1]
+  }
+})
 /**
  * 文章是否开放评论
  */

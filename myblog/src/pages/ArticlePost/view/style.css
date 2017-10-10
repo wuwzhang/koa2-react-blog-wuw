@@ -13,7 +13,7 @@
 .marked-preview ol{list-style-type: decimal !important}
 .marked-preview dir, .marked-preview menu, .marked-preview dd{ margin-left: 40px !important}
 .marked-preview ul {
-  list-style-type: circle;
+  list-style-type: disc;
 }
 .marked-preview ul, .marked-preview ol {
   margin: 0 0 0 20px !important;
@@ -35,4 +35,7 @@
 .postButton {
   margin-left: -15px;
 }
-
+.articlePost-title {
+  color: #29689a;
+  text-shadow: 1px 0 #A2D5F2;
+}

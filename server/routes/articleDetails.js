@@ -17,6 +17,7 @@ router.get('/api/article_details/:articleId', async(ctx, next) => {
     code = '-1',
     message = e.message
   }
+
   let Pre, Next;
 
   if (result[2]) {
@@ -46,7 +47,7 @@ router.get('/api/article_details/:articleId', async(ctx, next) => {
   }
 });
 
-router.get('/api/article_edit/:articleId', async(ctx, next) => {
+router.post('/api/article_edit/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { articleId } = ctx.params;
 

@@ -7,6 +7,7 @@ import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
+import Footer from '../../../components/Footer/index.js';
 import Pagination from '../../../components/Pagination/pagination';
 
 import { getArticlesByCatalog } from '../fetch.js'
@@ -144,6 +145,7 @@ class ArticleByCatalog extends Component {
             </Row>
           </section>
         </Grid>
+        <Footer />
       </section>
     );
   }

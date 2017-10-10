@@ -34,12 +34,15 @@ const zh_CN = {
   labelPassword: '密码',
   labelComfirmPassword: '确认密码',
   labelUserName: '用户名',
-  Submitu: '提交',
+  Submit: '提交',
   Edit: '编辑',
   Delete: '删除',
   Checked: '已确认',
   Check: '确认',
   All: '全部',
-  Ok: '确认'
+  Ok: '确认',
+  Contact: '请联系我',
+  Location: '中国 宁波',
+  Links: '友情链接'
 }
 export default zh_CN;

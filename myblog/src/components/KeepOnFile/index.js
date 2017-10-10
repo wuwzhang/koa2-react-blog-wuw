@@ -18,7 +18,7 @@ const KeepOnFileList = ({ year, monthInfo, badgeColor='red' }) => {
         monthInfo.map((item) => {
           return (
 
-            <p className="KeepOnFile-month">{ Arr[item.month-1] }<Badge style={{width:'20px', height: '20px', background: badgeColor}} count={ item.count } overflowCount={10}></Badge></p>
+            <p className="KeepOnFile-month">{ Arr[item.month-1] }<Badge style={{height: '20px', background: badgeColor}} count={ item.count } overflowCount={9}></Badge></p>
           );
         })
       }

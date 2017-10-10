@@ -7,6 +7,7 @@ import { view as ArticlTagItem } from '../../../components/ArticleItem/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
+import Footer from '../../../components/Footer/index.js'
 import Pagination from '../../../components/Pagination/pagination';
 
 import { fetchs as TagsFetch } from '../../../components/TagsCloud/';
@@ -144,6 +145,7 @@ class ArticleByTag extends Component {
 
           </section>
         </Grid>
+        <Footer />
       </section>
     );
   }

@@ -1,9 +1,14 @@
 .footer {
   background: #07689f;
-  padding-top: 20px;
+  padding-top: 30px;
   color: #FAFAFA;
 }
-.footer p {
+.footer h3 {
+  color: #49a9ee;
+  margin-bottom: 10px;
+  text-shadow: 1px 0px #ccc;
+}
+.power {
   text-align: center;
   line-height: 54px;
   height: 54px;
@@ -12,11 +17,56 @@
   border-top: 1px solid #eee;
   margin-top: 10px;
 }
+.Footer-fontLink, .foot-base-nav {
+  padding-top: 25px;
+}
+.links {
+  padding-top: 20px;
+}
 .Footer-fontLink li {
   display: inline-block;
-  margin: 0 10px;
+  margin-right: 20px;
 }
-.Footer-fontLink li a {
+.Footer-fontLink li a,.Footer-fontLink li span {
   color: #FAFAFA;
   font-size: 22px;
+}
+.information p {
+  font-size: 16px;
+  line-height: 40px;
+  height: 40px;
+  padding: 5px 0;
+}
+.information p span {
+  display: inline-block;
+}
+.footer .information .fa {
+  width: 30px;
+  color: #A2D5F2;
+}
+.footer h4 {
+  color: #49a9ee;
+  margin-bottom: 10px;
+  text-shadow: 1px 0px #ccc;
+}
+.links li {
+  line-height: 25px;
+  height: 25px;
+}
+.links li a {
+  font-size: 14px;
+  color: #FAFAFA;
+  padding: 3px 0;
+  font-weight: 100;
+}
+.links li span:hover {
+  cursor: pointer;
+}
+.foot-base-nav li{
+  display: inline-block;
+  margin-right: 20px;
+}
+.foot-base-nav li a {
+  color: #FF7E67;
+  font-size: 16px;
 }
