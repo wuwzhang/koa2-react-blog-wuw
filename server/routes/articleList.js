@@ -132,6 +132,7 @@ router.get('/api/getArticlesByTag', async(ctx, next) => {
  */
 router.post('/api/getArticlesByCatalog', async(ctx, next) => {
   let code = '1', message = 'ok';
+  console.log('-----Catalog_post----------')
 
   const { catalog, page = 1, eachPageArticles = 5 } = ctx.request.body;
 
@@ -152,6 +153,7 @@ router.post('/api/getArticlesByCatalog', async(ctx, next) => {
 })
 router.get('/api/getArticlesByCatalog', async(ctx, next) => {
   let code = '1', message = 'ok';
+  console.log('-----Catalog_get----------')
 
   const { catalog, page = 1, eachPageArticles = 5 } = ctx.request.body;
 
@@ -175,7 +177,7 @@ router.get('/api/getArticlesByCatalog', async(ctx, next) => {
  */
 router.post('/api/getArticleBySearch', async(ctx, next) => {
   let code = '1', message = 'ok';
-
+  console.log('-----search_post----------')
   const { value, page = 1, eachPageArticle = 5 } = ctx.request.body;
 
   try {
@@ -193,11 +195,18 @@ router.post('/api/getArticleBySearch', async(ctx, next) => {
     'articles': result[1]
   }
 })
-router.get('/api/getArticleBySearch', async(ctx, next) => {
+router.post('/api/getArticleBySearch/:value', async(ctx, next) => {
   let code = '1', message = 'ok';
+  console.log('-----search_get----------')
 
-  const { value, page = 1, eachPageArticle = 5 } = ctx.request.body;
+  const { page = 1, eachPageArticle = 5 } = ctx.request.body;
+  // const page = 1, eachPageArticle = 5;
+  const { value } = ctx.params;
 
+  console.log(page)
+  console.log(eachPageArticle)
+
+  console.log(value);
   try {
     var result = await Promise.all([$Article.getArticlesSearchCount(value),
                                     $Article.getArticleBySearch(value, page, eachPageArticle)]);
@@ -257,5 +266,32 @@ router.post('/api/article_toggle_ArticlePublic', async(ctx, next) => {
     'message': message
   }
 
+})
+
+router.get('/api/top_preview_article', async(ctx, next) => {
+  let code = '1', message = '获取浏览排行成功';
+
+  try {
+    var result = await $Article.getTopPreviewArticle();
+  } catch(e) {
+    code = '-1',
+    message = e.message
+  }
+
+  if (result) {
+    result = result.map((article) => {
+      return {
+        _id: article._id,
+        title: article.title,
+        pv: article.pv
+      }
+    })
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'result': result
+  }
 })
 module.exports = router;

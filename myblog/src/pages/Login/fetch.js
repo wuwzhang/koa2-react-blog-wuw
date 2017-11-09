@@ -32,3 +32,32 @@ export const login = async(params) => {
     }
   }
 }
+
+export const getUserByToken = async(token) => {
+  let url = DOMAIN + '/api/getUserByToken';
+
+  try {
+    var result = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        token
+      }),
+      credentials: CREDENTIALS
+    })
+  } catch(e) {
+
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: '-2',
+      message: '未知错误'
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { view as ArticleLi } from '../../../components/ArticleLi/';
 import { view as TopMenu } from '../../../components/TopMenu/';
@@ -14,7 +14,7 @@ import {
   Grid,
   Col,
   Row
-} from 'react-bootstrap'
+} from 'react-bootstrap';
 import QueueAnim from 'rc-queue-anim';
 import { Button } from 'antd';
 
@@ -65,9 +65,17 @@ class ArticleList extends Component {
 
   render() {
     let { currentPage, pageArticleCount } = this.state;
-    let { articles } = this.props;
-    let totalPages = Math.ceil(pageArticleCount / 10);
+    let { articles, location, user } = this.props;
+    let totalPages = Math.ceil(pageArticleCount / 10),
+        pathname ='/login',
+        redirectState = { from: location };
 
+    if (!user) {
+      return <Redirect to={{
+              pathname: pathname,
+              state: redirectState
+            }}/>
+    }
 
     return(
       <section>
@@ -196,6 +204,8 @@ class ArticleList extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    user: state.login.user,
+    location: state.routing.location,
     articles: state.articleList.articles
   }
 }

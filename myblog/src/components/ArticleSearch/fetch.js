@@ -2,7 +2,7 @@ export const DOMAIN = '';
 const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
 
 export const getArticleBySearch = async (value, page, eachPageArticle) => {
-  let url = DOMAIN + '/api/getArticleBySearch';
+  let url = DOMAIN + `/api/getArticleBySearch/${value}`;
   try {
     var result = await fetch(url, {
       method: 'POST',
@@ -11,7 +11,6 @@ export const getArticleBySearch = async (value, page, eachPageArticle) => {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({
-        value: value,
         page,
         eachPageArticle
       }),

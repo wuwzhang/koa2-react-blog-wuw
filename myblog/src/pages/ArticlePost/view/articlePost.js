@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import moment from 'moment';
 
 import marked from 'marked';
+// import katex from 'katex';
 
 // import { view as FieldGroup } from '../../../components/FieldGroup';
 import redirect from '../../../components/Redirect';
@@ -60,8 +61,8 @@ class ArticlePostOrEdit extends Component {
     })
 
     this.state = {
-      title: this.props.articleTitle || '',
-      content: this.props.articleContent || '',
+      title: localStorage.getItem('title') || this.props.articleTitle || '',
+      content: localStorage.getItem('content') || this.props.articleContent || '',
       tags: '',
       catalog: '',
       tagsValid: 'success',
@@ -75,6 +76,7 @@ class ArticlePostOrEdit extends Component {
   }
 
   componentDidMount() {
+
     this.props.initPost();
   }
 
@@ -130,7 +132,18 @@ class ArticlePostOrEdit extends Component {
       })
     }
   }
-
+  _setTitle(value) {
+    localStorage.setItem('title', value)
+    this.setState({
+      title: value
+    })
+  }
+  _setContent(value) {
+    localStorage.setItem('content', value)
+    this.setState({
+      content: value
+    })
+  }
   /**
    * 检测标签是否合法，由中文;分割为不合法
    * @param  {string} value 标签字符串
@@ -222,7 +235,16 @@ class ArticlePostOrEdit extends Component {
 
   render() {
     let { title, content, tags, catalog } = this.state;
-    let { msgType, msg } = this.props.articlePost;
+    let { location, user, articlePost: {msgType, msg} } = this.props;
+    let pathname ='/login',
+        redirectState = { from: location };
+
+    if (!user) {
+      return <Redirect to={{
+              pathname: pathname,
+              state: redirectState
+            }}/>
+    }
 
     return(
       <section>
@@ -247,7 +269,7 @@ class ArticlePostOrEdit extends Component {
                         type='text'
                         placeholder='Enter title'
                         value={title}
-                        onChange={(event)=>this.setState({title:event.target.value})}
+                        onChange={(event)=>this._setTitle(event.target.value)}
                         onBlur={(event)=>this._checkTitle(event.target.value)}
                       />
                     {this.state.titleHelp && <HelpBlock>{ this.state.titleHelp }</HelpBlock>}
@@ -273,7 +295,7 @@ class ArticlePostOrEdit extends Component {
                                                 componentClass="textarea"
                                                 placeholder='Enter Content'
                                                 value={content}
-                                                onChange={(event)=>this.setState({content:event.target.value})}
+                                                onChange={(event) => this._setContent(event.target.value)}
                                                 onBlur={(event)=>this._checkContent(event.target.value)}
                                                 style={{ height: 800 }}
                                               />
@@ -308,7 +330,7 @@ class ArticlePostOrEdit extends Component {
                                                 componentClass="textarea"
                                                 placeholder='Enter Content'
                                                 value={content}
-                                                onChange={(event)=>this.setState({content:event.target.value})}
+                                                onChange={(event)=>this._setContent(event.target.value)}
                                                 onBlur={(event)=>this._checkContent(event.target.value)}
                                                 style={{ height: 800 }}
                                               />
@@ -384,6 +406,8 @@ ArticlePostOrEdit.propTypes = {
 const mapStateToProps = (state) => {
 
   return {
+    user: state.login.user,
+    location: state.routing.location,
     articlePost: state.articlePost
   }
 };

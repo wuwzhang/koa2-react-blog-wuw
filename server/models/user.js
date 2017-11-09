@@ -6,6 +6,8 @@ const UserSchema = new Schema({
   username: { type: String, require: true },
   password: { type: String, require: true },
   level: { type: Number, default: 1},
+  isActive: { type: Boolean, default: false },
+  activeKey: { type:String,required:true},
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 })

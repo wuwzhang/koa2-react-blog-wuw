@@ -7,7 +7,7 @@ import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import Footer from '../../../components/Footer/index.js';
-import { view as SearchBox, fetchs as searchFetch, actions as searchAction } from '../../../components/ArticleSearch/';
+import { fetchs as searchFetch, actions as searchAction } from '../../../components/ArticleSearch/';
 import Pagination from '../../../components/Pagination/pagination';
 
 import { FormattedMessage } from 'react-intl';
@@ -33,6 +33,25 @@ class ArticleBySearch extends Component {
 
     this.handlePage = this.handlePage.bind(this);
     this._handleKeyPress = this._handleKeyPress.bind(this);
+  }
+
+  async componentDidMount() {
+    let { articles, searchContent } = this.props;
+
+    if (!articles || articles.length === 0) {
+      let result = await searchFetch.getArticleBySearch(searchContent, 1, 4);
+
+      if (result.code === '1') {
+        this.setState({
+          redirectToReferrer: true
+        })
+        this.props.successSearch(result.articles, result.count);
+
+      } else {
+        this.props.failSearch(result.message);
+      }
+    }
+
   }
 
   async handlePage(curPage) {
@@ -61,19 +80,21 @@ class ArticleBySearch extends Component {
 
     let { value } = this.state;
 
-    let result = await searchFetch.getArticleBySearch(value, 1, 4);
+    // let result = await searchFetch.getArticleBySearch(value, 1, 4);
 
-    if (result.code === '1') {
-      this.setState({
-        redirectToReferrer: true
-      })
-      this.props.successSearch(result.articles, result.count);
+    // if (result.code === '1') {
+    //   this.setState({
+    //     redirectToReferrer: true
+    //   })
+    //   this.props.successSearch(result.articles, result.count);
 
-    } else {
+    // } else {
 
-      this.props.failSearch(result.message);
-      console.log(result);
-    }
+    //   this.props.failSearch(result.message);
+    //   console.log(result);
+    // }
+    //
+    window.location.href = '/article_by_search/' + value;
   }
 
   _handleKeyPress(event) {

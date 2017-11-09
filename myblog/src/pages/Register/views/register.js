@@ -269,7 +269,7 @@ class Register extends Component {
                     msgType === 'warning' ? <Alert className="myAlert registAlert" message="注册失败" type="warning" showIcon closable/> : null
                   }
                   {
-                    msgType === 'success' ? <Alert className="myAlert registAlert" message="注册成功" type="success" showIcon closable/> : null
+                    msgType === 'success' ? <Alert className="myAlert registAlert" message="在相应邮箱确认" type="success" showIcon closable/> : null
                   }
                 </Form>
               </QueueAnim>

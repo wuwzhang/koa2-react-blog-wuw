@@ -5,9 +5,8 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const session = require('koa2-session-store')
-const MongoStore = require('koa2-session-mongolass')
+const MongoStore = require('koa-session-mongoose')
 const config = require('config-lite')(__dirname)
-// const logger = require('koa-logger')
 
 const index = require('./routes/index')
 const signIn = require('./routes/signIn')
@@ -21,6 +20,7 @@ const message = require('./routes/message')
 const tags = require('./routes/tags')
 // const catalog = require('./routes/catalog')
 const keepOnFileList = require('./routes/keepOnFileList')
+const verifyKey = require('./routes/verifymail')
 
 const log = require('./logs/log')
 
@@ -36,7 +36,7 @@ app.use(bodyparser({
 
 app.keys = [config.session.secret];
 app.use(session({
-  name: config.session.key,
+  name: config.session.key,     // 设置 cookie 中保存 session id 的字段名称
   secret: config.session.secret,
   resave: true,
   saveUninitialized: false,
@@ -45,8 +45,6 @@ app.use(session({
   },
   stroe: new MongoStore()
 }))
-
-// app.use(flash())
 
 app.use(json())
 app.use(require('koa-static')(__dirname + '/build'))
@@ -65,6 +63,9 @@ app.use(async(ctx, next) => {
 })
 app.use(async(ctx, next) => {
   await next()
+  if(!ctx.session){
+    ctx.session.flag = 1
+  }
   if (ctx.response.status === 400) {
     ctx.response.redirect('?', ctx.request.url)
   }
@@ -89,6 +90,7 @@ app.use(message.routes(), message.allowedMethods())
 app.use(tags.routes(), tags.allowedMethods())
 // app.use(catalog.routes(), catalog.allowedMethods())
 app.use(keepOnFileList.routes(), keepOnFileList.allowedMethods())
+app.use(verifyKey.routes(), verifyKey.allowedMethods())
 
 //错误请求的日志
 app.use(koaWinston(log.errorloger));

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
 // import { loginOut } from '../action.js'
-import { actions as loginActions } from '../../../pages/Login/';
+import { actions as loginActions, fetchs as loginFetchs } from '../../../pages/Login/';
 // import { fetchs as commentFetch } from '../../Comment/'
 
 import './style.css';
@@ -26,13 +26,35 @@ class Topmenu extends Component {
     this.handleSignOut = this.handleSignOut.bind(this);
   }
 
+  componentDidMount() {
+    let token = window.localStorage.getItem('token');
+
+    if (token) {
+      this.loginByToken(token);
+    }
+  }
+
   handleSignOut(event) {
     event.preventDefault();
     this.props.loginOut(this.props.user);
+    window.localStorage.removeItem('token')
+  }
+
+  async loginByToken(token) {
+    let result = await loginFetchs.getUserByToken(token);
+
+    if (result.code === '1') {
+      this.props.loginByToken(result.user);
+    } else {
+
+    }
   }
 
   render() {
     let { commentcommentNotCheckedCount, messagecommentNotCheckedCount } = this.props;
+
+
+
     return (
       <Grid>
 
@@ -114,7 +136,10 @@ class Topmenu extends Component {
                                   </ul>
                                 : <ul className="base-option">
                                     <li className="base-item">
-                                      <Link to='/login'>
+                                      <Link to={{
+                                        pathname: '/login',
+                                        state: { from: this.props.location }
+                                      }}>
                                         <FontAwesome name='user-circle'/>
                                         <FormattedMessage
                                           id="Login"
@@ -163,7 +188,6 @@ class Topmenu extends Component {
     );
   }
 }
-
 const menu = (
   <Menu>
     <Menu.Item>
@@ -202,6 +226,7 @@ Topmenu.propTypes = {
 const mapStateToProps = (state)=> (
   {
     user: state.login.user,
+    location: state.routing.location,
     commentcommentNotCheckedCount: state.comment.NotCheckedCount,
     messagecommentNotCheckedCount: state.message.NotCheckedCount
   }
@@ -209,6 +234,9 @@ const mapStateToProps = (state)=> (
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    loginByToken: async(user) => {
+      dispatch(loginActions.finishLogin(user));
+    },
     loginOut: async(user) => {
       dispatch(loginActions.loginOut(user));
     }

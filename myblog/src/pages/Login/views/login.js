@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
 import { login } from '../fetch';
 import { view as FieldGroup } from '../../../components/FieldGroup';
@@ -25,7 +25,7 @@ import {
   Grid,
   Col
 } from 'react-bootstrap';
-import { Alert } from 'antd';
+import { Alert, message } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 
 import './style.css';
@@ -38,20 +38,26 @@ class Login extends Component {
     this.state = {
       account: '',
       password: '',
-      loading: false
+      loading: false,
+      failMessage: ''
     }
 
     this._handleKeyPress = this._handleKeyPress.bind(this);
   }
-
   async _signIn() {
     const { account, password } = this.state;
     // await this.props.loginIn({account, password});
     this.props.startLogin();
+
     let result = await login({account, password});
 
     if (result.code === '1') {
       this.props.successLogin(result.user, result.message);
+      message.success('login success');
+
+      if (result.token) {
+        window.localStorage.setItem('token', result.token);
+      }
 
       let res = await commentFetch.getNotCheckedComments();
       if (res.code === '1') {
@@ -68,6 +74,15 @@ class Login extends Component {
       }
     } else {
       this.props.failLogin(result.message)
+      if (result.code === '-1') {
+        this.setState({
+          failMessage: '邮箱未确认'
+        })
+      } else {
+        this.setState({
+          failMessage: '用户名密码错误'
+        })
+      }
     }
   }
 
@@ -115,7 +130,14 @@ class Login extends Component {
   }
 
   render() {
-    let { user, msgType } = this.props;
+    let { user, fromPath, msgType } = this.props;
+    let { failMessage } = this.state;
+
+    if (msgType === 'success' && user && fromPath.state) {
+      return <Redirect to={{
+              pathname: fromPath.state.from.pathname
+            }}/>
+    }
 
     return (
       <section className='Login-Bg'>
@@ -181,13 +203,10 @@ class Login extends Component {
                   </FormGroup>
 
                   {
-                    msgType === 'warning' ? <Alert className="myAlert registAlert" message="用户名或密码错误" type="warning" showIcon closable/>
+                    msgType === 'warning' ? <Alert className="myAlert registAlert" message={ failMessage } type="warning" showIcon closable/>
                                           : null
                   }
-                  {
-                    msgType === 'success' ? <Alert className="myAlert registAlert" message="登录成功" type="success" showIcon closable/>
-                                          : null
-                  }
+
                 </Form>
               </QueueAnim>
             </Col>
@@ -207,9 +226,11 @@ Login.propTypes = {
 }
 
 
-const mapStateToProps = (state)=> (
-  state.login
-);
+const mapStateToProps = (state)=> ({
+  msgType: state.login.msgType,
+  user: state.login.user,
+  fromPath: state.routing.location
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {

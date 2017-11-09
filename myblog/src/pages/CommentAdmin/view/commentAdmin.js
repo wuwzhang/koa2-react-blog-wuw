@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as CommentLi } from '../../../components/CommentLi/';
@@ -73,9 +73,18 @@ class CommentAdmin extends Component {
 
   render() {
 
-    let { comments = [] } = this.props;
+    let { comments = [], location, user } = this.props;
     let { currentPage, pageArticleCount, filter } = this.state;
-    let totalPages = Math.ceil(pageArticleCount / 10);
+    let totalPages = Math.ceil(pageArticleCount / 10),
+        pathname ='/login',
+        redirectState = { from: location };
+
+    if (!user) {
+      return <Redirect to={{
+              pathname: pathname,
+              state: redirectState
+            }}/>
+    }
 
     return (
       <section>
@@ -212,6 +221,8 @@ const selectVisibleComment = (comments, filter) => {
 
 const mapStateToProps = (state) => {
   return {
+    user: state.login.user,
+    location: state.routing.location,
     comments: selectVisibleComment(state.comment.allComment, state.comment.filter)
   }
 }

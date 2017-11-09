@@ -8,6 +8,7 @@ import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
 import Footer from '../../../components/Footer/index.js'
+import Pagination from '../../../components/Pagination/pagination';
 
 import { Timeline, Radio } from 'antd';
 import FontAwesome from 'react-fontawesome';
@@ -28,16 +29,40 @@ class KeepOnFileList extends Component {
       catalogView: 'catalog'
     }
     this.handleView = this.handleView.bind(this);
+    this.handlePage = this.handlePage.bind(this);
   }
   async componentDidMount() {
-    let result = await getArticleDateList();
+    let result = await getArticleDateList(1, 4);
 
     if (result.code === '1') {
       this.setState({
-        articleList: result.articles
+        articleList: result.articles,
+        currentPage: 1,
+        count: result.count
       })
     } else {
       console.log(result);
+    }
+  }
+
+  async handlePage(curPage) {
+    console.log(curPage)
+    this.setState({
+      currentPage: curPage,
+      redirectToReferrer: false
+    })
+    let result = await getArticleDateList(curPage, 4);
+
+    if (result.code === '1') {
+      this.setState({
+        articleList: result.articles,
+        count: result.count,
+        pageArticleCount: result.count,
+        redirectToReferrer: false
+      })
+
+    } else {
+
     }
   }
 
@@ -48,7 +73,8 @@ class KeepOnFileList extends Component {
   }
   render() {
 
-    let { articleList, catalogView } = this.state;
+    let { articleList, catalogView, currentPage, count } = this.state;
+    let totalPages = Math.ceil(count / 4);
 
     return(
       <section>
@@ -100,6 +126,12 @@ class KeepOnFileList extends Component {
                     }
                     </QueueAnim>
                   </Timeline>
+                  <Pagination
+                    totalPages={ totalPages }
+                    currentPage={ currentPage }
+                    range={ 5 }
+                    onChange={ this.handlePage }
+                  />
                 </section>
               </Col>
               <Col md={2} sm={2} xsHidden>

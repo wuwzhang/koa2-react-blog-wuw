@@ -43,6 +43,7 @@ const en_US = {
   OK: 'OK',
   Contact: 'Contact Me',
   Location: 'Ningbo China',
-  Links: 'Links'
+  Links: 'Links',
+  Fork: 'Copy link to clipboard'
 }
 export default en_US;

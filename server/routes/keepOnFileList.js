@@ -21,8 +21,14 @@ router.get('/api/getArticleDateList', async(ctx, next) => {
 
 router.post('/api/getArticleDateList', async(ctx, next) => {
   let code = '1', message = 'ok';
+
+  let { page, eachPageArticle } = ctx.request.body;
+
   try {
-    var result = await $Article.getArticleListByDate();
+    var result = await Promise.all([
+                                    $Article.getArticleListByDate(page, eachPageArticle),
+                                    $Article.getArticleListCountByDate()
+                                  ])
 
   } catch (e) {
     code = '-1',
@@ -32,7 +38,8 @@ router.post('/api/getArticleDateList', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'articles': result
+    'articles': result[0],
+    'count': result[1].length
   }
 });
 

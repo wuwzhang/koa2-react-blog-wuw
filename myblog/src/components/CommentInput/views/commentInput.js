@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 
-import redirect from '../../Redirect/'
 import {
   fetchs as commentFetchs,
   actions as CommentAction
@@ -28,7 +27,9 @@ class CommentInput extends Component {
     this.state = {
       comment: '',
       commentValid: null,
-      commentHelp: ''
+      commentHelp: '',
+      pathname: null,
+      redirectState: null
     }
   }
 
@@ -72,9 +73,20 @@ class CommentInput extends Component {
   _login() {
     let pathname ='/login',
         redirectState = { from: this.props.location };
-    redirect(pathname, redirectState)
+
+    this.setState({
+      pathname: pathname,
+      redirectState: redirectState
+    })
   }
   render() {
+    let { pathname, redirectState } = this.state;
+    if (pathname) {
+      return <Redirect to={{
+              pathname: pathname,
+              state: redirectState
+            }}/>
+    }
     return (
       <Form>
         <FormGroup>
@@ -104,7 +116,6 @@ class CommentInput extends Component {
                                     onClick={()=>this._addComment()}
                                   >submit</Button>
                                 : <Button
-
                                     className="myButton commentButton submit-btn"
                                     onClick={()=>this._login()}
                                   >login</Button>

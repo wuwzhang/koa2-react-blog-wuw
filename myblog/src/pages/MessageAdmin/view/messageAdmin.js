@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as MessageLi } from '../../../components/MessageLi/';
@@ -73,9 +73,18 @@ class MessageAdmin extends Component {
 
   render() {
 
-    let { messages = [] } = this.props;
+    let { messages = [], location, user } = this.props;
     let { currentPage, pageArticleCount, filter } = this.state;
-    let totalPages = Math.ceil(pageArticleCount / 10);
+    let totalPages = Math.ceil(pageArticleCount / 10),
+        pathname ='/login',
+        redirectState = { from: location };
+
+    if (!user) {
+      return <Redirect to={{
+              pathname: pathname,
+              state: redirectState
+            }}/>
+    }
 
     return (
       <section>
@@ -210,6 +219,8 @@ const selectVisibleMessage = (Message, filter) => {
 
 const mapStateToProps = (state) => {
   return {
+    user: state.login.user,
+    location: state.routing.location,
     messages: selectVisibleMessage(state.message.message, state.message.filter)
   }
 }

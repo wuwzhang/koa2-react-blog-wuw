@@ -43,6 +43,7 @@ const zh_CN = {
   Ok: '确认',
   Contact: '请联系我',
   Location: '中国 宁波',
-  Links: '友情链接'
+  Links: '友情链接',
+  Fork: '引用'
 }
 export default zh_CN;

@@ -39,3 +39,10 @@
   color: #29689a;
   text-shadow: 1px 0 #A2D5F2;
 }
+.katex span {
+  top: 0 !important;
+}
+.katex .vlist>span {
+  top: -.39em !important;
+}
+

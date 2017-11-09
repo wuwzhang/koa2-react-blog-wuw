@@ -1,9 +1,9 @@
 section.keepOnFile-page {
   width: 100%;
   height: calc(100vh - 54px);
-  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
-  background: -o-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
-  background: linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
+  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.6) 0%, rgba(256, 256, 256, 0.8) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
+  background: -o-linear-gradient(rgba(256, 256, 256, 0.6) 0%, rgba(256, 256, 256, 0.8) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
+  background: linear-gradient(rgba(256, 256, 256, 0.6) 0%, rgba(256, 256, 256, 0.8) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
   background-size: 80% 80vh;
   background-position: left bottom;
   padding-top: 20px;

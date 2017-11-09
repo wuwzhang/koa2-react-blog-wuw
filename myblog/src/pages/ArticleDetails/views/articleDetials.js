@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { detailArticle } from '../fetch';
+import { detailArticle, getTopPreviewArticle } from '../fetch';
 import { withRouter, Redirect } from 'react-router-dom';
-
-import { BackTop } from 'antd';
 
 import { articleInitDetails } from '../action.js';
 import ArticleOptionNav from '../../../components/ArticleOptionNav/articleOptionNav.js';
@@ -19,7 +17,10 @@ import {
   Col,
   Row
 } from 'react-bootstrap';
+import { BackTop, Button } from 'antd';
 import FontAwesome from 'react-fontawesome';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { FormattedMessage } from 'react-intl';
 
 import './style.css';
 
@@ -31,8 +32,12 @@ class ArticleDetails extends Component {
 
     this.state = {
       preArticle: {},
-      nextArticle: {}
+      nextArticle: {},
+      topPreviewArticle: [],
+      location: document.URL
     }
+
+    this.onCopy = this.onCopy.bind(this);
 
     import('highlight').then(({hljs}) => {
       marked.setOptions({
@@ -68,6 +73,15 @@ class ArticleDetails extends Component {
       console.log(result)
     }
 
+    let TopPreviewRes = await getTopPreviewArticle();
+    if (TopPreviewRes.code === '1') {
+      this.setState({
+        topPreviewArticle: TopPreviewRes.result
+      })
+    } else {
+
+    }
+
   }
 
   async _getNewArticle(articleId) {
@@ -85,6 +99,10 @@ class ArticleDetails extends Component {
     }
   }
 
+  onCopy() {
+    this.setState({copied: true});
+  }
+
   render() {
     if (this.props.deleted) {
       this.props.endDelete();
@@ -97,7 +115,7 @@ class ArticleDetails extends Component {
       );
     }
     let { article } = this.props;
-    let { preArticle, nextArticle } = this.state;
+    let { preArticle, nextArticle, topPreviewArticle = [] } = this.state;
 
     if (article) {
       return(
@@ -112,13 +130,20 @@ class ArticleDetails extends Component {
                   <Col md={6} sm={6} xs={6}>
                     <h3 className='ArticleDetails-articleTitle'>{ article.title }</h3>
                   </Col>
-                  <Col md={6} sm={6}  xs={6}>
+                  <Col md={6} sm={6} xs={6}>
                     {
                       this.props.user && this.props.user.level === 0
                       ? <ArticleOptionNav
                           myStyle = { { color: '#FF7E67', fontSize: '16px', marginRight: '15px' } }
                         />
-                      : null
+                      : <CopyToClipboard onCopy={this.onCopy} text = { this.state.location }>
+                          <Button>
+                            <FormattedMessage
+                              id="Fork"
+                              defaultMessage="Copy To Clipboard"
+                            />
+                          </Button>
+                        </CopyToClipboard>
                     }
                   </Col>
                 </section>
@@ -143,10 +168,21 @@ class ArticleDetails extends Component {
                     create_time = { article.created_at ? article.created_at.slice(0, 10) : '' }
                     update_time = { article.updated_at ? article.updated_at.slice(0, 10) : '' }
                   />
+                  <section className='topPreview'>
+                    <ul>
+                      {
+                        topPreviewArticle.map((article) => {
+                          return  <li onClick={()=>this._getNewArticle(article._id)}>
+                                    <span>{article.title.length > 15 ? article.title.slice(0, 15) + '...' : article.title}</span>
+                                    <span>{article.pv}</span>
+                                  </li>
+                        })
+                      }
+                    </ul>
+                  </section>
                 </Col>
               </Row>
               <Row>
-
                 <section className="pre-next">
                   <ul>
                     {
@@ -168,15 +204,15 @@ class ArticleDetails extends Component {
                   </ul>
                 </section>
 
-              </Row>
-              <Row>
-                {
-                  article.isComment ? <Col md={10} ms={10} xs={10}>
-                                        <Comment />
-                                      </Col>
-                                    : <p>此篇文章暂不开放评论</p>
-                }
-              </Row>
+            </Row>
+            <Row>
+              {
+                article.isComment ? <Col md={10} ms={10} xs={10}>
+                                      <Comment />
+                                    </Col>
+                                  : <p>此篇文章暂不开放评论</p>
+              }
+            </Row>
             <BackTop />
             </section>
           </Grid>

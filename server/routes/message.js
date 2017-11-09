@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const router = require('koa-router')();
 const Models = require('../lib/core');
 const $Messages = Models.$Messages;
+const validator = require('validator');
+const nodemailer = require('nodemailer');
 
 router.post('/api/post_message', async(ctx, next) => {
 
@@ -10,9 +12,45 @@ router.post('/api/post_message', async(ctx, next) => {
   let code = '1', message = '发送成功';
 
   try {
-    var result = await $Messages.create({ email, content });
-  }catch (e) {
-    code = '-1';
+     if (!email || !validator.isEmail(email)) {
+      code = '-1';
+      message = '填写正确的邮箱格式'
+    } else {
+      email = validator.trim(email);
+      var result = await $Messages.create({ email });
+
+      function sendEmail(email) {
+        var stmpTransport = nodemailer.createTransport({
+          host:"smtp.126.com",
+          secureConnection: true,
+          port: 25,
+          auth:{
+            user:"wuwZhang@126.com", //你的邮箱帐号,
+            pass:"sqwangyi22"//你的邮箱授权码
+          }
+        });
+
+        var mailOptions = {
+          from:"Messages <wuwZhang@126.com>",//标题
+          to: "wuwZhang@126.com",//收件人
+          subject: "Message Check", // 标题
+          html: "<p>博客有新消息待确认</p>" // html 内容
+        };
+
+        stmpTransport.sendMail(mailOptions, function(error, response) {
+          if (error) {
+            console.log('error', error);
+          } else {
+            console.log("Message sent:" + response.message);
+          }
+          stmpTransport.close();
+        });
+      }
+
+      sendEmail(email);
+    }
+  } catch (e) {
+    code = '-2';
     message = e.message
   }
 

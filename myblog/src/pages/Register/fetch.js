@@ -56,3 +56,32 @@ export const checkAccount = async(account) => {
     }
   }
 }
+
+export const registActive = async(verifyKey) => {
+  const url = DOMAIN + '/api/registActive';
+  try {
+    var result = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        verifyKey
+      }),
+      credentials: CREDENTIALS
+    })
+  } catch(e) {
+    console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+     code: '-2',
+     message: '未知错误'
+    }
+  }
+}
+

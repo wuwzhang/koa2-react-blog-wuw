@@ -7,6 +7,7 @@ import createHistory from 'history/createBrowserHistory';
 import { view as Home } from './pages/Home/';
 import About from './pages/About/index.js';
 import NotFound from './pages/NotFound.js';
+import VerifyMail from './pages/VerifyMail/index.js';
 import { view as Tags } from './pages/Tags/';
 import { view as Login } from './pages/Login/';
 import { view as Register } from './pages/Register/';
@@ -17,9 +18,9 @@ import { view as ArticleList } from './pages/ArticleList/';
 import { view as CommentAdmin } from './pages/CommentAdmin/';
 import { view as MessageAdmin } from './pages/MessageAdmin/';
 import { view as KeepOnFileList } from './pages/keepOnFileList/';
-import { view as ArticleByTag } from './pages/ArticleByTag/'
-import { view as ArticleByCatalog } from './pages/ArticleByCatalog/'
-import { view as ArticleBySearch } from './pages/ArticleBySearch/'
+import { view as ArticleByTag } from './pages/ArticleByTag/';
+import { view as ArticleByCatalog } from './pages/ArticleByCatalog/';
+import { view as ArticleBySearch } from './pages/ArticleBySearch/';
 
 const history = createHistory();
 
@@ -40,6 +41,8 @@ const history = createHistory();
 //     callback(null, require('./pages/ArticleDetails/views/articleDetials.js').default);
 //   }, 'articelDetails');
 // };
+//
+//
 
 
 const Routes = () => (
@@ -61,10 +64,11 @@ const Routes = () => (
       <Route path="/Keep_On_File" component={ KeepOnFileList }></Route>
       <Route path="/article_by_tag" component={ ArticleByTag }></Route>
       <Route path="/article_by_catalog" component={ ArticleByCatalog }></Route>
-      <Route path="/article_by_search" component={ ArticleBySearch }></Route>
+      <Route path="/article_by_search/:value" component={ ArticleBySearch }></Route>
       {/* <Route path="article_post" getComponent={ getArticlePostPage }></Route>
       <Route path="article_edit/:articleId" getComponent={ getArticleEditPage }></Route>
       <Route path="article_details/:articleId" getComponent={ getArticleDetailsPage }></Route> */}
+      <Route path="/verifyemail/:verifyemail" component={ VerifyMail }></Route>
       <Route component={ NotFound }></Route>
     </Switch>
   </ConnectedRouter>

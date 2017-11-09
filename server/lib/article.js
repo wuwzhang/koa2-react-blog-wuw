@@ -103,7 +103,7 @@ exports.getArticlesCountByMonth = () => {
  *   articles: [{id: "", title: "", create_at: ""}, {}]
  * }
  */
-exports.getArticleListByDate = () => {
+exports.getArticleListByDate = (page = 1, range = 4) => {
   return Article.aggregate(
                   {
                     $match: {
@@ -123,7 +123,29 @@ exports.getArticleListByDate = () => {
                     }
                   }}
                 )
-                .sort({_id: -1});
+                .sort({_id: -1})
+                .skip(range * (page - 1))
+                .limit(range)
+                .exec();
+}
+
+exports.getArticleListCountByDate = () => {
+  return Article.aggregate(
+                  {
+                    $match: {
+                      isPublic: true
+                    }
+                  },
+                  { $group: {
+                    _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
+                    articles: {
+                      $push: {
+                        id: "$_id"
+                      }
+                    }
+                  }}
+                )
+                .exec();
 }
 
 /**
@@ -284,4 +306,11 @@ exports.getPreArticleById = (articleId) => {
  */
 exports.getNextArticleById = (articleId) => {
   return Article.findOne({_id: {$gt: articleId}}).sort({_id: 1 }).exec()
+}
+
+exports.getTopPreviewArticle = () => {
+  return Article.find()
+                .sort({pv: -1})
+                .limit(5)
+                .exec();
 }
