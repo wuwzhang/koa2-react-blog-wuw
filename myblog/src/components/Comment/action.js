@@ -2,10 +2,12 @@ import {
   INIT_COMMENT,
   INIT_ALL_COMMENT,
   ADD_COMMENT,
+  ADD_SUBCOMMENT,
   CHECK_COMMENT,
   DELETE_COMMENT,
   NOTCHECKED_COMMENT,
-  SET_COMMENT_FILTER
+  SET_COMMENT_FILTER,
+  SET_SHOW_REPLY
 } from './actionType.js';
 
 export const commentInit = (comments) => ({
@@ -22,6 +24,12 @@ export const commentAdd = (comment) => ({
   type: ADD_COMMENT,
   comment
 });
+
+export const addSubComment = ({subComment, commentIndex}) => ({
+  type: ADD_SUBCOMMENT,
+  subComment,
+  commentIndex
+})
 
 export const commentChecked = (commentIndex) => ({
   type: CHECK_COMMENT,
@@ -42,4 +50,10 @@ export const commentDelete = (commentIndex, isChecked) => ({
 export const setFilter = (filter) => ({
   type: SET_COMMENT_FILTER,
   filter
+});
+
+export const setIsShowReply = ({state, commentIndex}) => ({
+  type: SET_SHOW_REPLY,
+  state,
+  commentIndex
 })

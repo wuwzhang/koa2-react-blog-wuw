@@ -21,3 +21,6 @@
   top: -150px;
   left: calc(100% - 50px);
 }
+.avatarLabel {
+  color: #07689f;
+}

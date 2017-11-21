@@ -3,7 +3,9 @@ const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
 
 export const register = async(params) => {
   const url = DOMAIN + '/api/signUp',
-        { account, username, password } = params;
+        { account, username, password, avatarValue } = params;
+
+  console.log(avatarValue)
 
   try {
     var result = await fetch(url, {
@@ -12,7 +14,8 @@ export const register = async(params) => {
       body: JSON.stringify({
         account,
         username,
-        password
+        password,
+        avatarValue
       })
     })
   } catch(e) {

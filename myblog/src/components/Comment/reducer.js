@@ -2,7 +2,9 @@ import {
   INIT_COMMENT,
   INIT_ALL_COMMENT,
   ADD_COMMENT,
+  ADD_SUBCOMMENT,
   SET_COMMENT_FILTER,
+  SET_SHOW_REPLY,
   CHECK_COMMENT,
   DELETE_COMMENT,
   NOTCHECKED_COMMENT
@@ -11,7 +13,7 @@ import {
 export default (state, action) => {
   if (!state) {
     state = {
-      comment: [],
+      articleComments: [],
       allComment: [],
       NotCheckedCount: 0,
       filter: 'ALL'
@@ -23,7 +25,12 @@ export default (state, action) => {
 
       return {
         ...state,
-        comment: action.comments
+        articleComments: action.comments.map((comment) => {
+          return {
+            ...comment,
+            isShowReply: false
+          }
+        })
       }
     }
     case INIT_ALL_COMMENT: {
@@ -35,11 +42,21 @@ export default (state, action) => {
     case ADD_COMMENT: {
       return {
         ...state,
-        comment: [
+        articleComments: [
           action.comment,
-          ...state.comment
+          ...state.articleComments
         ],
         NotCheckedCount: state.NotCheckedCount + 1
+      }
+    }
+    case ADD_SUBCOMMENT: {
+
+      return {
+        ...state,
+        articleComments: [
+          ...state.articleComments[action.commentIndex].replies.push(action.subComment),
+          ...state.articleComments
+        ]
       }
     }
     case CHECK_COMMENT: {
@@ -76,6 +93,15 @@ export default (state, action) => {
       return {
         ...state,
         filter: action.filter
+      }
+    }
+    case SET_SHOW_REPLY: {
+      return {
+        ...state,
+        articleComments: [
+          ...state.articleComments[action.commentIndex].isShowReply = action.state,
+          ...state.articleComments
+        ]
       }
     }
     default: {

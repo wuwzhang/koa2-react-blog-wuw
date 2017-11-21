@@ -12,7 +12,7 @@ const ArticleSchema = new Schema({
   updated_at: { type: Date, default: Date.now },
   isPublic: { type: Boolean, default: true },
   isComment: { type: Boolean, default: true },
-  commentCount: { type: Number, default: 0 },
+  comments: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
   pv: { type: Number, default: 0 }
 }, { versionKey: false });
 

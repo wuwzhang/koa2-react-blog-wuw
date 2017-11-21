@@ -5,76 +5,117 @@ const $Article = Models.$Article;
 const $Comments = Models.$Comments;
 const $User = Models.$User;
 
+/**
+ * 文章添加一级评论
+ */
 router.post('/api/article_details/:articleId/comment', async(ctx, next) => {
 
   let { articleId, content } = ctx.request.body;
 
   let code = '1', message = '发表成功';
 
-  let commentModel = null;
+  var commentModel = null;
+
   if (ctx.params.articleId === articleId) {
     commentModel = {
       userId: ctx.session.user._id || ctx.request.body.userId,
       articleId: articleId,
       content: content,
-      isChecked: false,
       _id: new mongoose.Types.ObjectId()
     };
   }
 
   try {
     var result = await Promise.all([$Comments.create(commentModel),
-                                    $Article.incComment(commentModel.articleId),
+                                    $Article.addComment(commentModel.articleId, commentModel._id),
                                     $User.getUserById(commentModel.userId)])
-  }catch (e) {
+  } catch (e) {
     code = '-1';
     message = e.message
   }
 
-  // console.log(result[0])
+  let userResult = result[2],
+      user = {
+        _id: userResult._id,
+        username: userResult.username,
+        avatar: userResult.avatar
+      }
 
   ctx.response.body = {
     code: code,
     message: message,
     comment: {
-      user: result[2],
+      user: user,
       id: commentModel._id,
-      content: content,
-      create_at: result[0].created_at
+      created_at: result[0].created_at,
+      thumbsDown: 0,
+      thumbsUp: 0,
+      isRePort: false,
+      replies: [],
+      content: content
     }
   }
 });
 
+/**
+ * 获取文章的评论
+ */
 router.post('/api/article_details/:articleId/get/comment', async(ctx, next) => {
 
-  let { articleId } = ctx.params;
+  let { articleId, page = 1, range = 4 } = ctx.params;
 
   let code = '1', message = '发表成功';
 
   try {
-    var result = await $Comments.getCommentsByArticleId(articleId);
-  }catch (e) {
+    var result = await $Comments.getCommentsByArticleId(articleId, page, range);
+  } catch (e) {
     code = '-1';
-    message = e.message
+    message = e.message;
   }
-
-  let comments = result.map((comment, index) => (
-    {
-      user: comment.userId,
-      id: comment._id,
-      content: comment.content,
-      create_at: comment.created_at
-    }
-  ));
-
 
   ctx.response.body = {
     'code': code,
     'message': message,
-    'comments': comments
+    'comments': result
   }
 });
 
+/**
+ * 添加二级评论
+ */
+router.post('/api/addSubComment', async(ctx, next) => {
+  let code = '1', message = '写入子评论';
+  const {
+    parentId,
+    userId,
+    content
+  } = ctx.request.body;
+
+  try {
+    var date = new Date,
+        data = {
+          userId: userId,
+          content: content,
+          created_at: date
+        };
+
+    await $Comments.addSubComment(parentId, data);
+
+  } catch(e) {
+    code = '-1';
+    message = e.message;
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'created_at': date
+  }
+})
+
+/**
+ * 获取所有评论
+ */
 router.post('/api/comment_admin/getAll/comment', async(ctx, next) => {
 
   let code = '1', message = '获取成功';
@@ -83,7 +124,7 @@ router.post('/api/comment_admin/getAll/comment', async(ctx, next) => {
   try {
     var result = await Promise.all([$Comments.getAllCommentsCount(),
                                     $Comments.getPageComments(page, eachPageArticles)]);
-  }catch (e) {
+  } catch(e) {
     code = '-1';
     message = e.message
   }
@@ -111,6 +152,9 @@ router.post('/api/comment_admin/getAll/comment', async(ctx, next) => {
   }
 });
 
+/**
+ * 获取未确认的评论
+ */
 router.post('/api/getNotCheckedComments', async(ctx, next) => {
   let code = '1', message = '获取评论成功';
 
@@ -128,6 +172,9 @@ router.post('/api/getNotCheckedComments', async(ctx, next) => {
   }
 });
 
+/**
+ * 通过文章Id删除评论
+ */
 router.post('/api/comment_delete/:commentId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { commentId } = ctx.params;
@@ -152,12 +199,15 @@ router.post('/api/comment_delete/:commentId', async(ctx, next) => {
   }
 });
 
+/**
+ * 通过评论Id确认评论
+ */
 router.post('/api/comment_checked/:commentId', async(ctx, next) => {
   let code = '1', message = 'ok';
   const { commentId } = ctx.params;
 
   try {
-    var result = $Comments.setCommentChecked(commentId);
+    await $Comments.setCommentChecked(commentId);
   } catch (e) {
     code = '-1',
     message = e.message
@@ -168,5 +218,26 @@ router.post('/api/comment_checked/:commentId', async(ctx, next) => {
     'message': message
   }
 });
+
+/*
+ * 以及评论点赞
+ */
+
+router.post('/api/comment/:commentId/thumbsUp', async(ctx, next) => {
+  let code = '1', message = '一级评论点赞成功';
+  const { commentId } = ctx.params;
+
+  try {
+    await $Comments.thumbsUpById(commentId);
+  } catch (e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message
+  }
+})
 
 module.exports = router;

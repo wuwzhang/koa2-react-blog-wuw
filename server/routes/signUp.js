@@ -56,7 +56,8 @@ router.post('/api/signUp', async(ctx, next) => {
     let {
       account,
       username,
-      password
+      password,
+      avatarValue
     } = data;
 
     function md5 (str) {
@@ -69,13 +70,14 @@ router.post('/api/signUp', async(ctx, next) => {
     } else {
       password = md5(validator.trim(password));
       account = validator.trim(account);
-      var activeKey = md5(validator.trim(password));
+      var activeKey = md5(validator.trim(account));
 
       const user = {
         account: account,
         username: username,
         password: password,
-        activeKey: activeKey
+        activeKey: activeKey,
+        avatar: avatarValue
       }
 
       await $User.create(user);

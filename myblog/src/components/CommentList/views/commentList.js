@@ -9,50 +9,51 @@ import {
 import './style.css';
 
 class CommentList extends Component {
-  componentDidMount() {
-    this.props.initComment(this.props.articleId);
+
+  async componentDidMount() {
+    let result = await commentFetchs.getComment(this.props.articleId);
+
+    if (result.code === '1') {
+      this.props.initComment(result.comments);
+    } else {
+
+    }
   }
+
   render() {
     let { comments = [] } = this.props;
+
     return (
       <section className="comment-list">
         <ul>
-          {
-            comments.map((comment, index) => {
-              return comment ? <CommentItem
-                                key = { index }
-                                user = { comment.user }
-                                content = { comment.content }
-                                create_at = { comment.create_at }
-                              />
-                              : null
-            }
-            )
-          }
+        {
+          comments.map((comment, index) => {
+            return <CommentItem
+                      key = { index }
+                      commentIndex = { index }
+                    />
+          })
+        }
         </ul>
       </section>
     );
   }
 }
 const mapStateToProps = (state) => {
+
   let pathname = state.routing.location.pathname,
       articleId = pathname.split('/')[2];
+
   return {
-    comments: state.comment.comment,
+    comments: state.comment.articleComments,
     articleId: articleId
   }
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    initComment: async (articleId) => {
-      let result = await commentFetchs.getComment(articleId);
-
-      if (result.code === '1') {
-        dispatch(commentActions.commentInit(result.comments));
-      } else {
-        console.log(result);
-      }
+    initComment: (comments) => {
+      dispatch(commentActions.commentInit(comments));
     }
   }
 }

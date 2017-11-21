@@ -1,10 +1,27 @@
-.comment-user {
-  color: #336699;
-  font-size: 16px;
-  text-shadow: 1px 1px 1px #6666ee;
-}
-.commentItem-li span {
+.commentItem-Ul li {
   display: inline-block;
   height: 24px;
   line-height: 24px;
+}
+.commentItem-username {
+  font-weight: 500;
+  color: #000;
+}
+.commentItem-content {
+  color: #333;
+}
+.commentItem-option {
+  color: #666;
+}
+.commentItem-option-btn {
+  display: inline-block;
+  margin: 0 5px;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.commentItem-option-btn:hover {
+  cursor: pointer;
 }

@@ -23,6 +23,7 @@ router.post('/api/signIn', async(ctx, next) => {
     let result = await $User.getUserByAccount(account);
     password = crypto.createHash('md5').update(password).digest('hex');
 
+
     if (result.isActive === false) {
       code = '-1';
       message = '邮箱未确认'
@@ -37,6 +38,7 @@ router.post('/api/signIn', async(ctx, next) => {
         level: result.level,
         username: result.username,
         account: result.account,
+        avatar: result.avatar,
         _id: result._id
       }
     } else {
@@ -58,35 +60,41 @@ router.post('/api/signIn', async(ctx, next) => {
 
 router.post('/api/getUserByToken', async(ctx, next) => {
   let { token } = ctx.request.body;
-  let code = '1', message = 'token获取用户成功', account = '';
+  let code = '1', message = 'token获取用户成功', account = '',
+      user = null;
 
   try {
     if (token) {
+
+      //验证token是否过期，此处设置为1小时
       jwt.verify(token, config.secretKey, function(err, decoded) {
         if (err) {
-          console.log(err)
+          code = '-1';
+          message = 'token过期';
+
         } else {
-          // console.log(decoded.data)
+
+          //未过期将token进行解析，返回用户账号
           account = decoded.data;
-          console.log(account);
         }
       })
 
       if (account) {
         let result = await $User.getUserByAccount(account)
 
-        var user = {
+        user = {
           level: result.level,
           username: result.username,
           account: result.account,
+          avatar: result.avatar,
           _id: result._id
         }
       }
+
     }
 
-
   } catch (e) {
-    code = '-1';
+    code = '-2';
     message = e.message;
   }
   ctx.response.body = {

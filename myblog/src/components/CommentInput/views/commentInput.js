@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { withRouter, Redirect } from 'react-router-dom';
 
+import { Avatar } from '../../Avatar/index.js';
+
 import {
   fetchs as commentFetchs,
   actions as CommentAction
@@ -19,6 +21,8 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
+import { notification } from 'antd';
+import './style.css';
 
 class CommentInput extends Component {
   constructor(props) {
@@ -66,7 +70,21 @@ class CommentInput extends Component {
         comment: comment
       }
 
-      this.props.addComment(data);
+      let result = await commentFetchs.addComment(data);
+      if (result.code === '1') {
+        this.props.addComment(result.comment);
+        notification.success({
+          message: 'Notification',
+          description: 'please login first',
+          style: {
+            color: '#ff7e67',
+            bacground: '#fafafa'
+          }
+        });
+
+      } else {
+        console.log(result)
+      }
     }
   }
 
@@ -80,7 +98,9 @@ class CommentInput extends Component {
     })
   }
   render() {
-    let { pathname, redirectState } = this.state;
+    let { pathname, redirectState } = this.state,
+        { user } = this.props;
+
     if (pathname) {
       return <Redirect to={{
               pathname: pathname,
@@ -95,7 +115,11 @@ class CommentInput extends Component {
             <Col md={1} >
               <ControlLabel
                 validationState={this.state.commentValid}
-              >Comment：</ControlLabel>
+              >
+              {
+                this.props.user ? <Avatar avatarNum={user.avatar} width={55} /> : 'Comment：'
+              }
+              </ControlLabel>
             </Col>
             <Col md={11} >
               <FormControl
@@ -112,11 +136,11 @@ class CommentInput extends Component {
             <Col md={2} mdOffset={10}>
               {
                 this.props.user ? <Button
-                                    className="myButton commentButton submit-btn"
+                                    className="commentButton submit-btn"
                                     onClick={()=>this._addComment()}
                                   >submit</Button>
                                 : <Button
-                                    className="myButton commentButton submit-btn"
+                                    className="commentButton submit-btn"
                                     onClick={()=>this._login()}
                                   >login</Button>
               }
@@ -133,39 +157,11 @@ const mapStateToProps = (state) => ({
   location: state.routing.location
 })
 
-/*
-*result = {
-* "code": "1",
-* "message": "",
-* "comment": {
-*   "userId": {
-*   },
-*   "result": {
-*   }
-* }
-*}
-*
-*/
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    addComment: async (data) => {
-
-      let result = await commentFetchs.addComment(data);
-
-      if (result.code === '1') {
-        let comment = result.comment;
-
-        dispatch(CommentAction.commentAdd({
-          user: comment.user,
-          articleId: comment.articleId,
-          articleTitle: comment.articleTitle,
-          id: comment.id,
-          content: comment.content,
-          create_at: comment.created_at
-        }))
-      } else {
-        console.log(result.code);
-      }
+    addComment: (comment) => {
+      dispatch(CommentAction.commentAdd(comment))
     }
   }
 }

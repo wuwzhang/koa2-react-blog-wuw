@@ -20,8 +20,45 @@ export const addComment = async (params) => {
       },
       body: JSON.stringify({
         userId: userId,
-        articleId:articleId,
-        content:comment
+        articleId: articleId,
+        content: comment
+      }),
+      credentials: CREDENTIALS
+    })
+  } catch(e) {
+    console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: '-2',
+      message: '未知错误'
+    }
+  }
+}
+
+export const addSubComment = async (params) => {
+  let {
+    parentId,
+    userId,
+    subComment
+  } = params;
+
+  let url = DOMAIN + '/api/addSubComment';
+
+  try {
+    var result = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: userId,
+        content: subComment,
+        parentId: parentId
       }),
       credentials: CREDENTIALS
     })
@@ -155,6 +192,32 @@ export const changeCommentCheck = async (commentId) => {
   try {
     var result = await fetch(url, {
       method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      credentials: CREDENTIALS
+    })
+  } catch(e) {
+    console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: '-2',
+      message: '未知错误'
+    }
+  }
+}
+
+export const thumbsUp = async (commentId) => {
+  let url = DOMAIN + `/api/comment/${commentId}/thumbsUp`;
+
+  try {
+    var result = await fetch(url, {
+      method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Content-type': 'application/json'

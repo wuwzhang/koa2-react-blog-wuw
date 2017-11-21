@@ -46,7 +46,7 @@ class KeepOnFileList extends Component {
   }
 
   async handlePage(curPage) {
-    console.log(curPage)
+
     this.setState({
       currentPage: curPage,
       redirectToReferrer: false

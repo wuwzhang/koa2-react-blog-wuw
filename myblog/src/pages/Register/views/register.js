@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import qs from 'qs';
-
 import { view as FieldGroup } from '../../../components/FieldGroup';
 import { view as TopMenu } from '../../../components/TopMenu/';
 
@@ -23,12 +21,23 @@ import {
   FormGroup,
   Button,
   Form,
+  ControlLabel,
+  ButtonToolbar,
+  ToggleButtonGroup,
+  ToggleButton,
   Grid,
   Col
 } from 'react-bootstrap';
-import { Alert } from 'antd';
+import { Alert, Avatar } from 'antd';
 
 import './style.css';
+
+import avatar1 from '../../../media/1.jpg';
+import avatar2 from '../../../media/2.jpg';
+import avatar3 from '../../../media/3.jpg';
+import avatar4 from '../../../media/4.jpg';
+import avatar5 from '../../../media/5.jpg';
+// import avatar6 from '../../../media/6.jpg';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -44,6 +53,7 @@ class Register extends Component {
       confirmPwd: '',
       username: '',
       porfile: '',
+      avatarValue: 1,
       accountValid: null,
       usernameValid: null,
       passwordValid: null,
@@ -51,6 +61,7 @@ class Register extends Component {
     }
 
     this._handleKeyPress = this._handleKeyPress.bind(this);
+    this._handleAvatar = this._handleAvatar.bind(this);
   }
 
   async _checkAccount(value) {
@@ -146,12 +157,20 @@ class Register extends Component {
     }
   }
 
+  _handleAvatar(avatarValue) {
+
+    this.setState({
+      avatarValue: avatarValue
+    })
+  }
+
   async _regist() {
 
     const {
       account,
       username,
       password,
+      avatarValue,
       accountValid,
       usernameValid,
       passwordValid,
@@ -167,7 +186,7 @@ class Register extends Component {
     }
 
     if (_checkComplete()) {
-      this.props.loginUp({ account, username, password });
+      this.props.loginUp({ account, username, password, avatarValue });
     }
 
   }
@@ -251,6 +270,46 @@ class Register extends Component {
                       </Col>
                     </FormGroup>
                   */}
+                  <FormGroup>
+                    <Col sm={12} md={12}>
+                      <ControlLabel className='avatarLabel'>
+                        <FormattedMessage
+                          id="Avatar"
+                          defaultMessage='Avatar'
+                        />
+                      </ControlLabel>
+                    </Col>
+                    <Col sm={12} md={12}>
+
+                      <ButtonToolbar>
+                        <ToggleButtonGroup
+                          type="radio"
+                          name="options"
+                          value={this.state.avatarValue}
+                          onChange={this._handleAvatar}
+                        >
+                          <ToggleButton value={1}>
+                            <Avatar src={avatar1} />
+                          </ToggleButton>
+                          <ToggleButton value={2}>
+                            <Avatar src={avatar2} />
+                          </ToggleButton>
+                          <ToggleButton value={3}>
+                            <Avatar src={avatar3} />
+                          </ToggleButton>
+                          <ToggleButton value={4}>
+                            <Avatar src={avatar4} />
+                          </ToggleButton>
+                          <ToggleButton value={5}>
+                            <Avatar src={avatar5} />
+                          </ToggleButton>
+                          <ToggleButton value={6}>
+                            <Avatar src={avatar5} />
+                          </ToggleButton>
+                        </ToggleButtonGroup>
+                      </ButtonToolbar>
+                    </Col>
+                  </FormGroup>
                   <FormGroup>
                     <Col sm={4} md={5} xs={10}>
                       <Button

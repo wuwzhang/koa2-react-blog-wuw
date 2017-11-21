@@ -132,7 +132,7 @@ router.get('/api/getArticlesByTag', async(ctx, next) => {
  */
 router.post('/api/getArticlesByCatalog', async(ctx, next) => {
   let code = '1', message = 'ok';
-  console.log('-----Catalog_post----------')
+  // console.log('-----Catalog_post----------')
 
   const { catalog, page = 1, eachPageArticles = 5 } = ctx.request.body;
 
@@ -153,7 +153,7 @@ router.post('/api/getArticlesByCatalog', async(ctx, next) => {
 })
 router.get('/api/getArticlesByCatalog', async(ctx, next) => {
   let code = '1', message = 'ok';
-  console.log('-----Catalog_get----------')
+  // console.log('-----Catalog_get----------')
 
   const { catalog, page = 1, eachPageArticles = 5 } = ctx.request.body;
 
@@ -177,7 +177,7 @@ router.get('/api/getArticlesByCatalog', async(ctx, next) => {
  */
 router.post('/api/getArticleBySearch', async(ctx, next) => {
   let code = '1', message = 'ok';
-  console.log('-----search_post----------')
+  // console.log('-----search_post----------')
   const { value, page = 1, eachPageArticle = 5 } = ctx.request.body;
 
   try {
@@ -197,16 +197,12 @@ router.post('/api/getArticleBySearch', async(ctx, next) => {
 })
 router.post('/api/getArticleBySearch/:value', async(ctx, next) => {
   let code = '1', message = 'ok';
-  console.log('-----search_get----------')
+  // console.log('-----search_get----------')
 
   const { page = 1, eachPageArticle = 5 } = ctx.request.body;
   // const page = 1, eachPageArticle = 5;
   const { value } = ctx.params;
 
-  console.log(page)
-  console.log(eachPageArticle)
-
-  console.log(value);
   try {
     var result = await Promise.all([$Article.getArticlesSearchCount(value),
                                     $Article.getArticleBySearch(value, page, eachPageArticle)]);

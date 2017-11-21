@@ -9,9 +9,10 @@ router.post('/api/registActive', async(ctx, next) => {
 
   try {
     const activeKey = verifyKey.split('/')[2];
+
     await $User.verifymail(activeKey, true);
   } catch (e) {
-    code = '-2';
+    code = '-1';
     message = e.message;
   }
 

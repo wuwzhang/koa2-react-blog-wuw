@@ -121,12 +121,19 @@ exports.getArticleListByDate = (page = 1, range = 4) => {
                         created_at: "$created_at"
                       }
                     }
-                  }}
-                )
-                .sort({_id: -1})
-                .skip(range * (page - 1))
-                .limit(range)
-                .exec();
+                  }},
+                  {
+                    $sort: {
+                      '_id': -1
+                    }
+                  },
+                  {
+                    $skip: range * (page - 1)
+                  },
+                  {
+                    $limit: range
+                  }
+                );
 }
 
 exports.getArticleListCountByDate = () => {
@@ -280,13 +287,13 @@ exports.incPv = (articleId) => {
 /**
  * 评论量+1
  */
-exports.incComment = (articleId) => {
-  return Article.update({ _id: articleId }, { $inc: { commentCount: 1 } })
+exports.addComment = (articleId, commentId) => {
+  return Article.update({ _id: articleId }, { $addToSet: { comments: commentId } })
                 .exec();
 }
 
-exports.redComment = (articleId) => {
-  return Article.update({ _id: articleId }, { $inc: { commentCount: -1 } })
+exports.redComment = (articleId, commentId) => {
+  return Article.update({ _id: articleId }, { $pull: { comments: commentId } })
                 .exec();
 }
 
