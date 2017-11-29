@@ -8,6 +8,7 @@ const jwtKoa = require('koa-jwt');
 const fetch = require('node-fetch');
 const cryptoUtils = require('../utils/cryptoUtils');
 const validator = require('validator');
+const redisUtils = require('../utils/redisUtils')
 
 router.get('/api/signIn/github', async(ctx, next) => {
   let code = '1', message = 'ok';
@@ -104,14 +105,19 @@ router.get('/github/oauth/callback', async (ctx) => {
     message = e.message
   })
 
-  // try {
-  //   var token = jwt.sign({
-  //     data: result.email,
-  //   }, config.secretKey, { expiresIn: '1h' });
-  // } catch (e) {
-  //   code = '-2';
-  //   message = e.message;
-  // }
+  try {
+    var token = jwt.sign({
+      data: result.email,
+    }, config.secretKey, { expiresIn: '1h' });
+
+    redisUtils.addUser({
+      token: token,
+      ...result
+    })
+  } catch(e) {
+    code = '-2';
+    message = e.message
+  }
 
   ctx.response.body = {
     'code': code,

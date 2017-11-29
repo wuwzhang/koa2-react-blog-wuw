@@ -24,19 +24,19 @@ function start() {
 }
 
 async function addUser(params) {
-  if (utils.isEmpty(params, params.userId)) {
+  if (utils.isEmpty(params, params._id)) {
     return console.error('redis - addUser 参数错误')
   }
 
-  await client.hset('user', params.userId, JSON.stringifyI(params))
+  await client.hset('user', params._id, JSON.stringify(params))
 }
 
 async function getUser(params) {
-  if (utils.isEmpty(userId)) {
+  if (utils.isEmpty(_id)) {
     return console.error('redis - getUser 参数错误')
   }
 
-  let user = await client.hget(USER_KEY, userId);
+  let user = await client.hget(USER_KEY, _id);
 
   if (user === null) {
     return null;
