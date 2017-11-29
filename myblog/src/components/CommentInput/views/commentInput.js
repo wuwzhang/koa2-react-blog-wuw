@@ -5,11 +5,10 @@ import { withRouter, Redirect } from 'react-router-dom';
 
 import { Avatar } from '../../Avatar/index.js';
 
-import {
-  fetchs as commentFetchs,
-  actions as CommentAction
-} from '../../Comment/';
+import { fetchs as commentFetchs, actions as CommentAction } from '../../Comment/';
+import { actions as ArticleAction } from '../../../pages/ArticleDetails/';
 
+import { FormattedMessage } from 'react-intl';
 
 import {
   Form,
@@ -64,6 +63,8 @@ class CommentInput extends Component {
             { comment } = this.state,
             articleId = this.props.location.pathname.split('/')[2];
 
+            console.log(user)
+
       const data = {
         userId: user._id,
         articleId: articleId,
@@ -72,7 +73,9 @@ class CommentInput extends Component {
 
       let result = await commentFetchs.addComment(data);
       if (result.code === '1') {
+
         this.props.addComment(result.comment);
+
         notification.success({
           message: 'Notification',
           description: 'please login first',
@@ -107,6 +110,7 @@ class CommentInput extends Component {
               state: redirectState
             }}/>
     }
+
     return (
       <Form>
         <FormGroup>
@@ -115,10 +119,12 @@ class CommentInput extends Component {
             <Col md={1} >
               <ControlLabel
                 validationState={this.state.commentValid}
+                style={{color: '#07689f'}}
               >
-              {
-                this.props.user ? <Avatar avatarNum={user.avatar} width={55} /> : 'Comment：'
-              }
+                {
+                  user && user.avatar ? <Avatar avatarNum={user.avatar.toString()} width='100%' />
+                                      : 'comment'
+                }
               </ControlLabel>
             </Col>
             <Col md={11} >
@@ -127,7 +133,7 @@ class CommentInput extends Component {
                 placeholder='Enter Comment'
                 onChange={(event)=>this.setState({comment:event.target.value})}
                 onBlur={(event)=>this._checkComment(event.target.value)}
-                style={{height: '100px'}}
+                style={{height: '100px', color: '#07689f', border: '1px solid ##07689f'}}
               />
               {this.state.commentHelp && <HelpBlock>{this.state.commentHelp}</HelpBlock>}
             </Col>
@@ -138,11 +144,21 @@ class CommentInput extends Component {
                 this.props.user ? <Button
                                     className="commentButton submit-btn"
                                     onClick={()=>this._addComment()}
-                                  >submit</Button>
+                                  >
+                                    <FormattedMessage
+                                      id="Submit"
+                                      defaultMessage="Submit"
+                                    />
+                                  </Button>
                                 : <Button
                                     className="commentButton submit-btn"
                                     onClick={()=>this._login()}
-                                  >login</Button>
+                                  >
+                                    <FormattedMessage
+                                      id="Login"
+                                      defaultMessage="Login"
+                                    />
+                                  </Button>
               }
             </Col>
           </Row>
@@ -161,7 +177,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     addComment: (comment) => {
-      dispatch(CommentAction.commentAdd(comment))
+      dispatch(CommentAction.commentAdd(comment));
+      dispatch(ArticleAction.commentAdd());
     }
   }
 }

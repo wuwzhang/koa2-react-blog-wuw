@@ -8,6 +8,7 @@ import { view as Home } from './pages/Home/';
 import About from './pages/About/index.js';
 import NotFound from './pages/NotFound.js';
 import VerifyMail from './pages/VerifyMail/index.js';
+import VerifyGithub from './pages/VerifyGithub/index.js';
 import { view as Tags } from './pages/Tags/';
 import { view as Login } from './pages/Login/';
 import { view as Register } from './pages/Register/';
@@ -69,6 +70,7 @@ const Routes = () => (
       <Route path="article_edit/:articleId" getComponent={ getArticleEditPage }></Route>
       <Route path="article_details/:articleId" getComponent={ getArticleDetailsPage }></Route> */}
       <Route path="/verifyemail/:verifyemail" component={ VerifyMail }></Route>
+      <Route path="/github/oauth/callback" component={ VerifyGithub }></Route>
       <Route component={ NotFound }></Route>
     </Switch>
   </ConnectedRouter>

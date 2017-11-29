@@ -6,7 +6,7 @@ const fs = require('async-file');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
 const nodemailer = require('nodemailer');
-const crypto = require('crypto');
+const cryptoUtils = require('../utils/cryptoUtils');
 const validator = require('validator');
 
 // router.get('/home/register', async(ctx, next) => {
@@ -60,17 +60,13 @@ router.post('/api/signUp', async(ctx, next) => {
       avatarValue
     } = data;
 
-    function md5 (str) {
-      return crypto.createHash('md5').update(str).digest('hex');
-    }
-
     if (!account || !validator.isEmail(account)) {
       code = '-1';
       message = '填写正确的邮箱格式'
     } else {
-      password = md5(validator.trim(password));
+      password = cryptoUtils.md5(validator.trim(password));
       account = validator.trim(account);
-      var activeKey = md5(validator.trim(account));
+      var activeKey = cryptoUtils.md5(validator.trim(account));
 
       const user = {
         account: account,

@@ -33,6 +33,32 @@ export const login = async(params) => {
   }
 }
 
+export const loginByGithub = async() => {
+  let url = DOMAIN + '/api/signIn/github';
+  try {
+    var result = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Content-type': 'application/json'
+      },
+      credentials: CREDENTIALS
+    })
+  } catch(e) {
+
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: '-2',
+      message: '未知错误'
+    }
+  }
+}
+
 export const getUserByToken = async(token) => {
   let url = DOMAIN + '/api/getUserByToken';
 
@@ -61,3 +87,5 @@ export const getUserByToken = async(token) => {
     }
   }
 }
+
+

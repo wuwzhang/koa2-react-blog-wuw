@@ -175,7 +175,7 @@ class ArticleList extends Component {
                                         title = { article.title }
                                         isPublic = { article.isPublic }
                                         isComment = { article.isComment }
-                                        commentCount = { article.commentCount }
+                                        commentCount = { article.comments.length }
                                         pv = { article.pv }
                                         index = { index }
                                         update_time = { article.updated_at }

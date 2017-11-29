@@ -7,7 +7,9 @@ import {
   DELETE_COMMENT,
   NOTCHECKED_COMMENT,
   SET_COMMENT_FILTER,
-  SET_SHOW_REPLY
+  SET_SHOW_REPLY,
+  SET_THUMBSUP,
+  SET_THUMBSDOWN
 } from './actionType.js';
 
 export const commentInit = (comments) => ({
@@ -56,4 +58,14 @@ export const setIsShowReply = ({state, commentIndex}) => ({
   type: SET_SHOW_REPLY,
   state,
   commentIndex
+})
+
+export const setThumbsUp = (count) => ({
+  type: SET_THUMBSUP,
+  count
+})
+
+export const setThumbsDown = (count) => ({
+  type: SET_THUMBSDOWN,
+  count
 })

@@ -1,7 +1,13 @@
 .commnet {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #ff7e67;
   margin: 40px 0 0 0 ;
   padding: 20px 0;
+}
+.comment textarea {
+  border: 1px solid #07689f;
+}
+.commnet .help-block {
+  color: #A2D5F2 !important;
 }
 .commentButton {
   width: 130px !important;

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, withRouter } from 'react-router-dom';
 
+import { Avatar } from '../../Avatar/index.js';
+
 import {
   fetchs as commentFetchs,
   actions as commentAction
@@ -15,9 +17,9 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
-// import { Avatar } from 'antd';
-import { Avatar } from '../../Avatar/index.js';
 import './style.css';
+
+import { FormattedMessage } from 'react-intl';
 
 class SubCommentInput extends Component {
 
@@ -107,11 +109,21 @@ class SubCommentInput extends Component {
                   this.props.user ? <Button
                                       className="submit-btn subComment-btn"
                                       onClick={()=>this._addSubComment()}
-                                    >submit</Button>
+                                    >
+                                      <FormattedMessage
+                                        id="Submit"
+                                        defaultMessage="Submit"
+                                      />
+                                    </Button>
                                   : <Button
                                       className="submit-btn subComment-btn"
                                       onClick={()=>this._login()}
-                                    >login</Button>
+                                    >
+                                      <FormattedMessage
+                                        id="Login"
+                                        defaultMessage="Login"
+                                      />
+                                    </Button>
                 }
               </Col>
             </Row>

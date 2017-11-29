@@ -38,10 +38,15 @@ router.get('/api/article_details/:articleId', async(ctx, next) => {
     Next = null;
   }
 
+  if (result[0]) {
+    var articles = result[0],
+        article = articles[0]
+  }
+
   ctx.response.body = {
     'code': code,
     'message': message,
-    'article': result[0],
+    'article': article,
     'preArticle': Pre,
     'nextArticle': Next
   }

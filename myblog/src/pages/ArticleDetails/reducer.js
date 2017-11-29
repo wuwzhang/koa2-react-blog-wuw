@@ -1,5 +1,6 @@
 import {
-  INIT_DETAILEARTICLE
+  INIT_DETAILEARTICLE,
+  ADD_COMMENTCOUNT
 } from './actionType.js';
 
 export default (state, action) => {
@@ -14,6 +15,13 @@ export default (state, action) => {
       return {
         ...state,
         article: action.article.article
+      }
+    }
+    case ADD_COMMENTCOUNT: {
+
+      return {
+        ...state.article.comments = state.article.comments + 1,
+        ...state
       }
     }
     default: {

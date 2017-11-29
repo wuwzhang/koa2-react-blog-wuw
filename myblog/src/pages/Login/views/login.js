@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter, Redirect, Link  } from 'react-router-dom';
+// import PreloaderLink from '../../../enhancers/PreloaderLink.js';
 
-import { login } from '../fetch';
+import { login, loginByGithub } from '../fetch';
 import { view as FieldGroup } from '../../../components/FieldGroup';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { fetchs as commentFetch, actions as commentAction } from '../../../components/Comment/';
@@ -25,7 +26,7 @@ import {
   Grid,
   Col
 } from 'react-bootstrap';
-import { Alert, message } from 'antd';
+import { Alert, message, Icon } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 
 import './style.css';
@@ -43,7 +44,14 @@ class Login extends Component {
     }
 
     this._handleKeyPress = this._handleKeyPress.bind(this);
+    this._signInByGithub = this._signInByGithub.bind(this);
+    let { fromPath } = this.props;
+    let path = fromPath.state ? fromPath.state.from.pathname : '';
+    if (path) {
+      sessionStorage.setItem('fromPath', path);
+    }
   }
+
   async _signIn() {
     const { account, password } = this.state;
     // await this.props.loginIn({account, password});
@@ -84,6 +92,17 @@ class Login extends Component {
         })
       }
     }
+  }
+
+  async _signInByGithub(event) {
+    event.preventDefault();
+
+    let result = await loginByGithub();
+
+    if (result.code === '1') {
+      window.location.href = result.path;
+    }
+
   }
 
   _handleKeyPress(event) {
@@ -134,6 +153,7 @@ class Login extends Component {
     let { failMessage } = this.state;
 
     if (msgType === 'success' && user && fromPath.state) {
+
       return <Redirect to={{
               pathname: fromPath.state.from.pathname
             }}/>
@@ -156,7 +176,6 @@ class Login extends Component {
                 </h2>
                 <Form key='b' horizontal>
                   <FieldGroup
-                    autoFocus
                     type='email'
                     label='labelEmail'
                     labelColor='#07689f'
@@ -206,7 +225,9 @@ class Login extends Component {
                     msgType === 'warning' ? <Alert className="myAlert registAlert" message={ failMessage } type="warning" showIcon closable/>
                                           : null
                   }
-
+                  <Link onClick={this._signInByGithub} to="/login/github">
+                    <Icon type='github' />
+                  </Link>
                 </Form>
               </QueueAnim>
             </Col>

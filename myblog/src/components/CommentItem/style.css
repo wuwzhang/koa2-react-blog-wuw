@@ -5,10 +5,10 @@
 }
 .commentItem-username {
   font-weight: 500;
-  color: #000;
+  color: #07689f;
 }
 .commentItem-content {
-  color: #333;
+  color: rgb(7, 104, 159, 0.8);
 }
 .commentItem-option {
   color: #666;
@@ -24,4 +24,12 @@
 }
 .commentItem-option-btn:hover {
   cursor: pointer;
+  color: #A2D5F2;
+}
+.ant-notification-notice {
+  background: #fafafa !important;
+}
+.ant-notification-notice-message {
+  color: #07689f !important;
+  font-size: 14px;
 }

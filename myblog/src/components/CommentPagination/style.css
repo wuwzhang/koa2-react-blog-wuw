@@ -1,0 +1,45 @@
+.commentPagination {
+  border-top: 1px solid rgba(255, 126, 103, 0.5);
+  position: relative;
+}
+.commentPagination .countPage {
+  color: rgba(255, 126, 103);
+  font-size: 14px;
+  border: 1px solid;
+  border-bottom: 0;
+  display: inline-block;
+  position: absolute;
+  top: -23px;
+  padding: 0 4px;
+  background: #fafafa;
+}
+.commentPagination .countPage span {
+  color: #07689f;
+}
+ul.commentPagination-list {
+  float: right;
+  margin-top: 5px;
+}
+ul.commentPagination-list li {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  margin-right: 1px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 126, 103, 0.5);
+  color: #ff7e67;
+  background: #fafafa;
+}
+ul.commentPagination-list li:hover{
+  cursor: pointer;
+  background: rgba(255, 126, 103, 0.3);
+}
+ul.commentPagination-list li.active{
+  background: #ff7e67;
+  color: #fafafa;
+}
+ul.commentPagination-list li.disable:hover {
+  cursor: not-allowed !important;
+}

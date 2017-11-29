@@ -18,7 +18,7 @@ router.post('/api/article_details/:articleId/comment', async(ctx, next) => {
 
   if (ctx.params.articleId === articleId) {
     commentModel = {
-      userId: ctx.session.user._id || ctx.request.body.userId,
+      userId: ctx.request.body.userId,
       articleId: articleId,
       content: content,
       _id: new mongoose.Types.ObjectId()
@@ -60,9 +60,10 @@ router.post('/api/article_details/:articleId/comment', async(ctx, next) => {
 /**
  * 获取文章的评论
  */
-router.post('/api/article_details/:articleId/get/comment', async(ctx, next) => {
+router.post('/api/article_details/:articleId/get_comment', async(ctx, next) => {
 
-  let { articleId, page = 1, range = 4 } = ctx.params;
+  let { articleId } = ctx.params,
+      { page = 1, range = 4 } = ctx.request.body;
 
   let code = '1', message = '发表成功';
 
@@ -99,10 +100,15 @@ router.post('/api/addSubComment', async(ctx, next) => {
           created_at: date
         };
 
-    await $Comments.addSubComment(parentId, data);
+    if (parentId && userId) {
+      await $Comments.addSubComment(parentId, data);
+    } else {
+      code = '-1',
+      message = '数据缺失'
+    }
 
   } catch(e) {
-    code = '-1';
+    code = '-2';
     message = e.message;
   }
 
@@ -226,9 +232,11 @@ router.post('/api/comment_checked/:commentId', async(ctx, next) => {
 router.post('/api/comment/:commentId/thumbsUp', async(ctx, next) => {
   let code = '1', message = '一级评论点赞成功';
   const { commentId } = ctx.params;
+  let { userId } = ctx.request.body;
 
   try {
-    await $Comments.thumbsUpById(commentId);
+    let res = await $Comments.thumbsUpById(commentId, userId);
+    console.log(res);
   } catch (e) {
     code = '-1',
     message = e.message
@@ -240,4 +248,21 @@ router.post('/api/comment/:commentId/thumbsUp', async(ctx, next) => {
   }
 })
 
+router.post('/api/comment/:commentId/thumbsDown', async(ctx, next) => {
+  let code = '1', message = '一级评论点赞成功';
+  const { commentId } = ctx.params;
+  let { userId } = ctx.request.body;
+
+  try {
+    await $Comments.thumbsDownById(commentId, userId);
+  } catch (e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message
+  }
+})
 module.exports = router;

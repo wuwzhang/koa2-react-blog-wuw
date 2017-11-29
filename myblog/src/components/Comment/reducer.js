@@ -7,7 +7,9 @@ import {
   SET_SHOW_REPLY,
   CHECK_COMMENT,
   DELETE_COMMENT,
-  NOTCHECKED_COMMENT
+  NOTCHECKED_COMMENT,
+  SET_THUMBSUP,
+  SET_THUMBSDOWN
 } from './actionType.js';
 
 export default (state, action) => {
@@ -101,6 +103,14 @@ export default (state, action) => {
         articleComments: [
           ...state.articleComments[action.commentIndex].isShowReply = action.state,
           ...state.articleComments
+        ]
+      }
+    }
+    case SET_THUMBSUP: {
+      return {
+        ...state,
+        articleComments: [
+
         ]
       }
     }

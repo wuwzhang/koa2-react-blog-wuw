@@ -1,3 +1,4 @@
+var mongoose = require('mongoose');
 var Article = require('../models').Article;
 var Comments = require('../models').Comments;
 
@@ -26,8 +27,14 @@ exports.getArticles = () => {
  */
 exports.getArticleById = (articleId) => {
 
-  return Article.findOne({ _id: articleId })
-                .exec();
+  return Article.aggregate(
+    { $match: { _id: mongoose.Types.ObjectId(articleId) } },
+    { $addFields: {
+      comments: {
+        $size: '$comments'
+      }
+    }}
+  )
 };
 
 /**

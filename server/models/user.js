@@ -5,7 +5,7 @@ const UserSchema = new Schema({
   account: { type:String, require: true },
   username: { type: String, require: true },
   password: { type: String, require: true },
-  avatar: { type: Number, default: 1 },
+  avatar: { type: String, default: '1' },
   level: { type: Number, default: 1},
   isActive: { type: Boolean, default: false },
   activeKey: { type:String,required:true},

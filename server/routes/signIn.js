@@ -102,6 +102,6 @@ router.post('/api/getUserByToken', async(ctx, next) => {
     'message': message,
     'user': user
   }
-})
+});
 
 module.exports = router;

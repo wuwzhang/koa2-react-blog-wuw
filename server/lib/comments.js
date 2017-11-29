@@ -185,9 +185,46 @@ exports.addSubComment = (parentId, data) => {
  * 一级平评论点赞
  * @param  {ObjectId} commentId 评论Id
  */
-exports.thumbsUpById = (commentId) => {
-  return Comments.update(
-    { _id: commentId },
-    { $inc: { thumbsUp: 1 } }
-  ).exec()
+exports.thumbsUpById = (commentId, userId) => {
+  return Comments.findOne({ _id: commentId })
+                 .then((res) => {
+                    let thumbsUp = res.thumbsUp;
+                    if (thumbsUp && thumbsUp instanceof Array) {
+                      if (thumbsUp.indexOf(userId) === -1) {
+                        return Comments.update(
+                          { _id: commentId },
+                          { $addToSet: { thumbsUp: userId } }
+                        )
+                      } else {
+                        return Comments.update(
+                          { _id: commentId },
+                          { $pull: { thumbsUp: userId } }
+                        )
+                      }
+                    } else {
+
+                    }
+                 })
+}
+
+exports.thumbsDownById = (commentId, userId) => {
+  return Comments.findOne({ _id: commentId })
+                 .then((res) => {
+                    let thumbsDown = res.thumbsDown;
+                    if (thumbsDown && thumbsDown instanceof Array) {
+                      if (thumbsDown.indexOf(userId) === -1) {
+                        return Comments.update(
+                          { _id: commentId },
+                          { $addToSet: { thumbsDown: userId } }
+                        )
+                      } else {
+                        return Comments.update(
+                          { _id: commentId },
+                          { $pull: { thumbsDown: userId } }
+                        )
+                      }
+                    } else {
+
+                    }
+                 })
 }

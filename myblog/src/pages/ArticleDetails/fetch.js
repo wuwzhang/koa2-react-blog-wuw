@@ -2,6 +2,7 @@ export const DOMAIN = '';
 const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
 
 export const detailArticle = async(articleId) => {
+  console.log(articleId)
   let url = DOMAIN + `/api/article_details/${articleId}`;
 
   try {

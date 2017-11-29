@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { view as SubCommentInput } from '../subCommentInput/';
 import SubCommentItem from '../SubCommentItem/index.js';
@@ -11,15 +12,45 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
-import { notification } from 'antd';
+import { notification, Button, Icon } from 'antd';
 import FontAwesome from 'react-fontawesome';
 import './style.css';
+
+// import { FormattedMessage } from 'react-intl';
 
 const marked = require('marked');
 
 class CommentItem extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      pathname: null,
+      redirectState: null
+    }
+  }
+
+  _login() {
+    let pathname ='/login',
+        redirectState = { from: this.props.location };
+
+    this.setState({
+      pathname: pathname,
+      redirectState: redirectState
+    })
+  }
+
   _handleShowRepliy() {
+
+    const btn = (
+      <Button
+        className="submit-btn subComment-btn"
+        onClick={()=>this._login()}
+      >
+        Sign In
+      </Button>
+    );
 
     let { user, commentIndex, comments = [] } = this.props,
         comment = comments[commentIndex];
@@ -35,9 +66,11 @@ class CommentItem extends Component {
         commentIndex: commentIndex
       });
     } else {
-      notification.warning({
-        message: 'Notification',
-        description: 'please login first',
+      notification.open({
+        message: 'Sign In',
+        description: 'If you want to reply, please login first',
+        btn,
+        icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
         style: {
           color: '#ff7e67',
           bacground: '#fafafa'
@@ -47,20 +80,88 @@ class CommentItem extends Component {
   }
 
   async _handleThumbsUp(commentId) {
-    console.log(commentId);
-    let result = await commentFetchs.thumbsUp(commentId);
 
-    if (result.code === '1') {
+    const btn = (
+      <Button
+        className="submit-btn subComment-btn"
+        onClick={()=>this._login()}
+      >
+        Sign In
+      </Button>
+    );
 
-    } else {
+    let userId = this.props.user ? this.props.user._id : '';
+    if (userId && commentId) {
+      let result = await commentFetchs.thumbsUp(commentId, userId);
 
+      if (result.code === '1') {
+        this.props.setThumbsUp(1);
+      } else {
+
+      }
+    } else if (!userId) {
+      notification.open({
+        message: 'Sign In',
+        description: 'If you want to thumbs up, please login first',
+        btn,
+        icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
+        style: {
+          color: '#ff7e67',
+          bacground: '#fafafa'
+        }
+      });
+    }
+  }
+
+  async _handleThumbsDown(commentId) {
+    const btn = (
+      <Button
+        className="submit-btn subComment-btn"
+        onClick={()=>this._login()}
+      >
+        Sign In
+      </Button>
+    );
+
+    let userId = this.props.user ? this.props.user._id : '';
+
+    if (userId && commentId) {
+      let result = await commentFetchs.thumbsDown(commentId, userId);
+
+      if (result.code === '1') {
+        this.props.thumbsDown(1)
+      } else {
+
+      }
+    } else if(!userId) {
+      notification.open({
+        message: 'Sign In',
+        description: 'If you want to thums down, please login first',
+        btn,
+        icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
+        style: {
+          color: '#ff7e67',
+          bacground: '#fafafa'
+        }
+      });
     }
   }
 
   render() {
     let { comments, commentIndex } = this.props,
         comment = comments[commentIndex],
+        { pathname, redirectState } = this.state,
         { replies = [], user = {} } = comment;
+
+    if (pathname) {
+      return <Redirect to={{
+              pathname: pathname,
+              state: redirectState
+            }}/>
+    }
+
+    // user = user ? user[0] : user;
+    console.log(user.avatar)
 
     return (
       <Row>
@@ -97,19 +198,21 @@ class CommentItem extends Component {
                   <span className='commentItem-option-btn'>
                     <FontAwesome name='thumbs-o-up'/>
                     <span
-                      onClick={ () => this._handleThumbsUp() }
+                      onClick={ () => this._handleThumbsUp(comment._id) }
                     > {comment.thumbsUp}</span>
                   </span>
                 </li>
                 <li>
                   <span className='commentItem-option-btn'>
                     <FontAwesome name='thumbs-o-down'/>
-                    <span> {comment.thumbsDown}</span>
+                    <span
+                      onClick={ () => this._handleThumbsDown(comment._id) }
+                    > {comment.thumbsDown}</span>
                   </span>
                 </li>
                 <li>
                   <span
-                    onClick={ () => this._handleShowRepliy(comment.id) }
+                    onClick={ () => this._handleShowRepliy() }
                     className='commentItem-option-btn'
                   >
                     回复
@@ -139,7 +242,7 @@ class CommentItem extends Component {
             <Col md={12} sm={12}>
               {
                 comment.isShowReply ? <SubCommentInput
-                                        parentId = { comment.id }
+                                        parentId = { comment._id }
                                         commentIndex = { commentIndex }
                                       />
                                     : null
@@ -163,6 +266,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setIsShowReply: (state, commentIndex) => {
       dispatch(commentAction.setIsShowReply(state, commentIndex));
+    },
+    setThumbsUp: (count) => {
+      dispatch(commentAction.setThumbsUp(count));
+    },
+    setThumbsDown: (count) => {
+      dispatch(commentAction.setThumbsDown(count));
     }
   }
 }
