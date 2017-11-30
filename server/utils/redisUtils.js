@@ -3,7 +3,8 @@ const utils = require('./utils');
 const config = require('config-lite')(__dirname).redis;
 
 const USER_KEY = 'users';
-const ARTICLE_PREVIEW_KEY = 'articlesPreview';
+const ARTICLE_KEY = 'articles';
+const COMMENT_KEY = 'comments';
 
 var client = null;
 
@@ -12,31 +13,45 @@ function start() {
     port: config.port,
     host: config.host,
     family: config.family,
+    password: config.auth,
     db: config.db
   })
 
   client.on('error', async (err, res) => {
-    console.log('连接redis错误', err);
+    console.error('连接redis错误', err);
   })
   client.on('connect', async () => {
-    console.log('连接redis成功');
+    console.error('连接redis成功');
   })
 }
 
+/**
+ * 向redis中添加用户信息
+ * @param {object} params { user }
+ */
 async function addUser(params) {
   if (utils.isEmpty(params, params._id)) {
     return console.error('redis - addUser 参数错误')
   }
 
-  await client.hset('user', params._id, JSON.stringify(params))
+  let keys = USER_KEY+ ':' + params._id;
+
+  await client.set(keys, JSON.stringify(params), 'EX', 60 * 60)
 }
 
-async function getUser(params) {
+/**
+ * 通过userId获取用户
+ * @param  {ObjectId} _id 用户Id
+ * @return {object}     存在返回user的json格式，不存在返回null
+ */
+async function getUser(_id) {
   if (utils.isEmpty(_id)) {
     return console.error('redis - getUser 参数错误')
   }
 
-  let user = await client.hget(USER_KEY, _id);
+  let keys = USER_KEY+ ':' + _id;
+
+  let user = await client.get(keys);
 
   if (user === null) {
     return null;
@@ -45,8 +60,107 @@ async function getUser(params) {
   return JSON.parse(user);
 }
 
+/**
+ * 每篇文章的评论的用户Id
+ * @param {object} params { commentId, userId }
+ */
+async function thumbsUpById(params) {
+  if (utils.isEmpty(params, params.commentId, params.userId)) {
+    console.error('redis - addComment 参数错误');
+  }
+
+  let keys = COMMENT_KEY + '_likes:' + params.commentId,
+      userId = params.userId;
+
+  let res = await client.sismember(keys, userId);
+
+  if (res === 1) {
+    await client.srem(keys, userId);
+  } else {
+    await client.sadd(keys, userId);
+  }
+
+}
+
+/**
+ * 查询浏览量默认前5的文章
+ */
+async function getTopPreviewArticle(start = 1, end = 5) {
+  let keys = 'preview:' + ARTICLE_KEY;
+
+  return await client.zrevrange(keys, start, end, 'WITHSCORES');
+}
+
+/**
+ * 添加文章浏览量
+ */
+async function setTopPreviewArticle(params) {
+  if (utils.isEmpty(params, params._id, params.title, params.pv)) {
+    console.error('redis - setTopPreviewArticle 参数错误');
+  }
+
+  let keys = 'preview:' + ARTICLE_KEY,
+      { _id, title, pv } = params,
+      value = _id + ':' + title;
+
+  await client.zadd(keys, pv, value);
+}
+
+/**
+ * 添加文章浏览
+ */
+async function incPv(params) {
+  if (utils.isEmpty(params, params.articleId, params.title)) {
+    console.error('redis - incPv 参数错误')
+  }
+
+  let keys = 'preview:' + ARTICLE_KEY,
+      { articleId, title } = params,
+      value = articleId + ':' + title;
+
+  await client.zincrby(keys, 1, value);
+}
+
+/**
+ * 查询文章评论量默认前5的文章
+ */
+async function getTopCommentsArticle(start = 1, end = 5) {
+  let keys = 'comments:' + ARTICLE_KEY;
+
+  return await client.zrevrange(keys, start, end, 'WITHSCORES');
+}
+
+async function setTopCommentsArticle(params) {
+  if (utils.isEmpty(params, params._id, params.title, params.commentCount)) {
+    console.error('redis - setTopCommentsArticle 参数错误');
+  }
+
+  let key = 'comments:' + ARTICLE_KEY,
+      { _id, title, commentCount } = params,
+      value = _id + ':' + title;
+
+  await client.zadd(keys, commentCount, value);
+}
+
+
+async function setCommentCount(params) {
+  if (utils.isEmpty(params, params.articleId, params.title, params.num)) {
+    console.error('redis - incComment 参数错误')；
+  }
+
+  let key = 'comments:' + ARTICLE_KEY,
+      { articleId, title, num  } = params,
+      value = articleId + ':' + title;
+
+  await client.zincrby(keys, num, value);
+ }
+
 module.exports = {
   start,
   addUser,
-  getUser
+  getUser,
+  thumbsUpById,
+  getTopPreviewArticle,
+  setTopPreviewArticle,
+  incPv
 }

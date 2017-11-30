@@ -1,10 +1,9 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const Models = require('../lib/core');
 const $User = Models.$User;
-const config = require('config-lite')(__dirname)
+const config = require('config-lite')(__dirname);
 const router = require('koa-router')();
-const jwt = require('jsonwebtoken');
-const jwtKoa = require('koa-jwt');
+const jwtUtils = require('../utils/jwtUtils');
 const fetch = require('node-fetch');
 const cryptoUtils = require('../utils/cryptoUtils');
 const validator = require('validator');
@@ -106,14 +105,13 @@ router.get('/github/oauth/callback', async (ctx) => {
   })
 
   try {
-    var token = jwt.sign({
-      data: result.email,
-    }, config.secretKey, { expiresIn: '1h' });
+    var token = jwtUtils.setToken(result._id, config.secretKey)
 
     redisUtils.addUser({
       token: token,
       ...result
     })
+
   } catch(e) {
     code = '-2';
     message = e.message
@@ -122,7 +120,8 @@ router.get('/github/oauth/callback', async (ctx) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'user': result
+    'user': result,
+    'token': token
   }
 })
 

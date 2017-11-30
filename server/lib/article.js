@@ -310,7 +310,11 @@ exports.redComment = (articleId, commentId) => {
  * @return {[object]}           [文章信息]
  */
 exports.getPreArticleById = (articleId) => {
-  return Article.findOne({_id: {$lt: articleId}}).sort({_id: -1 }).exec()
+  return Article.findOne(
+    { _id: {$lt: articleId} },
+    { _id: 1, title: 1 }
+  ).sort({_id: -1 })
+  .exec()
 }
 
 /**
@@ -319,12 +323,41 @@ exports.getPreArticleById = (articleId) => {
  * @return {[object]}           [文章信息]
  */
 exports.getNextArticleById = (articleId) => {
-  return Article.findOne({_id: {$gt: articleId}}).sort({_id: 1 }).exec()
+  return Article.findOne(
+    { _id: {$gt: articleId} },
+    { _id: 1, title: 1 }
+  )
+  .sort({_id: 1 })
+  .exec()
 }
 
 exports.getTopPreviewArticle = () => {
-  return Article.find()
+  return Article.aggregate(
+                  { $match: { isPublic: true } },
+                  { $sort: { created_at: -1 } },
+                  { $project: {
+                      _id: 1,
+                      title: 1,
+                      pv: 1
+                    }
+                  }
+                )
                 .sort({pv: -1})
-                .limit(5)
                 .exec();
+}
+
+exports.getTopCommentsArticle = () => {
+  return Article.aggregate(
+                  { $match: { isPublic: true } },
+                  { $addFields: {
+                    commentCount: {
+                      $size: $comments
+                    }
+                  } },
+                  { $project: {
+                    _id: 1,
+                    title: 1,
+                    commentCount
+                  } }
+                ).exec()
 }

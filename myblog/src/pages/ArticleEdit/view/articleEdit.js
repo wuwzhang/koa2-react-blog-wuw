@@ -40,6 +40,7 @@ import { Alert, Button, BackTop } from 'antd';
 moment.locale('zh-cn');
 
 class ArticlePostOrEdit extends Component {
+
   constructor(props) {
     super(props);
 
@@ -77,18 +78,26 @@ class ArticlePostOrEdit extends Component {
   async componentDidMount () {
 
     this.props.initPost();
-    let result = await getEditArticle(this.props.articleId);
 
-    if (result.code === '1') {
+    let { article = {}, articleId } = this.props;
+
+    if (article) {
+      let result = await getEditArticle(articleId);
+
+      if (result.code === '1') {
+        article = result.article;
+      } else {
+        console.log(result)
+      }
+    }
+
+    if (article) {
       this.setState({
-        title: result.article.title,
-        content: result.article.content,
-        tags: result.article.tags,
-        catalog: result.article.catalog
-
+        title: article.title,
+        content: article.content,
+        tags: article.tags,
+        catalog: article.catalog
       })
-    } else {
-      console.log(result.code);
     }
   }
 
@@ -395,7 +404,8 @@ const mapStateToProps = (state) => {
 
   return {
     articleId: articleId,
-    articleEdit: state.articleEdit
+    articleEdit: state.articleEdit,
+    article: state.articleDetails.article
   }
 };
 
@@ -419,7 +429,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default redirect(withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ArticlePostOrEdit)));
+export default redirect(withRouter(connect(mapStateToProps, mapDispatchToProps)(ArticlePostOrEdit)));

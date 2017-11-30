@@ -29,7 +29,7 @@ class Topmenu extends Component {
   componentDidMount() {
     let token = window.localStorage.getItem('token');
 
-    if (token) {
+    if (token && !this.props.user) {
       this.loginByToken(token);
     }
   }

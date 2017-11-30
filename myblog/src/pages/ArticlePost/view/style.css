@@ -27,7 +27,8 @@
 }
 .previewButton {
   margin-top: 24px;
-
+  display: inline-block;
+  margin-right: 10px;
 }
 .myButton {
   height: 34px !important;

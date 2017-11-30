@@ -41,6 +41,7 @@ class CommentItem extends Component {
     })
   }
 
+
   _handleShowRepliy() {
 
     const btn = (
@@ -68,7 +69,7 @@ class CommentItem extends Component {
     } else {
       notification.open({
         message: 'Sign In',
-        description: 'If you want to reply, please login first',
+        description: '回复，要先登录一下哦，点击下方传送门',
         btn,
         icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
         style: {
@@ -102,7 +103,7 @@ class CommentItem extends Component {
     } else if (!userId) {
       notification.open({
         message: 'Sign In',
-        description: 'If you want to thumbs up, please login first',
+        description: '点赞，要先登录一下哦，点击下方传送门',
         btn,
         icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
         style: {
@@ -136,7 +137,7 @@ class CommentItem extends Component {
     } else if(!userId) {
       notification.open({
         message: 'Sign In',
-        description: 'If you want to thums down, please login first',
+        description: '嫌弃，怕是要先登录一下，点击下方传送门',
         btn,
         icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
         style: {
@@ -153,6 +154,8 @@ class CommentItem extends Component {
         { pathname, redirectState } = this.state,
         { replies = [], user = {} } = comment;
 
+        // console.log('commentItem - parentId', comment._id)
+
     if (pathname) {
       return <Redirect to={{
               pathname: pathname,
@@ -161,7 +164,6 @@ class CommentItem extends Component {
     }
 
     // user = user ? user[0] : user;
-    console.log(user.avatar)
 
     return (
       <Row>
@@ -258,7 +260,8 @@ class CommentItem extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.login.user,
-    comments: state.comment.articleComments
+    comments: state.comment.articleComments,
+    location: state.routing.location
   }
 }
 

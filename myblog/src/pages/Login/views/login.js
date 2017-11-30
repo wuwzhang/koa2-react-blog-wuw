@@ -26,7 +26,7 @@ import {
   Grid,
   Col
 } from 'react-bootstrap';
-import { Alert, message, Icon } from 'antd';
+import { notification, message, Icon } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 
 import './style.css';
@@ -54,7 +54,6 @@ class Login extends Component {
 
   async _signIn() {
     const { account, password } = this.state;
-    // await this.props.loginIn({account, password});
     this.props.startLogin();
 
     let result = await login({account, password});
@@ -91,6 +90,16 @@ class Login extends Component {
           failMessage: '用户名密码错误'
         })
       }
+
+      notification.open({
+        message: '登录失败',
+        description: this.state.failMessage,
+        icon: <Icon type="meh-o" style={{ color: '#ff7e67' }} />,
+        style: {
+          color: '#ff7e67',
+          bacground: '#fafafa'
+        }
+      });
     }
   }
 
@@ -150,7 +159,6 @@ class Login extends Component {
 
   render() {
     let { user, fromPath, msgType } = this.props;
-    let { failMessage } = this.state;
 
     if (msgType === 'success' && user && fromPath.state) {
 
@@ -220,11 +228,6 @@ class Login extends Component {
                       </Button>
                     </Col>
                   </FormGroup>
-
-                  {
-                    msgType === 'warning' ? <Alert className="myAlert registAlert" message={ failMessage } type="warning" showIcon closable/>
-                                          : null
-                  }
                   <Link onClick={this._signInByGithub} to="/login/github">
                     <Icon type='github' />
                   </Link>

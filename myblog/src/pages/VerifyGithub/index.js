@@ -31,6 +31,10 @@ class VerifyGithub extends Component {
       if (result.code === '1') {
         this.props.successLogin(result.user)
 
+        if (result.token) {
+          window.localStorage.setItem('token', result.token);
+        }
+
         this.setState({
           isRedirect: true
         })

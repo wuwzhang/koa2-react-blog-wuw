@@ -20,12 +20,12 @@ const CommentsSchema = new Schema({
         type: Date,
         default: Date.now
       },
-      thumbsUp: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }],
       content: {
         type: String
+      },
+      isRePort: {
+        type: Boolean,
+        default: false
       }
     }
   ]

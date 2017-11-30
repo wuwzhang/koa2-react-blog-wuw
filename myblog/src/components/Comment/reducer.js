@@ -24,7 +24,7 @@ export default (state, action) => {
 
   switch (action.type) {
     case INIT_COMMENT: {
-
+      console.log('action - comments', action.comments)
       return {
         ...state,
         articleComments: action.comments.map((comment) => {

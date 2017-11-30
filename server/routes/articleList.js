@@ -1,6 +1,7 @@
 const router = require('koa-router')();
 const Models = require('../lib/core');
 const $Article = Models.$Article;
+const redisUtils = require('../utils/redisUtils');
 
 router.post('/api/article_list', async(ctx, next) => {
   let code = '1', message = 'ok';
@@ -16,28 +17,6 @@ router.post('/api/article_list', async(ctx, next) => {
     'code': code,
     'message': message,
     'articles': result
-  }
-});
-
-/**
- * 通过文章id删除文章
- */
-router.post('/api/article_delete/:articleId', async(ctx, next) => {
-  let code = '1', message = 'ok';
-  const { articleId } = ctx.params;
-
-  try {
-
-    var result = await $Article.deleteArticleById(articleId);
-
-  } catch (e) {
-    code = '-1',
-    message = e.message
-  }
-
-  ctx.response.body = {
-    'code': code,
-    'message': message
   }
 });
 
@@ -264,30 +243,82 @@ router.post('/api/article_toggle_ArticlePublic', async(ctx, next) => {
 
 })
 
+/**
+ * 获取浏览量排行前五的文章
+ */
 router.get('/api/top_preview_article', async(ctx, next) => {
-  let code = '1', message = '获取浏览排行成功';
+  let code = '1', message = '获取浏览排行成功',
+      result = [],
+      resultArr = [];
 
   try {
-    var result = await $Article.getTopPreviewArticle();
+
+    /**
+     * 返回排行前5浏览量的文章
+     * @type {array}
+     * ['${articleId_1}:${title_1}', pv1, ..., '${articleId_n}:${title_n}', pv2]
+     */
+    result = await redisUtils.getTopPreviewArticle(0, 4);
+
+    //如果redis中数据为空,从mongodb中获取,并将获得的数据添加到redis中
+    if (result.length === 0) {
+      result = await $Article.getTopPreviewArticle();
+
+      result.forEach(async (article) => {
+        await redisUtils.setTopPreviewArticle(article);
+      })
+
+      resultArr = result.slice(0, 5);
+    } else {
+      let len = result.length,
+          cnt = Math.floor(len / 2);
+      for (let i = 0; i < cnt; i += 1) {
+        let str = result ? result[i * 2] : result;
+            articleIdTitle = str ? str.split(':') : str,
+            pv = result[i * 2 + 1];
+
+        resultArr[i] = {
+          _id: articleIdTitle ? articleIdTitle[0] : '',
+          title: articleIdTitle ? articleIdTitle[1] : '',
+          pv: pv
+        }
+      }
+    }
   } catch(e) {
     code = '-1',
     message = e.message
   }
 
-  if (result) {
-    result = result.map((article) => {
-      return {
-        _id: article._id,
-        title: article.title,
-        pv: article.pv
-      }
-    })
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'result': resultArr
+  }
+});
+
+
+router.get('/api/top_comments_article', async(ctx, next) => {
+  let code = '1', message = '获取评论排行',
+      result;
+
+  try {
+    result = await redisUtils.getTopCommentsArticle();
+
+    if (result.length === 0) {
+      result = await $Article.getTopCommentsArticle();
+
+      console.log('result', result)
+    } else {
+
+    }
+  } catch(e) {
+    code = '-1';
+    message = e.message
   }
 
   ctx.response.body = {
     'code': code,
-    'message': message,
-    'result': result
+    'message': message
   }
 })
 module.exports = router;

@@ -20,7 +20,7 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
-import { notification } from 'antd';
+import { notification, Icon } from 'antd';
 import './style.css';
 
 class CommentInput extends Component {
@@ -63,8 +63,6 @@ class CommentInput extends Component {
             { comment } = this.state,
             articleId = this.props.location.pathname.split('/')[2];
 
-            console.log(user)
-
       const data = {
         userId: user._id,
         articleId: articleId,
@@ -76,9 +74,10 @@ class CommentInput extends Component {
 
         this.props.addComment(result.comment);
 
-        notification.success({
-          message: 'Notification',
-          description: 'please login first',
+        notification.open({
+          message: 'Comment Succeed',
+          description: '哈哈哈哈哈哈，成功了，作者君也没想到',
+          icon: <Icon type="smile-o" style={{ color: '#A2D5F2' }} />,
           style: {
             color: '#ff7e67',
             bacground: '#fafafa'
@@ -86,7 +85,15 @@ class CommentInput extends Component {
         });
 
       } else {
-        console.log(result)
+        notification.open({
+          message: 'Comment Failed',
+          description: '啊啊啊啊啊啊，失败了，八成是睡着了吧',
+          icon: <Icon type="meh-o" style={{ color: '#ff7e67' }} />,
+          style: {
+            color: '#ff7e67',
+            bacground: '#fafafa'
+          }
+        });
       }
     }
   }

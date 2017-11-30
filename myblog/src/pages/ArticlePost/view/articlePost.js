@@ -3,11 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter, Redirect } from 'react-router-dom';
 import moment from 'moment';
-
 import marked from 'marked';
-// import katex from 'katex';
 
-// import { view as FieldGroup } from '../../../components/FieldGroup';
 import redirect from '../../../components/Redirect';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import './style.css';
@@ -73,6 +70,7 @@ class ArticlePostOrEdit extends Component {
     }
 
     this.handlePreview = this.handlePreview.bind(this);
+    this.handleClear = this.handleClear.bind(this);
   }
 
   componentDidMount() {
@@ -197,6 +195,22 @@ class ArticlePostOrEdit extends Component {
     }))
   }
 
+  handleClear() {
+    this.setState({
+      title: '',
+      content: localStorage.getItem('content') || this.props.articleContent || '',
+      tags: '',
+      catalog: '',
+      tagsValid: 'success',
+      catalogValid: 'success',
+      titleValid: 'success',
+      contentValid: 'success'
+    })
+
+    localStorage.removeItem('title');
+    localStorage.removeItem('content')
+  }
+
   /**
    * 发布文章
    */
@@ -281,6 +295,9 @@ class ArticlePostOrEdit extends Component {
                   <Button className="myButton previewButton" onClick={ this.handlePreview }>
                     { this.state.isPreview ? '<  Hidden Preview' : 'Show Preview  >' }
                   </Button>
+                  <Button className="myButton previewButton" onClick={ this.handleClear }>
+                    Clear
+                  </Button>
                 </Col>
               </Row>
               {
@@ -300,9 +317,6 @@ class ArticlePostOrEdit extends Component {
                                                 style={{ height: 800 }}
                                               />
                                               {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
-
-
-
                                           </FormGroup>
                                         </Col>
                                         {

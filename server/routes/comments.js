@@ -4,6 +4,7 @@ const Models = require('../lib/core');
 const $Article = Models.$Article;
 const $Comments = Models.$Comments;
 const $User = Models.$User;
+const redisUtils = require('../utils/redisUtils');
 
 /**
  * 文章添加一级评论
@@ -26,9 +27,17 @@ router.post('/api/article_details/:articleId/comment', async(ctx, next) => {
   }
 
   try {
+
+    /* *
+     * 向mongodb中插入数据
+     * 在comment表中插入数据
+     * 在_id为aritleId的文章中添加commentId
+     * 通过userId获取用户信息
+     */
     var result = await Promise.all([$Comments.create(commentModel),
                                     $Article.addComment(commentModel.articleId, commentModel._id),
-                                    $User.getUserById(commentModel.userId)])
+                                    $User.getUserById(commentModel.userId)]);
+
   } catch (e) {
     code = '-1';
     message = e.message
@@ -69,6 +78,17 @@ router.post('/api/article_details/:articleId/get_comment', async(ctx, next) => {
 
   try {
     var result = await $Comments.getCommentsByArticleId(articleId, page, range);
+
+    // console.log(result);
+    var comments = result.map((comment) => {
+      let user = comment.user ? comment.user[0] : comment.user;
+
+      return {
+        ...comment,
+        user: user
+      }
+    })
+
   } catch (e) {
     code = '-1';
     message = e.message;
@@ -77,7 +97,7 @@ router.post('/api/article_details/:articleId/get_comment', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'comments': result
+    'comments': comments
   }
 });
 
@@ -234,9 +254,16 @@ router.post('/api/comment/:commentId/thumbsUp', async(ctx, next) => {
   const { commentId } = ctx.params;
   let { userId } = ctx.request.body;
 
+  /**
+   * 通过sadd方法添加userId
+   * @key comments:${commentId}
+   * @value userId
+   */
   try {
-    let res = await $Comments.thumbsUpById(commentId, userId);
-    console.log(res);
+    let res = await Promise.all([$Comments.thumbsUpById(commentId, userId),
+                                 redisUtils.thumbsUpById({commentId, userId})
+                                ]);
+
   } catch (e) {
     code = '-1',
     message = e.message

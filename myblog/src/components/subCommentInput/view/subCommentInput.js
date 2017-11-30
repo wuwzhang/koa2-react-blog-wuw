@@ -52,7 +52,7 @@ class SubCommentInput extends Component {
             user: user,
             content: subComment,
             created_at: result.created_at,
-            thumbsUp: 0
+            isRePort: false
           },
           commentIndex: commentIndex
         },{
@@ -66,9 +66,13 @@ class SubCommentInput extends Component {
     }
   }
 
-  _login() {
+  _login(e) {
+    e.preventDefault();
+    console.log('login click')
     let pathname ='/login',
         redirectState = { from: this.props.location };
+
+    console.log('redirectState', redirectState)
 
     this.setState({
       pathname: pathname,
@@ -80,7 +84,7 @@ class SubCommentInput extends Component {
 
     let { pathname, redirectState } = this.state,
         { user } = this.props;
-    if (pathname) {
+    if (pathname && redirectState) {
       return <Redirect to={{
               pathname: pathname,
               state: redirectState
@@ -117,7 +121,7 @@ class SubCommentInput extends Component {
                                     </Button>
                                   : <Button
                                       className="submit-btn subComment-btn"
-                                      onClick={()=>this._login()}
+                                      onClick={(e)=>this._login(e)}
                                     >
                                       <FormattedMessage
                                         id="Login"

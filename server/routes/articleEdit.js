@@ -13,6 +13,8 @@ router.post('/api/article_edit/:articleId', async(ctx, next) => {
 
   try {
     var result = await $Article.getArticleById(articleId);
+
+    result = result ? result[0] : result;
     // console.log(result);
   } catch (e) {
     code = '-1',
@@ -23,6 +25,30 @@ router.post('/api/article_edit/:articleId', async(ctx, next) => {
     'code': code,
     'message': message,
     'article': result
+  }
+});
+
+/**
+ * 通过文章id删除文章
+ */
+router.post('/api/article_delete/:articleId', async(ctx, next) => {
+  let code = '1', message = 'ok';
+  const { articleId } = ctx.params;
+
+  try {
+
+    var result = await Promise.all([$Article.deleteArticleById(articleId),
+
+                                  ])
+
+  } catch (e) {
+    code = '-1',
+    message = e.message
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message
   }
 });
 

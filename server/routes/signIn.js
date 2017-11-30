@@ -1,9 +1,9 @@
 const router = require('koa-router')();
 const Models = require('../lib/core');
 const $User = Models.$User;
-const jwt = require('jsonwebtoken');
-const jwtKoa = require('koa-jwt');
-const crypto = require('crypto');
+const jwtUtils = require('../utils/jwtUtils')
+const cryptoUtils = require('../utils/cryptoUtils');
+const redisUtils = require('../utils/redisUtils')
 const config = require('config-lite')(__dirname)
 
 router.get('/home/login', async(ctx, next) => {
@@ -16,13 +16,12 @@ router.post('/api/signIn', async(ctx, next) => {
   let { account, password } = ctx.request.body;
 
   try {
-    var token = jwt.sign({
-      data: account,
-    }, config.secretKey, { expiresIn: '1h' });
+
 
     let result = await $User.getUserByAccount(account);
-    password = crypto.createHash('md5').update(password).digest('hex');
+    password = cryptoUtils.md5(password);
 
+    var token = jwtUtils.setToken(result._id, config.secretKey);
 
     if (result.isActive === false) {
       code = '-1';
@@ -41,6 +40,12 @@ router.post('/api/signIn', async(ctx, next) => {
         avatar: result.avatar,
         _id: result._id
       }
+
+      await redisUtils.addUser({
+        ...user,
+        token: token
+      })
+
     } else {
       code = '-2';
       message = '用户名或密码错误'
@@ -49,6 +54,7 @@ router.post('/api/signIn', async(ctx, next) => {
     code = '-3';
     message = e.message;
   }
+
 
   ctx.response.body = {
     'code': code,
@@ -60,27 +66,29 @@ router.post('/api/signIn', async(ctx, next) => {
 
 router.post('/api/getUserByToken', async(ctx, next) => {
   let { token } = ctx.request.body;
-  let code = '1', message = 'token获取用户成功', account = '',
+  let code = '1', message = 'token获取用户成功', _id = '',
       user = null;
 
   try {
     if (token) {
 
       //验证token是否过期，此处设置为1小时
-      jwt.verify(token, config.secretKey, function(err, decoded) {
-        if (err) {
-          code = '-1';
-          message = 'token过期';
 
-        } else {
 
-          //未过期将token进行解析，返回用户账号
-          account = decoded.data;
+      _id = jwtUtils.getToken(token, config.secretKey);
+
+      if (_id === -1) {
+        code = '-1';
+        message = 'token过期'
+      } else {
+
+        let result = await redisUtils.getUser(_id);
+
+        if (!result) {
+          result = await $User.getUserId(_id)
         }
-      })
 
-      if (account) {
-        let result = await $User.getUserByAccount(account)
+        // console.log('result', result)
 
         user = {
           level: result.level,

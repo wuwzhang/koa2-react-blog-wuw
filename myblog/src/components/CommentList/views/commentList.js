@@ -26,7 +26,6 @@ class CommentList extends Component {
     let result = await commentFetchs.getComment(this.props.articleId, 1, 4);
 
     if (result.code === '1') {
-
       this.props.initComment(result.comments);
 
     } else {

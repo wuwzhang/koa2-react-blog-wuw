@@ -1,6 +1,7 @@
 const router = require('koa-router')();
 const Models = require('../lib/core');
 const $Article = Models.$Article;
+const redisUtils = require('../utils/redisUtils');
 
 router.get('/api/article_details/:articleId', async(ctx, next) => {
   let code = '1', message = 'ok';
@@ -12,61 +13,34 @@ router.get('/api/article_details/:articleId', async(ctx, next) => {
                                     $Article.incPv(articleId),
                                     $Article.getPreArticleById(articleId),
                                     $Article.getNextArticleById(articleId)
-                                  ]);
+                                  ])
+                                  .then(async (values) => {
+                                    if (values && values[0] && values[0][0] && values[0][0].title) {
+                                      let title = values[0][0].title;
+                                      await redisUtils.incPv({articleId, title});
+                                    }
+
+                                    if (values) {
+                                      return {
+                                        article: values[0] ? values[0][0] : '',
+                                        pre: values[2] ? values[2] : null,
+                                        next: values[3] ? values[3] : null
+                                      }
+                                    }
+                                  })
   } catch (e) {
     code = '-1',
     message = e.message
   }
 
-  let Pre, Next;
-
-  if (result[2]) {
-    Pre = {
-      title: result[2].title,
-      _id: result[2]._id
-    };
-  } else {
-    Pre = null;
-  }
-
-  if (result[3]) {
-    Next = {
-      title: result[3].title,
-      _id: result[3]._id
-    };
-  } else {
-    Next = null;
-  }
-
-  if (result[0]) {
-    var articles = result[0],
-        article = articles[0]
-  }
+  // console.log(result)
 
   ctx.response.body = {
     'code': code,
     'message': message,
-    'article': article,
-    'preArticle': Pre,
-    'nextArticle': Next
-  }
-});
-
-router.post('/api/article_edit/:articleId', async(ctx, next) => {
-  let code = '1', message = 'ok';
-  const { articleId } = ctx.params;
-
-  try {
-    var result = await $Article.getArticleById(articleId);
-  } catch (e) {
-    code = '-1',
-    message = e.message
-  }
-
-  ctx.response.body = {
-    'code': code,
-    'message': message,
-    'article': result
+    'article': result.article,
+    'preArticle': result.pre,
+    'nextArticle': result.next
   }
 });
 

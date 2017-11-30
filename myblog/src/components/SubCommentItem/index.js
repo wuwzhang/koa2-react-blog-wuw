@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Avatar } from '../Avatar/index.js';
-import FontAwesome from 'react-fontawesome';
 
 import './style.css';
 
@@ -40,12 +39,6 @@ class SubCommentItem extends Component {
             </ul>
             <ul>
               <li>{reply.created_at ? reply.created_at.slice(0, 10) : reply}</li>
-              <li>
-                <span className='commentItem-option-btn'>
-                  <FontAwesome name='thumbs-o-up'/>
-                  <span> {reply.thumbsUp}</span>
-                </span>
-              </li>
               <li>
                 <span className='commentItem-option-btn'>举报</span>
               </li>

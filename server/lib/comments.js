@@ -81,13 +81,19 @@ exports.getCommentsByArticleId = (articleId, page, range) => {
               ]
             },
             user: '$$i',
-            thumbsUp: {
-              $size: {
-                $arrayElemAt: [
-                  '$replies.thumbsUp',
-                  { '$indexOfArray': ['$replies.userId', '$$i._id'] }
-                ]
-              }
+            // thumbsUp: {
+            //   $size: {
+            //     $arrayElemAt: [
+            //       '$replies.thumbsUp',
+            //       { '$indexOfArray': ['$replies.userId', '$$i._id'] }
+            //     ]
+            //   }
+            // },
+            isRePort: {
+              $arrayElemAt: [
+                '$replies.created_at',
+                { '$indexOfArray': ['$replies.isRePort', '$$i._id'] }
+              ]
             },
             created_at: {
               $arrayElemAt: [

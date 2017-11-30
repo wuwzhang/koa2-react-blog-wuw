@@ -16,7 +16,7 @@ onerror(app)
 
 // middlewares
 app.use(bodyparser({ enableTypes:['json', 'form', 'text'] }))
-app.use(middlewares.error())
+// app.use(middlewares.error())
 app.use(json())
 app.use(require('koa-static')(__dirname + '/build'))
 app.use(views(__dirname + '/build', { extension: 'html' }))
