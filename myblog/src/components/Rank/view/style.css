@@ -1,0 +1,46 @@
+.articleDetails-rank {
+  padding: 20px;
+  margin-top: 10px;
+}
+.ArticleDetails-Title, .ArticleDetails-sub-Title {
+  font-size: 17px;
+  font-weight: bolder;
+  margin-bottom: 10px;
+  color: rgb(51, 102, 153);
+  font-weight: 700;
+  text-shadow: rgba(16, 142, 233, .5);
+}
+.ArticleDetails-Title {
+  line-height: 32px;
+  border-bottom: 1px solid #ccc;
+}
+.ArticleDetails-sub-Title {
+  font-size: 13px;
+  color: #369;
+  text-shadow: 1px 1px rgba(16, 142, 233, .5);
+}
+.topRank {
+  /*position: absolute;*/
+  top: 10px;
+  margin-top: 10px;
+}
+.topPreview {
+  margin-top: 20px;
+}
+.topRank .topRank-li {
+  display: block !important;
+  color: #999;
+  line-height: 24px;
+  border-bottom: 1px solid #eee;
+}
+.topRank .topRank-li:hover span {
+  color: #ff7e67;
+}
+.topRank-li span {
+  /*float: left;*/
+}
+.articleDetail-rank-count {
+  color: #ff7e67;
+  margin-top: 10px;
+  margin-left: 7px;
+}

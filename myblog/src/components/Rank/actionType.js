@@ -1,0 +1,2 @@
+export const SET_PREVIEW_PANK = 'RANK/PREVIEW/SET';
+export const SET_COMMENT_PANK = 'RANK/COMMENT/SET';
