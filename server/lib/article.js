@@ -351,13 +351,13 @@ exports.getTopCommentsArticle = () => {
                   { $match: { isPublic: true } },
                   { $addFields: {
                     commentCount: {
-                      $size: $comments
+                      $size: '$comments'
                     }
                   } },
                   { $project: {
                     _id: 1,
                     title: 1,
-                    commentCount
+                    commentCount: 1
                   } }
                 ).exec()
 }

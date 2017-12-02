@@ -109,13 +109,13 @@ exports.getCommentsByArticleId = (articleId, page, range) => {
             }
           }
         }
-      },
-      thumbsUp: {
-        $size: '$thumbsUp'
-      },
-      thumbsDown: {
-        $size: '$thumbsDown'
       }
+      // thumbsUp: {
+      //   $size: '$thumbsUp'
+      // },
+      // thumbsDown: {
+      //   $size: '$thumbsDown'
+      // }
     }},
     { $project: {
       userId: 0,
@@ -191,26 +191,36 @@ exports.addSubComment = (parentId, data) => {
  * 一级平评论点赞
  * @param  {ObjectId} commentId 评论Id
  */
-exports.thumbsUpById = (commentId, userId) => {
-  return Comments.findOne({ _id: commentId })
-                 .then((res) => {
-                    let thumbsUp = res.thumbsUp;
-                    if (thumbsUp && thumbsUp instanceof Array) {
-                      if (thumbsUp.indexOf(userId) === -1) {
-                        return Comments.update(
-                          { _id: commentId },
-                          { $addToSet: { thumbsUp: userId } }
-                        )
-                      } else {
-                        return Comments.update(
-                          { _id: commentId },
-                          { $pull: { thumbsUp: userId } }
-                        )
-                      }
-                    } else {
+// exports.thumbsUpById = (commentId, userId) => {
+//   return Comments.findOne({ _id: commentId })
+//                  .then((res) => {
+//                     let thumbsUp = res.thumbsUp;
+//                     if (thumbsUp && thumbsUp instanceof Array) {
+//                       if (thumbsUp.indexOf(userId) === -1) {
+//                         return Comments.update(
+//                           { _id: commentId },
+//                           { $addToSet: { thumbsUp: userId } }
+//                         )
+//                       } else {
+//                         return Comments.update(
+//                           { _id: commentId },
+//                           { $pull: { thumbsUp: userId } }
+//                         )
+//                       }
+//                     } else {
 
-                    }
-                 })
+//                     }
+//                  })
+// }
+
+exports.thumbsUp = (commentId, val) => {
+  return Comments.update({ _id: commentId }, { $inc: { thumbsUp: val } })
+                 .exec()
+}
+
+exports.thumbsDown = (commentId, val) => {
+  return Comments.update({ _id: commentId }, { $inc: { thumbsDown: val } })
+                 .exec()
 }
 
 exports.thumbsDownById = (commentId, userId) => {

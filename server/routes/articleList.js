@@ -268,7 +268,7 @@ router.get('/api/top_preview_article', async(ctx, next) => {
         await redisUtils.setTopPreviewArticle(article);
       })
 
-      resultArr = result.slice(0, 5);
+      resultArr = result.slice(0, 4);
     } else {
       let len = result.length,
           cnt = Math.floor(len / 2);
@@ -299,17 +299,35 @@ router.get('/api/top_preview_article', async(ctx, next) => {
 
 router.get('/api/top_comments_article', async(ctx, next) => {
   let code = '1', message = '获取评论排行',
-      result;
+      result = [],
+      resultArr = [];
 
   try {
-    result = await redisUtils.getTopCommentsArticle();
+    result = await redisUtils.getTopCommentsArticle(0, 4);
+    // console.log('redis - topComment - exit', result)
 
     if (result.length === 0) {
       result = await $Article.getTopCommentsArticle();
 
-      console.log('result', result)
-    } else {
+      result.forEach(async (article) => {
+        await redisUtils.setTopCommentsArticle(article)
+      })
 
+      resultArr = result.slice(0, 4);
+    } else {
+      let len = result.length,
+          cnt = Math.floor(len / 2);
+      for (let i = 0; i < cnt; i += 1) {
+        let str = result ? result[i * 2] : result;
+            articleIdTitle = str ? str.split(':') : str,
+            commentCount = result[i * 2 + 1];
+
+        resultArr[i] = {
+          _id: articleIdTitle ? articleIdTitle[0] : '',
+          title: articleIdTitle ? articleIdTitle[1] : '',
+          commentCount: commentCount
+        }
+      }
     }
   } catch(e) {
     code = '-1';
@@ -318,7 +336,8 @@ router.get('/api/top_comments_article', async(ctx, next) => {
 
   ctx.response.body = {
     'code': code,
-    'message': message
+    'message': message,
+    'result': resultArr
   }
 })
 module.exports = router;

@@ -86,8 +86,6 @@ router.get('/github/oauth/callback', async (ctx) => {
           _id = new mongoose.Types.ObjectId();
 
       await $User.create({
-        isActive: true,
-        activeKey: activeKey,
         _id: _id,
         ...result
       })
@@ -111,6 +109,8 @@ router.get('/github/oauth/callback', async (ctx) => {
       token: token,
       ...result
     })
+
+    ctx.session.user = result;
 
   } catch(e) {
     code = '-2';

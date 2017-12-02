@@ -77,18 +77,28 @@ router.post('/api/article_details/:articleId/get_comment', async(ctx, next) => {
   let code = '1', message = '发表成功';
 
   try {
-    var result = await $Comments.getCommentsByArticleId(articleId, page, range);
+    var result = await $Comments.getCommentsByArticleId(articleId, page, range),
+        ans;
 
-    // console.log(result);
-    var comments = result.map((comment) => {
-      let user = comment.user ? comment.user[0] : comment.user;
+    async function getComment(result) {
+      let comments = [];
+      for (let comment of result) {
 
-      return {
-        ...comment,
-        user: user
+        let user = comment.user ? comment.user[0] : comment.user,
+                   commentId = comment._id,
+                   ans = await redisUtils.getThumbs(commentId);
+        comments.push({
+          ...comment,
+          user: user,
+          likes: ans[0],
+          dislikes: ans[1]
+        })
       }
-    })
 
+      return comments;
+    }
+
+    ans = await getComment(result)
   } catch (e) {
     code = '-1';
     message = e.message;
@@ -97,7 +107,7 @@ router.post('/api/article_details/:articleId/get_comment', async(ctx, next) => {
   ctx.response.body = {
     'code': code,
     'message': message,
-    'comments': comments
+    'comments': ans
   }
 });
 
@@ -260,36 +270,79 @@ router.post('/api/comment/:commentId/thumbsUp', async(ctx, next) => {
    * @value userId
    */
   try {
-    let res = await Promise.all([$Comments.thumbsUpById(commentId, userId),
-                                 redisUtils.thumbsUpById({commentId, userId})
-                                ]);
+
+    var result = await redisUtils.thumbsUpById({commentId, userId})
+                                  .then(async (res) => {
+
+                                    if (res === -1) {
+                                      try {
+                                        await $Comments.thumbsUp(commentId, -1);
+                                      } catch (e) {
+                                        code = '-1';
+                                        message = e.message
+                                      }
+
+                                      return -1;
+                                    } else if (res === 1) {
+                                      try {
+                                        await $Comments.thumbsUp(commentId, 1);
+                                      } catch (e) {
+                                        code = '-2';
+                                        message = e.message;
+                                      }
+                                      return 1;
+                                    }
+                                  })
 
   } catch (e) {
-    code = '-1',
-    message = e.message
+    code = '-3';
+    message = e.message;
   }
 
   ctx.response.body = {
     'code': code,
-    'message': message
+    'message': message,
+    'thumbsUp': result
   }
 })
 
 router.post('/api/comment/:commentId/thumbsDown', async(ctx, next) => {
-  let code = '1', message = '一级评论点赞成功';
+  let code = '1', message = '一级评论踩成功';
   const { commentId } = ctx.params;
   let { userId } = ctx.request.body;
 
   try {
-    await $Comments.thumbsDownById(commentId, userId);
+    var result = await redisUtils.thumbsDownById({commentId, userId})
+                              .then(async (res) => {
+                                if (res === -1) {
+                                  try {
+                                    await $Comments.thumbsDown(commentId, -1);
+                                  } catch (e) {
+                                    code = '-1';
+                                    message = e.message;
+                                  }
+
+                                  return -1;
+                                } else if (res === 1) {
+                                  try {
+                                    await $Comments.thumbsDown(commentId, 1);
+                                  } catch (e) {
+                                    code = '-2';
+                                    message = e.message;
+                                  }
+
+                                  return 1;
+                                }
+                              })
   } catch (e) {
-    code = '-1',
-    message = e.message
+    code = '-3';
+    message = e.message;
   }
 
   ctx.response.body = {
     'code': code,
-    'message': message
+    'message': message,
+    'thumbsDown': result
   }
 })
 module.exports = router;

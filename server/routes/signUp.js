@@ -1,7 +1,7 @@
 const router = require('koa-router')();
 const Models = require('../lib/core');
 const $User = Models.$User;
-const cheackNotLogin = require('../middlewares/check-login').cheackNotLogin;
+const redisUtils = require('../utils/redisUtils')
 const fs = require('async-file');
 const path = require('path');
 const uuidV4 = require('uuid/v4');
@@ -42,12 +42,6 @@ function sendEmail(key, email) {
   });
 }
 
-router.post('/signIn', async(ctx, next) => {
-  await cheackNotLogin(ctx, next);
-  ctx.response.body = ctx.flash.get();
-});
-
-
 router.post('/api/signUp', async(ctx, next) => {
   let code = '1', message = '注册成功';
 
@@ -76,7 +70,8 @@ router.post('/api/signUp', async(ctx, next) => {
         avatar: avatarValue
       }
 
-      await $User.create(user);
+      // await $User.create(user);
+      await redisUtils.setCreateTmpUser(user);
       delete user.password;
       // ctx.session.user = user;
 

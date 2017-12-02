@@ -1,8 +1,31 @@
 const router = require('koa-router')();
 const redisUtils = require('../utils/redisUtils')
-const checkLogin = require('../middlewares/check-login').checkLogin;
+const checkLoginUtils = require('../utils/checkLoginUtils')
 
-router.get('/signOut', async(ctx, next) => {
-  await checkLogin(ctx, next)
-  ctx.response.body = ctx.flash.get();
-})
+router.post('/api/signOut', async(ctx, next) => {
+  let { userId } = ctx.request.body,
+      code = '1', message = '注销成功';
+
+  if (checkLoginUtils.cheackNotLogin(ctx)) {
+
+    try {
+      let move = redisUtils.delUser(userId);
+
+      console.log(move)
+    } catch (e) {
+      code = '-2';
+      message = e.message;
+    }
+
+  } else {
+    code = '-3';
+    message = '未登录'
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message
+  }
+});
+
+module.exports = router;

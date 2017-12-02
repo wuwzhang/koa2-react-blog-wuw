@@ -5,6 +5,8 @@ import FontAwesome from 'react-fontawesome';
 
 import './style.css';
 
+import { FormattedMessage } from 'react-intl';
+
 class ArticleTags extends Component {
   // console.log(tags);
   constructor(props) {
@@ -24,7 +26,15 @@ class ArticleTags extends Component {
     }
     return (
       <section className="ArticleTags">
-        <h6 className="ArticleTags-tagTitle" style={{ color: color }}><FontAwesome className="ArticleTags-tagTitle-icon" name='tag' /><span style={{ color: color}}>tags</span></h6>
+        <h6 className="ArticleTags-tagTitle" style={{ color: color }}>
+          <FontAwesome className="ArticleTags-tagTitle-icon" name='tag' />
+          <span style={{ color: color}}>
+            <FormattedMessage
+              id="Tags"
+              defaultMessage="Tags"
+            />
+          </span>
+        </h6>
         <ul>
           {
             tags.map((tag) => {

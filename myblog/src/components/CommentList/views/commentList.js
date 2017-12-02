@@ -26,7 +26,38 @@ class CommentList extends Component {
     let result = await commentFetchs.getComment(this.props.articleId, 1, 4);
 
     if (result.code === '1') {
-      this.props.initComment(result.comments);
+      // this.props.initComment(result.comments)
+      let comments = result.comments;
+      let ans = comments.map((comment) => {
+                  let likesState = 0,
+                      dislikesState = 0;
+
+                  if (this.props.user && this.props.user._id) {
+                    let { likes, dislikes } = comment,
+                        userId = this.props.user._id;
+
+                    if (likes && likes.length > 0) {
+                      likesState = userId.indexOf(likes) === '-1' ? -1 : 1;
+                    } else {
+                      likesState = -1;
+                    }
+
+                    if (dislikes && dislikes.length > 0) {
+                      dislikesState = userId.indexOf(dislikes) === '-1' ? -1 : 1;
+                    } else {
+                      dislikesState = -1;
+                    }
+
+                  }
+
+                  return {
+                    likesState,
+                    dislikesState,
+                    ...comment
+                  }
+                })
+
+    this.props.initComment(ans)
 
     } else {
 
@@ -65,12 +96,10 @@ class CommentList extends Component {
         <ul>
         {
           comments.map((comment, index) => {
-            if (comment) {
-              return <CommentItem
-                        key = { index }
-                        commentIndex = { index }
-                      />
-            }
+            return <CommentItem
+                      key = { index }
+                      commentIndex = { index }
+                    />
           })
         }
         </ul>
@@ -86,7 +115,8 @@ const mapStateToProps = (state) => {
   return {
     comments: state.comment.articleComments,
     commentCount: state.articleDetails.article.comments,
-    articleId: articleId
+    articleId: articleId,
+    user: state.login.user
   }
 };
 

@@ -19,7 +19,7 @@ const en_US = {
   CloudLabel: 'Cloud Label',
   CatalogList: 'Catalog List',
   Summary: 'Summary',
-  Chinses: 'Zh',
+  Chinses: '中',
   English: 'En',
   SearchByTag: 'Search By Tag',
   SearchByCatalog: 'Search By Catalog',
@@ -45,6 +45,11 @@ const en_US = {
   Location: 'Ningbo China',
   Links: 'Links',
   Fork: 'Copy link to clipboard',
-  Avatar: 'Avatar'
+  Avatar: 'Avatar',
+  Time: 'Time',
+  Tags: 'Tags',
+  Catalog: 'Catalog',
+  Rank: 'Rank'
+
 }
 export default en_US;

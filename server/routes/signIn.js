@@ -11,44 +11,45 @@ router.get('/home/login', async(ctx, next) => {
 });
 
 router.post('/api/signIn', async(ctx, next) => {
-  let code = '1', message = '登录成功';
+  let code = '1', message = '登录成功', user = null, token = '';
 
   let { account, password } = ctx.request.body;
 
   try {
 
+    user = await redisUtils.getCreateTmpUser(cryptoUtils.md5(account))
 
-    let result = await $User.getUserByAccount(account);
-    password = cryptoUtils.md5(password);
-
-    var token = jwtUtils.setToken(result._id, config.secretKey);
-
-    if (result.isActive === false) {
+    if (user) {
       code = '-1';
       message = '邮箱未确认'
-    } else if (result && result.password === password) {
+    } else  {
 
-      // ctx.session.user = account;
-      // ctx.session.isLogin = true;
+      var result = await $User.getUserByAccount(account);
+      password = cryptoUtils.md5(password);
 
-      delete result.password;
+      if (result && result.password === password) {
+        delete result.password;
 
-      var user = {
-        level: result.level,
-        username: result.username,
-        account: result.account,
-        avatar: result.avatar,
-        _id: result._id
+        user = {
+          level: result.level,
+          username: result.username,
+          account: result.account,
+          avatar: result.avatar,
+          _id: result._id
+        }
+
+        token = jwtUtils.setToken(result._id, config.secretKey);
+
+        await redisUtils.addUser({
+          ...user,
+          token: token
+        })
+
+        ctx.session.user = user;
+      } else {
+        code = '-2';
+        message = '用户名或密码错误'
       }
-
-      await redisUtils.addUser({
-        ...user,
-        token: token
-      })
-
-    } else {
-      code = '-2';
-      message = '用户名或密码错误'
     }
   } catch (e) {
     code = '-3';

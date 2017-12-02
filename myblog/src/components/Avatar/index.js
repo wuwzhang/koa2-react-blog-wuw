@@ -14,11 +14,11 @@ export const Avatar = ({avatarNum = '1', width = 55}) => {
 
   if (type === 1) {
     return (
-      <img src={require(`../../media/${avatarNum}.jpg`)} width={width} className='myAvatar'/>
+      <img src={require(`../../media/${avatarNum}.jpg`)} alt='user avatar' width={width} className='myAvatar'/>
     );
   }
 
   return (
-    <img src={ avatarNum } width={width} className='myAvatar'/>
+    <img src={ avatarNum } alt='user avatar' width={width} className='myAvatar'/>
   )
 }

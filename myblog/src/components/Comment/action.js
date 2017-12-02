@@ -60,12 +60,14 @@ export const setIsShowReply = ({state, commentIndex}) => ({
   commentIndex
 })
 
-export const setThumbsUp = (count) => ({
+export const setThumbsUp = ({state, commentIndex}) => ({
   type: SET_THUMBSUP,
-  count
+  state,
+  commentIndex
 })
 
-export const setThumbsDown = (count) => ({
+export const setThumbsDown = ({state, commentIndex}) => ({
   type: SET_THUMBSDOWN,
-  count
+  state,
+  commentIndex
 })

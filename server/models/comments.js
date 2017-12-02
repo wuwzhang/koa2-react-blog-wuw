@@ -6,8 +6,10 @@ const CommentsSchema = new Schema({
   articleId: { type: Schema.Types.ObjectId, ref: 'Article', require: true },
   content: { type: String, require: true },
   created_at: { type: Date, default: Date.now },
-  thumbsUp: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  thumbsDown: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  // thumbsUp: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  // thumbsDown: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  thumbsUp: { type: Number, default: 0 },
+  thumbsDown: { type: Number, default: 0 },
   isChecked: { type: Boolean, default: false },
   isRePort: { type: Boolean, default: false },
   replies: [

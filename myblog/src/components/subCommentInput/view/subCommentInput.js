@@ -43,6 +43,9 @@ class SubCommentInput extends Component {
       userId: user._id
     }
 
+    console.log('subCommentInput - userId', user._id)
+    console.log('subCommentInput - parentId', parentId)
+
     let result = await commentFetchs.addSubComment(data);
 
     if (result.code === '1') {
@@ -68,11 +71,8 @@ class SubCommentInput extends Component {
 
   _login(e) {
     e.preventDefault();
-    console.log('login click')
     let pathname ='/login',
         redirectState = { from: this.props.location };
-
-    console.log('redirectState', redirectState)
 
     this.setState({
       pathname: pathname,

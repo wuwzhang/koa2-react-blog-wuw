@@ -7,6 +7,7 @@ import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
+import { view as Rank } from '../../../components/Rank/';
 import Footer from '../../../components/Footer/index.js';
 import Pagination from '../../../components/Pagination/pagination';
 
@@ -112,6 +113,7 @@ class ArticleByCatalog extends Component {
                     color = '#07689f'
                   />
                 </section>
+                <Rank showCharNum={8} style={{width: '100%', padding:'10px', border: '0'}}/>
               </Col>
               <Col md={10} sm={10} xs={12}>
                 <p>

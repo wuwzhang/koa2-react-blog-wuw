@@ -7,6 +7,7 @@ import { view as TagsCloud } from '../../../components/TagsCloud/';
 import { view as CatalogAside } from '../../../components/CatalogAside/';
 import { view as TopMenu } from '../../../components/TopMenu/';
 import { view as SearchBox } from '../../../components/ArticleSearch/';
+import { view as Rank } from '../../../components/Rank/';
 import Footer from '../../../components/Footer/index.js'
 import Pagination from '../../../components/Pagination/pagination';
 
@@ -152,6 +153,7 @@ class KeepOnFileList extends Component {
                     />
                   </div>
                 </section>
+                <Rank style={{padding: '20px'}}/>
               </Col>
             </Row>
 

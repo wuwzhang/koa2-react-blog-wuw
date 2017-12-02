@@ -25,6 +25,50 @@ function start() {
   })
 }
 
+async function setCreateTmpUser(params) {
+  if (utils.isEmpty(
+    params,
+    params.username,
+    params.account,
+    params.activeKey,
+    params.password,
+    params.avatar
+  )) {
+    console.error('redis - setCreateTmpUser 参数错误');
+  }
+
+  let { activeKey } = params;
+
+  let keys = 'create_user' + ':' + activeKey;
+  return await client.set(keys, JSON.stringify(params), 'EX', 5 * 60)
+}
+
+async function getCreateTmpUser(activeKey) {
+  if (utils.isEmpty(activeKey)) {
+    console.error('redis - getCreateTmpUser 参数错误');
+  }
+
+  let keys = 'create_user'+ ':' + activeKey;
+
+  let user = await client.get(keys);
+
+  if (user === null) {
+    return null;
+  }
+
+  return JSON.parse(user);
+
+}
+
+async function delCreateTmpUser(activeKey) {
+  if (utils.isEmpty(activeKey)) {
+    console.error('redis - delCreateTmpUser 参数错误');
+  }
+
+  let keys = 'create_user'+ ':' + activeKey;
+  return await client.del(keys, activeKey);
+}
+
 /**
  * 向redis中添加用户信息
  * @param {object} params { user }
@@ -36,7 +80,7 @@ async function addUser(params) {
 
   let keys = USER_KEY+ ':' + params._id;
 
-  await client.set(keys, JSON.stringify(params), 'EX', 60 * 60)
+  return await client.set(keys, JSON.stringify(params), 'EX', 60 * 60)
 }
 
 /**
@@ -60,6 +104,15 @@ async function getUser(_id) {
   return JSON.parse(user);
 }
 
+async function delUser(_id) {
+  if (utils.isEmpty(_id)) {
+    return console.log('redis - delUser 参数错误');
+  }
+
+  let keys = USER_KEY+ ':' + _id;
+  return await client.del(keys);
+}
+
 /**
  * 每篇文章的评论的用户Id
  * @param {object} params { commentId, userId }
@@ -76,10 +129,49 @@ async function thumbsUpById(params) {
 
   if (res === 1) {
     await client.srem(keys, userId);
+    return -1;
   } else {
     await client.sadd(keys, userId);
+    return 1;
   }
 
+}
+
+async function thumbsDownById(params) {
+  if (utils.isEmpty(params, params.commentId, params.userId)) {
+    console.error('redis - addComment 参数错误');
+  }
+
+  let keys = COMMENT_KEY + '_dislikes:' + params.commentId,
+      userId = params.userId;
+
+  let res = await client.sismember(keys, userId);
+
+  if (res === 1) {
+    await client.srem(keys, userId);
+    return -1;
+  } else {
+    await client.sadd(keys, userId);
+    return 1;
+  }
+
+}
+
+async function getThumbs(commentId) {
+  if (utils.isEmpty(commentId)) {
+    console.error('redis - getThumbs 参数');
+  }
+
+  let keyLikes = COMMENT_KEY + '_likes:' + commentId,
+      keyDislikes = COMMENT_KEY + '_dislikes:' + commentId,
+      result = {};
+
+  result = await Promise.all([client.smembers(keyLikes), client.smembers(keyDislikes)])
+                        .then((res) => {
+                          return res;
+                        })
+
+  return result
 }
 
 /**
@@ -135,7 +227,7 @@ async function setTopCommentsArticle(params) {
     console.error('redis - setTopCommentsArticle 参数错误');
   }
 
-  let key = 'comments:' + ARTICLE_KEY,
+  let keys = 'comments:' + ARTICLE_KEY,
       { _id, title, commentCount } = params,
       value = _id + ':' + title;
 
@@ -145,10 +237,10 @@ async function setTopCommentsArticle(params) {
 
 async function setCommentCount(params) {
   if (utils.isEmpty(params, params.articleId, params.title, params.num)) {
-    console.error('redis - incComment 参数错误')；
+    console.error('redis - incComment 参数错误');
   }
 
-  let key = 'comments:' + ARTICLE_KEY,
+  let keys = 'comments:' + ARTICLE_KEY,
       { articleId, title, num  } = params,
       value = articleId + ':' + title;
 
@@ -157,10 +249,19 @@ async function setCommentCount(params) {
 
 module.exports = {
   start,
+  setCreateTmpUser,
+  getCreateTmpUser,
+  delCreateTmpUser,
   addUser,
   getUser,
+  delUser,
   thumbsUpById,
+  thumbsDownById,
+  getThumbs,
   getTopPreviewArticle,
   setTopPreviewArticle,
-  incPv
+  incPv,
+  getTopCommentsArticle,
+  setTopCommentsArticle,
+  setCommentCount
 }

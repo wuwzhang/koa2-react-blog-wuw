@@ -5,6 +5,7 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const session = require('koa-generic-session')
+const redisStore = require('koa-session-ioredis')
 const middlewares = require('./middlewares/index')
 const redis = require('./utils/redisUtils.js')
 const config = require('config-lite')(__dirname)
@@ -14,9 +15,15 @@ const log = require('./logs/log')
 // error handler
 onerror(app)
 
+app.keys = ['wuw', 'blog'];
+app.use(session({
+  store: redisStore({
+
+  })
+}));
+
 // middlewares
 app.use(bodyparser({ enableTypes:['json', 'form', 'text'] }))
-// app.use(middlewares.error())
 app.use(json())
 app.use(require('koa-static')(__dirname + '/build'))
 app.use(views(__dirname + '/build', { extension: 'html' }))

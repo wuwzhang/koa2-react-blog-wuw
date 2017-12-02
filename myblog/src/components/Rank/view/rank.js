@@ -158,6 +158,14 @@ class Rank extends Component {
   }
 }
 
+Rank.propTypes = {
+  rank: PropTypes.object,
+  setTopPreviewArticle: PropTypes.func,
+  setTopCommentsArticle: PropTypes.func,
+  style: PropTypes.object,
+  showCharNum: PropTypes.number
+}
+
 const mapStateToProps = (state) => ({
   rank: state.rank
 })

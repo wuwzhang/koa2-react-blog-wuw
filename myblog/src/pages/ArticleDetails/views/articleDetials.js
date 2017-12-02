@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { detailArticle, getTopPreviewArticle } from '../fetch';
-import { withRouter, Redirect } from 'react-router-dom';
+import { detailArticle } from '../fetch';
+import { fetchs as rankFetchs } from '../../../components/Rank/';
+import { withRouter, Redirect, Link } from 'react-router-dom';
 
 import { articleInitDetails } from '../action.js';
 import ArticleOptionNav from '../../../components/ArticleOptionNav/articleOptionNav.js';
@@ -34,7 +35,8 @@ class ArticleDetails extends Component {
       preArticle: {},
       nextArticle: {},
       topPreviewArticle: [],
-      location: document.URL
+      topCommentsArticle: [],
+      windowLocation: document.URL
     }
 
     this.onCopy = this.onCopy.bind(this);
@@ -55,9 +57,13 @@ class ArticleDetails extends Component {
     }).catch(err => {
       console.log(err);
     })
+
+    // console.log('articleDetails - constructor - location', this.props.location)
   }
 
   async componentDidMount() {
+    // console.log('articleDetails - componentDidMount - location', this.props.location)
+
     let articleId = this.props.match.params.articleId;
     let result = await detailArticle(articleId);
 
@@ -73,13 +79,20 @@ class ArticleDetails extends Component {
       console.log(result)
     }
 
-    let TopPreviewRes = await getTopPreviewArticle();
-    if (TopPreviewRes.code === '1') {
+    let topPreviewRes = await rankFetchs.getTopPreviewArticle();
+    if (topPreviewRes.code === '1') {
       this.setState({
-        topPreviewArticle: TopPreviewRes.result
+        topPreviewArticle: topPreviewRes.result
       })
     } else {
 
+    }
+
+    let topCommentsRes = await rankFetchs.getTopCommentsArticle();
+    if (topCommentsRes.code === '1') {
+      this.setState({
+        topCommentsArticle: topCommentsRes.result
+      })
     }
 
   }
@@ -115,7 +128,7 @@ class ArticleDetails extends Component {
       );
     }
     let { article } = this.props;
-    let { preArticle, nextArticle, topPreviewArticle = [] } = this.state;
+    let { preArticle, nextArticle, topPreviewArticle = [], topCommentsArticle = [] } = this.state;
 
     if (article) {
       return(
@@ -136,7 +149,7 @@ class ArticleDetails extends Component {
                       ? <ArticleOptionNav
                           myStyle = { { color: '#FF7E67', fontSize: '16px', marginRight: '15px' } }
                         />
-                      : <CopyToClipboard onCopy={this.onCopy} text = { this.state.location }>
+                      : <CopyToClipboard onCopy={this.onCopy} text = { this.state.windowLocation }>
                           <Button>
                             <FormattedMessage
                               id="Fork"
@@ -168,17 +181,50 @@ class ArticleDetails extends Component {
                     create_time = { article.created_at ? article.created_at.slice(0, 10) : '' }
                     update_time = { article.updated_at ? article.updated_at.slice(0, 10) : '' }
                   />
-                  <section className='topPreview'>
-                    <ul>
-                      {
-                        topPreviewArticle.map((article) => {
-                          return  <li onClick={()=>this._getNewArticle(article._id)}>
-                                    <span>{article.title.length > 15 ? article.title.slice(0, 15) + '...' : article.title}</span>
-                                    <span>{article.pv}</span>
-                                  </li>
-                        })
-                      }
-                    </ul>
+                  <section className='articleDetails-rank'>
+                    <h5 className='ArticleDetails-Title'>
+                      <FontAwesome name='user-secret' style={{color: '#ff7e67', marginRight: '5px'}}/>
+                      <FormattedMessage
+                        id="Rank"
+                        defaultMessage="Rank"
+                      /> ~
+                    </h5>
+                    <section className='topPreview topRank'>
+                      <h6 className='ArticleDetails-sub-Title'>
+                        <FormattedMessage
+                          id="Preview"
+                          defaultMessage="Preview"
+                        />
+                      </h6>
+                      <ul>
+                        {
+                          topPreviewArticle.map((article) => {
+                            return  <Link className='topRank-li'  onClick={()=>this._getNewArticle(article._id)} to={`/article_details/${article._id}`}>
+                                      <span>{article.title.length > 12 ? article.title.slice(0, 15) + '...' : article.title}</span>
+                                      <span className='articleDetail-rank-count'> ({article.pv})</span>
+                                    </Link>
+                          })
+                        }
+                      </ul>
+                    </section>
+                    <section className='topComment topRank'>
+                      <h6 className='ArticleDetails-sub-Title'>
+                        <FormattedMessage
+                          id="Comment"
+                          defaultMessage="Comment"
+                        />
+                      </h6>
+                      <ul>
+                        {
+                          topCommentsArticle.map((article) => {
+                            return  <Link className='topRank-li' onClick={()=>this._getNewArticle(article._id)} to={`/article_details/${article._id}`}>
+                                      <span>{article.title.length > 12 ? article.title.slice(0, 15) + '...' : article.title}</span>
+                                      <span className='articleDetail-rank-count'>({article.commentCount})</span>
+                                    </Link>
+                          })
+                        }
+                      </ul>
+                    </section>
                   </section>
                 </Col>
               </Row>
@@ -186,19 +232,19 @@ class ArticleDetails extends Component {
                 <section className="pre-next">
                   <ul>
                     {
-                      preArticle? <li onClick={()=>this._getNewArticle(preArticle._id)}>
+                      preArticle? <Link onClick={()=>this._getNewArticle(preArticle._id)} to={`/article_details/${preArticle._id}`}>
                                     <FontAwesome name='angle-left'/>
                                     <span>&nbsp;&nbsp;{preArticle.title}</span>
-                                  </li>
+                                  </Link>
                                 : null
 
                     }
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     {
-                      nextArticle ? <li onClick={()=>this._getNewArticle(nextArticle._id)}>
+                      nextArticle ? <Link onClick={()=>this._getNewArticle(nextArticle._id)} to={`/article_details/${nextArticle._id}`}>
                                       <span>{nextArticle.title}&nbsp;&nbsp;</span>
                                       <FontAwesome name='angle-right'/>
-                                    </li>
+                                    </Link>
                                   : null
                     }
                   </ul>
@@ -229,7 +275,8 @@ const mapStateToProps = (state) => {
   return {
     user: state.login.user,
     article: state.articleDetails.article,
-    deleted: state.articleList.deleted
+    deleted: state.articleList.deleted,
+    location: state.routing.location
   }
 }
 

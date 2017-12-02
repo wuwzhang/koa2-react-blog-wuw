@@ -22,7 +22,7 @@ export const Footer = () => {
     <section className="footer">
       <Grid>
         <Row>
-          <Col md={6} ms={6} xs={12}>
+          <Col md={6} sm={6} xs={12}>
             <Row>
               <Col md={12} sm={12} xs={12}>
                 <h4>
@@ -33,7 +33,7 @@ export const Footer = () => {
                 </h4>
               </Col>
               <Col md={6} smHidden xsHidden>
-                <img src={carImg} alt="footer image" height='130px' />
+                <img src={carImg} alt="footer" height='130px' />
               </Col>
               <Col md={6} sm={12} xs={12}>
                 <ul className='information'>

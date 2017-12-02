@@ -28,6 +28,12 @@
   background-position: left bottom;
 }
 .articleByxx-Aside {
-  background: rgba(250, 250, 250, .8);
+  background: rgba(162, 213, 242, 0.1);
   padding: 10px 0;
+}
+.articleByxx-Aside form input {
+  width: 90%;
+}
+.articleByxx-Aside form button {
+  left: 71%;
 }

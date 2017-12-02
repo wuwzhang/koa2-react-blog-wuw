@@ -60,7 +60,7 @@ class Login extends Component {
 
     if (result.code === '1') {
       this.props.successLogin(result.user, result.message);
-      message.success('login success');
+      message.success('登录成功');
 
       if (result.token) {
         window.localStorage.setItem('token', result.token);
@@ -83,11 +83,11 @@ class Login extends Component {
       this.props.failLogin(result.message)
       if (result.code === '-1') {
         this.setState({
-          failMessage: '邮箱未确认'
+          failMessage: '亲, 先确认邮箱，确认邮箱'
         })
       } else {
         this.setState({
-          failMessage: '用户名密码错误'
+          failMessage: '用户名密码错误，大概吧，如果作者君没写错代码的话'
         })
       }
 
@@ -244,6 +244,8 @@ class Login extends Component {
 
 Login.propTypes = {
   user: PropTypes.object,
+  msgType:PropTypes.string,
+  fromPath: PropTypes.object,
   startLogin: PropTypes.func,
   successLogin: PropTypes.func,
   failLogin: PropTypes.func

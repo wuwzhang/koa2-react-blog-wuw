@@ -24,7 +24,6 @@ export default (state, action) => {
 
   switch (action.type) {
     case INIT_COMMENT: {
-      console.log('action - comments', action.comments)
       return {
         ...state,
         articleComments: action.comments.map((comment) => {
@@ -107,10 +106,26 @@ export default (state, action) => {
       }
     }
     case SET_THUMBSUP: {
+      let likesState = action.state;
+
       return {
         ...state,
         articleComments: [
+          ...state.articleComments[action.commentIndex].likesState = likesState,
+          ...state.articleComments[action.commentIndex].thumbsUp += likesState,
+          ...state.articleComments
+        ]
+      }
+    }
+    case SET_THUMBSDOWN: {
+      let dislikesState = action.state;
 
+      return {
+        ...state,
+        articleComments: [
+          ...state.articleComments[action.commentIndex].dislikesState = dislikesState,
+          ...state.articleComments[action.commentIndex].thumbsDown += dislikesState,
+          ...state.articleComments
         ]
       }
     }

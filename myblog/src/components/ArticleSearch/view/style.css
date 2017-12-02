@@ -3,14 +3,14 @@
 }
 .ArticleSearch input {
   height: 28px;
-  width: 98%;
+  width: 90%;
   text-indent: 5px;
   outline: none;
 }
 .ArticleSearch button {
   border: 0;
   position: absolute;
-  left: 77%;
+  left: 71%;
   margin-top: 1px;
   width: 26px;
   height: 26px;

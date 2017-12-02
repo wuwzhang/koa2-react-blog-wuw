@@ -8,7 +8,6 @@ import resetEnhancer from './enhancers/reset.js';
 
 import { reducer as loginReducer } from './pages/Login/';
 import { reducer as registReducer } from './pages/Register/';
-// import { reducer as articleEditReducer } from './pages/ArticlePostOrEdit/';
 import { reducer as articlePostReducer } from './pages/ArticlePost/';
 import { reducer as articleEditReducer } from './pages/ArticleEdit/';
 import { reducer as articleListReducer } from './pages/ArticleList/';
@@ -18,6 +17,7 @@ import { reducer as messageReducer } from './components/Contact/';
 import { reducer as catalogReducer } from './components/CatalogAside/';
 // import { reducer as localesReducer } from './components/ConnectedIntlProvider/';
 import { reducer as articleSearchReducer } from './components/ArticleSearch/';
+import { reducer as rankReducer } from './components/Rank/';
 
 
 import Perf from 'react-addons-perf';
@@ -36,7 +36,8 @@ const reducer = combineReducers({
   comment: commentReducer,
   message:messageReducer,
   catalog: catalogReducer,
-  routing: routerReducer
+  routing: routerReducer,
+  rank: rankReducer
   // locales: localesReducer
 });
 

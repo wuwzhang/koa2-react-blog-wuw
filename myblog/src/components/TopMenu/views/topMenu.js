@@ -7,7 +7,6 @@ import { FormattedMessage } from 'react-intl';
 
 // import { loginOut } from '../action.js'
 import { actions as loginActions, fetchs as loginFetchs } from '../../../pages/Login/';
-// import { fetchs as commentFetch } from '../../Comment/'
 
 import './style.css';
 import {
@@ -16,7 +15,7 @@ import {
   Col
 } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
-import { Badge, Icon, Menu, Dropdown } from 'antd';
+import { Badge, Icon, Menu, Dropdown, message } from 'antd';
 
 class Topmenu extends Component {
 
@@ -34,9 +33,18 @@ class Topmenu extends Component {
     }
   }
 
-  handleSignOut(event) {
+  async handleSignOut(event) {
     event.preventDefault();
-    this.props.loginOut(this.props.user);
+    let { user } = this.props;
+
+    let result = await loginFetchs.logout(user._id);
+    if (result.code === '1') {
+      message.success('注销成功');
+    } else {
+      message.error('啊呀妈呀，失败了')
+    }
+
+    this.props.loginOut(user);
     window.localStorage.removeItem('token')
   }
 
@@ -52,8 +60,6 @@ class Topmenu extends Component {
 
   render() {
     let { commentcommentNotCheckedCount, messagecommentNotCheckedCount } = this.props;
-
-
 
     return (
       <Grid>

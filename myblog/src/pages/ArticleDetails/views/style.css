@@ -24,15 +24,6 @@
   cursor: pointer;
   color: #FF7E67;
 }
-.topPreview {
-  position: absolute;
-}
-.topPreview li {
-  list-style: none;
-}
-.topPreview li:hover {
-  cursor: pointer;
-}
 div#toc {
   float: right;
   border: 1px solid #A2D5F2;

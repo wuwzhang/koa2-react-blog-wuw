@@ -91,12 +91,18 @@ class CommentItem extends Component {
       </Button>
     );
 
-    let userId = this.props.user ? this.props.user._id : '';
+    let userId = this.props.user ? this.props.user._id : '',
+        { commentIndex } = this.props;
+
     if (userId && commentId) {
       let result = await commentFetchs.thumbsUp(commentId, userId);
 
       if (result.code === '1') {
-        this.props.setThumbsUp(1);
+        this.props.setThumbsUp({
+          state: result.thumbsUp,
+          commentIndex: commentIndex
+        });
+
       } else {
 
       }
@@ -124,13 +130,17 @@ class CommentItem extends Component {
       </Button>
     );
 
-    let userId = this.props.user ? this.props.user._id : '';
+    let userId = this.props.user ? this.props.user._id : '',
+        { commentIndex } = this.props;
 
     if (userId && commentId) {
       let result = await commentFetchs.thumbsDown(commentId, userId);
 
       if (result.code === '1') {
-        this.props.thumbsDown(1)
+        this.props.setThumbsDown({
+          state: result.thumbsDown,
+          commentIndex: commentIndex
+        });
       } else {
 
       }
@@ -163,7 +173,7 @@ class CommentItem extends Component {
             }}/>
     }
 
-    // user = user ? user[0] : user;
+
 
     return (
       <Row>
@@ -197,7 +207,10 @@ class CommentItem extends Component {
                   }
                 </li>
                 <li>
-                  <span className='commentItem-option-btn'>
+                  <span
+                    className='commentItem-option-btn'
+                    style = { comment.likesState === 1 ? { color: '#ff7e67' } : {} }
+                  >
                     <FontAwesome name='thumbs-o-up'/>
                     <span
                       onClick={ () => this._handleThumbsUp(comment._id) }
@@ -205,7 +218,10 @@ class CommentItem extends Component {
                   </span>
                 </li>
                 <li>
-                  <span className='commentItem-option-btn'>
+                  <span
+                    className='commentItem-option-btn'
+                    style = { comment.dislikesState === 1 ? { color: '#ff7e67' } : {} }
+                  >
                     <FontAwesome name='thumbs-o-down'/>
                     <span
                       onClick={ () => this._handleThumbsDown(comment._id) }
@@ -267,14 +283,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setIsShowReply: (state, commentIndex) => {
-      dispatch(commentAction.setIsShowReply(state, commentIndex));
+    setIsShowReply: ({state, commentIndex}) => {
+      dispatch(commentAction.setIsShowReply({state, commentIndex}));
     },
-    setThumbsUp: (count) => {
-      dispatch(commentAction.setThumbsUp(count));
+    setThumbsUp: ({state, commentIndex}) => {
+      dispatch(commentAction.setThumbsUp({state, commentIndex}));
     },
-    setThumbsDown: (count) => {
-      dispatch(commentAction.setThumbsDown(count));
+    setThumbsDown: ({state, commentIndex}) => {
+      dispatch(commentAction.setThumbsDown({state, commentIndex}));
     }
   }
 }
