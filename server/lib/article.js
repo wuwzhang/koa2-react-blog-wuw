@@ -1,13 +1,12 @@
-var mongoose = require('mongoose');
-var Article = require('../models').Article;
-var Comments = require('../models').Comments;
+var mongoose = require("mongoose");
+var Article = require("../models").Article;
+var Comments = require("../models").Comments;
 
 /**
  * 创建新文章
  */
-exports.create = (article) => {
-  return Article.create(article)
-
+exports.create = article => {
+  return Article.create(article);
 };
 
 /**
@@ -18,39 +17,38 @@ exports.getArticles = () => {
     created_at: -1
   };
   return Article.find()
-                .sort(sort)
-                .exec();
+    .sort(sort)
+    .exec();
 };
 
 /**
  * 通过文章id获取文章
  */
-exports.getArticleById = (articleId) => {
-
+exports.getArticleById = articleId => {
   return Article.aggregate(
     { $match: { _id: mongoose.Types.ObjectId(articleId) } },
-    { $addFields: {
-      comments: {
-        $size: '$comments'
+    {
+      $addFields: {
+        comments: {
+          $size: "$comments"
+        }
       }
-    }}
-  )
+    }
+  );
 };
 
 /**
  * 通过文章标题获取文章（相同作者不能有相同标题的文章！！！！！！！！）
  */
-exports.getArticleByTitle = (title) => {
-  return Article.findOne({ title: title })
-                .exec();
+exports.getArticleByTitle = title => {
+  return Article.findOne({ title: title }).exec();
 };
 /**
  * 获取文章数量
  */
 exports.getArticleCount = () => {
-  return Article.count()
-                .exec();
-}
+  return Article.count().exec();
+};
 
 /**
  * 修改文章
@@ -58,25 +56,30 @@ exports.getArticleCount = () => {
  * @param  {object} data      修改的内容
  */
 exports.updateArticleById = (articleId, data) => {
-  return Article.update({ _id: articleId }, { $set: data }, function(err){
-    console.log(err);
-  });
+  return Article.update(
+    { _id: articleId },
+    { $set: data },
+    function(err) {
+      console.log(err);
+    }
+  );
 };
 
 /**
  * 通过文章id删除文章
  * @param  {number} articleId 文章id
  */
-exports.deleteArticleById = (articleId) => {
+exports.deleteArticleById = articleId => {
   return Article.remove({ _id: articleId })
-                .exec()
-                .then((res) => {
-                  if (res.result.ok && res.result.n > 0) {
-                    return  Comments.remove({articleId: articleId})
-                                    .exec()
-                  }
-                })
-}
+    .exec()
+    .then(res => {
+      if (res.result.ok && res.result.n > 0) {
+        return Comments.remove({
+          articleId: articleId
+        }).exec();
+      }
+    });
+};
 
 /**
  * 返回归档数据
@@ -89,19 +92,23 @@ exports.getArticlesCountByMonth = () => {
   return Article.aggregate(
     {
       $group: {
-        _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
+        _id: {
+          year: { $year: "$created_at" },
+          month: { $month: "$created_at" }
+        },
         count: { $sum: 1 }
       }
     },
     {
       $group: {
         _id: { year: "$_id.year" },
-        monthCount: { $push: { month: "$_id.month", count: "$count"}}
+        monthCount: {
+          $push: { month: "$_id.month", count: "$count" }
+        }
       }
     }
   );
-
-}
+};
 
 /**
  * 返回归档格式的文章
@@ -112,55 +119,64 @@ exports.getArticlesCountByMonth = () => {
  */
 exports.getArticleListByDate = (page = 1, range = 4) => {
   return Article.aggregate(
-                  {
-                    $match: {
-                      isPublic: true
-                    }
-                  },
-                  { $group: {
-                    _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
-                    articles: {
-                      $push: {
-                        id: "$_id",
-                        title: '$title',
-                        content: '$content',
-                        catalog: '$catalog',
-                        created_at: "$created_at"
-                      }
-                    }
-                  }},
-                  {
-                    $sort: {
-                      '_id': -1
-                    }
-                  },
-                  {
-                    $skip: range * (page - 1)
-                  },
-                  {
-                    $limit: range
-                  }
-                );
-}
+    {
+      $match: {
+        isPublic: true
+      }
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: "$created_at" },
+          month: { $month: "$created_at" }
+        },
+        articles: {
+          $push: {
+            id: "$_id",
+            title: "$title",
+            content: "$content",
+            catalog: "$catalog",
+            created_at: "$created_at"
+          }
+        }
+      }
+    },
+    {
+      $sort: {
+        _id: -1
+      }
+    },
+    {
+      $skip: range * (page - 1)
+    },
+    {
+      $limit: range
+    }
+  );
+};
 
 exports.getArticleListCountByDate = () => {
   return Article.aggregate(
-                  {
-                    $match: {
-                      isPublic: true
-                    }
-                  },
-                  { $group: {
-                    _id: { year: { $year: "$created_at"}, month: { $month: "$created_at"} },
-                    articles: {
-                      $push: {
-                        id: "$_id"
-                      }
-                    }
-                  }}
-                )
-                .exec();
-}
+    {
+      $match: {
+        isPublic: true
+      }
+    },
+    {
+      $group: {
+        _id: {
+          year: { $year: "$created_at" },
+          month: { $month: "$created_at" }
+        },
+        articles: {
+          $push: {
+            id: "$_id"
+          }
+        }
+      }
+    }
+  ).exec();
+};
 
 /**
  * 获取当前页的文章
@@ -169,75 +185,74 @@ exports.getArticleListCountByDate = () => {
  */
 exports.getPageArticle = (page, range) => {
   return Article.find({})
-                .sort({created_at: -1})
-                .skip(range * (page - 1))
-                .limit(range)
-                .exec();
-}
+    .sort({ created_at: -1 })
+    .skip(range * (page - 1))
+    .limit(range)
+    .exec();
+};
 
-exports.getArticlesTagsCount = (tag) => {
-  return Article.find({ tags: { "$in": [tag] }})
-                .count()
-                .exec();
-}
+exports.getArticlesTagsCount = tag => {
+  return Article.find({ tags: { $in: [tag] } })
+    .count()
+    .exec();
+};
 
-exports.getArticlesCatalogCount = (catalog) => {
+exports.getArticlesCatalogCount = catalog => {
   return Article.find({ catalog: catalog })
-                .count()
-                .exec();
-}
+    .count()
+    .exec();
+};
 
-exports.getArticlesSearchCount = (keyword) => {
-  const regex = { $regex: new RegExp(keyword, 'i')};
+exports.getArticlesSearchCount = keyword => {
+  const regex = { $regex: new RegExp(keyword, "i") };
   return Article.find({
-                    $or: [
-                      { title: regex },
-                      { catalog: regex },
-                      { tags: { $in: [new RegExp(keyword, 'i')] }}
-                    ]
-                  })
-                .count()
-                .exec();
-}
+    $or: [
+      { title: regex },
+      { catalog: regex },
+      { tags: { $in: [new RegExp(keyword, "i")] } }
+    ]
+  })
+    .count()
+    .exec();
+};
 
 /**
  * 通过标签名查找文章
  */
 exports.getArticlesByTag = (tag, page, range) => {
-
-  return Article.find({ tags: { "$in": [tag] }})
-                .sort({created_at: -1})
-                .skip(range * (page - 1))
-                .limit(range)
-                .exec();
-}
+  return Article.find({ tags: { $in: [tag] } })
+    .sort({ created_at: -1 })
+    .skip(range * (page - 1))
+    .limit(range)
+    .exec();
+};
 
 /**
  * 通过分类名查询文章
  */
 exports.getArticlesByCatalog = (catalog, page, range) => {
   return Article.find({ catalog: catalog })
-                .sort({created_at: -1})
-                .skip(range * (page - 1))
-                .limit(range)
-                .exec();
-}
+    .sort({ created_at: -1 })
+    .skip(range * (page - 1))
+    .limit(range)
+    .exec();
+};
 
 exports.getArticleBySearch = (keyword, page, range) => {
-  const regex = { $regex: new RegExp(keyword, 'i')};
+  const regex = { $regex: new RegExp(keyword, "i") };
 
   return Article.find({
-                    $or: [
-                      { title: regex },
-                      { catalog: regex },
-                      { tags: { $in: [new RegExp(keyword, 'i')] }}
-                    ]
-                  }).sort({updated_at: -1})
-                    .skip(range * (page - 1))
-                    .limit(range)
-                    .exec();
-
-}
+    $or: [
+      { title: regex },
+      { catalog: regex },
+      { tags: { $in: [new RegExp(keyword, "i")] } }
+    ]
+  })
+    .sort({ updated_at: -1 })
+    .skip(range * (page - 1))
+    .limit(range)
+    .exec();
+};
 
 /**
  * 返回分类和个分类所包含的文章书,按count数目由大到小排序
@@ -247,17 +262,15 @@ exports.getArticleBySearch = (keyword, page, range) => {
  * ]
  */
 exports.getArticleCatalogs = () => {
-  return Article.aggregate(
-                  {
-                    $group: {
-                      _id: '$catalog',
-                      count: { $sum: 1 }
-                    }
-                  }
-                )
-                .sort({count: -1})
-                .exec();
-}
+  return Article.aggregate({
+    $group: {
+      _id: "$catalog",
+      count: { $sum: 1 }
+    }
+  })
+    .sort({ count: -1 })
+    .exec();
+};
 
 /**
  * 修改文章是否开放评论
@@ -266,10 +279,14 @@ exports.getArticleCatalogs = () => {
  * @return null
  */
 exports.toggleComments = (articleId, state) => {
-  return Article.update({ _id: articleId }, { isComment: state }, function(error) {
-    console.log(error);
-  })
-}
+  return Article.update(
+    { _id: articleId },
+    { isComment: state },
+    function(error) {
+      console.log(error);
+    }
+  );
+};
 
 /**
  * 修改文章是否公开
@@ -278,86 +295,102 @@ exports.toggleComments = (articleId, state) => {
  * @return null
  */
 exports.toggleArticlePublic = (articleId, state) => {
-  return Article.update({ _id: articleId }, { isPublic: state }, function(error) {
-    console.log(error);
-  })
-}
+  return Article.update(
+    { _id: articleId },
+    { isPublic: state },
+    function(error) {
+      console.log(error);
+    }
+  );
+};
 
 /**
  * 阅读访问量+1
  */
-exports.incPv = (articleId) => {
-  return Article.update({ _id: articleId }, { $inc: { pv: 1 } })
-                .exec();
-}
+exports.incPv = articleId => {
+  return Article.update(
+    { _id: articleId },
+    { $inc: { pv: 1 } }
+  ).exec();
+};
 
 /**
  * 评论量+1
  */
 exports.addComment = (articleId, commentId) => {
-  return Article.update({ _id: articleId }, { $addToSet: { comments: commentId } })
-                .exec();
-}
+  return Article.update(
+    { _id: articleId },
+    { $addToSet: { comments: commentId } }
+  ).exec();
+};
 
 exports.redComment = (articleId, commentId) => {
-  return Article.update({ _id: articleId }, { $pull: { comments: commentId } })
-                .exec();
-}
+  return Article.update(
+    { _id: articleId },
+    { $pull: { comments: commentId } }
+  ).exec();
+};
 
 /**
  * 获取当前文章的上一篇文章
  * @param  {[ObjectId]} articleId [当前文章的Id]
  * @return {[object]}           [文章信息]
  */
-exports.getPreArticleById = (articleId) => {
+exports.getPreArticleById = articleId => {
   return Article.findOne(
-    { _id: {$lt: articleId} },
+    { _id: { $lt: articleId } },
     { _id: 1, title: 1 }
-  ).sort({_id: -1 })
-  .exec()
-}
+  )
+    .sort({ _id: -1 })
+    .exec();
+};
 
 /**
  * 获取当前文章的下一篇文章
  * @param  {[ObjectId]} articleId [当前文章的Id]
  * @return {[object]}           [文章信息]
  */
-exports.getNextArticleById = (articleId) => {
+exports.getNextArticleById = articleId => {
   return Article.findOne(
-    { _id: {$gt: articleId} },
+    { _id: { $gt: articleId } },
     { _id: 1, title: 1 }
   )
-  .sort({_id: 1 })
-  .exec()
-}
+    .sort({ _id: 1 })
+    .exec();
+};
 
 exports.getTopPreviewArticle = () => {
   return Article.aggregate(
-                  { $match: { isPublic: true } },
-                  { $sort: { created_at: -1 } },
-                  { $project: {
-                      _id: 1,
-                      title: 1,
-                      pv: 1
-                    }
-                  }
-                )
-                .sort({pv: -1})
-                .exec();
-}
+    { $match: { isPublic: true } },
+    { $sort: { created_at: -1 } },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        pv: 1
+      }
+    }
+  )
+    .sort({ pv: -1 })
+    .exec();
+};
 
 exports.getTopCommentsArticle = () => {
   return Article.aggregate(
-                  { $match: { isPublic: true } },
-                  { $addFields: {
-                    commentCount: {
-                      $size: '$comments'
-                    }
-                  } },
-                  { $project: {
-                    _id: 1,
-                    title: 1,
-                    commentCount: 1
-                  } }
-                ).exec()
-}
+    { $match: { isPublic: true } },
+    {
+      $addFields: {
+        commentCount: {
+          $size: "$comments"
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        title: 1,
+        commentCount: 1
+      }
+    }
+  ).exec();
+};
