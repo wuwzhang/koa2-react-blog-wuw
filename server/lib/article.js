@@ -56,13 +56,9 @@ exports.getArticleCount = () => {
  * @param  {object} data      修改的内容
  */
 exports.updateArticleById = (articleId, data) => {
-  return Article.update(
-    { _id: articleId },
-    { $set: data },
-    function(err) {
-      console.log(err);
-    }
-  );
+  return Article.update({ _id: articleId }, { $set: data }, function(err) {
+    console.log(err);
+  });
 };
 
 /**
@@ -76,7 +72,9 @@ exports.deleteArticleById = articleId => {
       if (res.result.ok && res.result.n > 0) {
         return Comments.remove({
           articleId: articleId
-        }).exec();
+        });
+      } else {
+        throw new Error("article delete error");
       }
     });
 };
@@ -279,13 +277,11 @@ exports.getArticleCatalogs = () => {
  * @return null
  */
 exports.toggleComments = (articleId, state) => {
-  return Article.update(
-    { _id: articleId },
-    { isComment: state },
-    function(error) {
-      console.log(error);
-    }
-  );
+  return Article.update({ _id: articleId }, { isComment: state }, function(
+    error
+  ) {
+    console.log(error);
+  });
 };
 
 /**
@@ -295,23 +291,18 @@ exports.toggleComments = (articleId, state) => {
  * @return null
  */
 exports.toggleArticlePublic = (articleId, state) => {
-  return Article.update(
-    { _id: articleId },
-    { isPublic: state },
-    function(error) {
-      console.log(error);
-    }
-  );
+  return Article.update({ _id: articleId }, { isPublic: state }, function(
+    error
+  ) {
+    console.log(error);
+  });
 };
 
 /**
  * 阅读访问量+1
  */
 exports.incPv = articleId => {
-  return Article.update(
-    { _id: articleId },
-    { $inc: { pv: 1 } }
-  ).exec();
+  return Article.update({ _id: articleId }, { $inc: { pv: 1 } }).exec();
 };
 
 /**
@@ -337,10 +328,7 @@ exports.redComment = (articleId, commentId) => {
  * @return {[object]}           [文章信息]
  */
 exports.getPreArticleById = articleId => {
-  return Article.findOne(
-    { _id: { $lt: articleId } },
-    { _id: 1, title: 1 }
-  )
+  return Article.findOne({ _id: { $lt: articleId } }, { _id: 1, title: 1 })
     .sort({ _id: -1 })
     .exec();
 };
@@ -351,10 +339,7 @@ exports.getPreArticleById = articleId => {
  * @return {[object]}           [文章信息]
  */
 exports.getNextArticleById = articleId => {
-  return Article.findOne(
-    { _id: { $gt: articleId } },
-    { _id: 1, title: 1 }
-  )
+  return Article.findOne({ _id: { $gt: articleId } }, { _id: 1, title: 1 })
     .sort({ _id: 1 })
     .exec();
 };

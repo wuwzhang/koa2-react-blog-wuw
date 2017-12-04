@@ -1,17 +1,16 @@
-const mongoose = require('mongoose');
-const Comments = require('../models/').Comments;
+const mongoose = require("mongoose");
+const Comments = require("../models/").Comments;
 
-exports.create = (data) => {
+exports.create = data => {
   return Comments.create(data, function(err) {
     if (err) {
-      console.log(err)
+      console.log(err);
     }
-  })
+  });
 };
 
-exports.getCommentById = (id) => {
-  return Comments.findOne({_id: id})
-          .exec()
+exports.getCommentById = id => {
+  return Comments.findOne({ _id: id }).exec();
 };
 
 exports.getAllComment = () => {
@@ -19,24 +18,24 @@ exports.getAllComment = () => {
     created_at: -1
   };
   return Comments.find({})
-                 .populate({ path: 'userId'})
-                 .populate({ path: 'articleId' })
-                 .sort(sort)
-                 .exec()
-}
+    .populate({ path: "userId" })
+    .populate({ path: "articleId" })
+    .sort(sort)
+    .exec();
+};
 
 exports.getPageComments = (page, range) => {
   const sort = {
     created_at: -1
   };
   return Comments.find({})
-                 .populate({ path: 'userId'})
-                 .populate({ path: 'articleId' })
-                 .sort(sort)
-                 .skip(range * (page - 1))
-                 .limit(range)
-                 .exec()
-}
+    .populate({ path: "userId" })
+    .populate({ path: "articleId" })
+    .sort(sort)
+    .skip(range * (page - 1))
+    .limit(range)
+    .exec();
+};
 
 // exports.getCommentsByArticleId = (articleId) => {
 //   const sort = {
@@ -50,130 +49,133 @@ exports.getPageComments = (page, range) => {
 // };
 
 exports.getCommentsByArticleId = (articleId, page, range) => {
-
   return Comments.aggregate(
-    { $match: { articleId: mongoose.Types.ObjectId(articleId) } },   //$match 不支持ObjectId， 需要使用mongoose.Types.ObjectId
+    { $match: { articleId: mongoose.Types.ObjectId(articleId) } }, //$match 不支持ObjectId， 需要使用mongoose.Types.ObjectId
     { $sort: { created_at: -1 } },
     { $skip: range * (page - 1) },
     { $limit: range },
-    { $lookup: {
-         from: "users",
-         localField: "userId",
-         foreignField: "_id",
-         as: "user"
-    }},
-    { $lookup: {
+    {
+      $lookup: {
+        from: "users",
+        localField: "userId",
+        foreignField: "_id",
+        as: "user"
+      }
+    },
+    {
+      $lookup: {
         from: "users",
         localField: "replies.userId",
         foreignField: "_id",
         as: "repliesT"
-    }},
-    { $addFields: {
-      replies: {
-        $map: {
-          input: '$repliesT',
-          as: 'i',
-          in: {
-            _id: {
-              $arrayElemAt: [
-                '$replies._id',
-                { '$indexOfArray': ['$replies.userId', '$$i._id'] }
-              ]
-            },
-            user: '$$i',
-            // thumbsUp: {
-            //   $size: {
-            //     $arrayElemAt: [
-            //       '$replies.thumbsUp',
-            //       { '$indexOfArray': ['$replies.userId', '$$i._id'] }
-            //     ]
-            //   }
-            // },
-            isRePort: {
-              $arrayElemAt: [
-                '$replies.created_at',
-                { '$indexOfArray': ['$replies.isRePort', '$$i._id'] }
-              ]
-            },
-            created_at: {
-              $arrayElemAt: [
-                '$replies.created_at',
-                { '$indexOfArray': ['$replies.userId', '$$i._id'] }
-              ]
-            },
-            content: {
-              $arrayElemAt: [
-                '$replies.content',
-                { '$indexOfArray': ['$replies.userId', '$$i._id'] }
-              ]
+      }
+    },
+    {
+      $addFields: {
+        replies: {
+          $map: {
+            input: "$repliesT",
+            as: "i",
+            in: {
+              _id: {
+                $arrayElemAt: [
+                  "$replies._id",
+                  { $indexOfArray: ["$replies.userId", "$$i._id"] }
+                ]
+              },
+              user: "$$i",
+              // thumbsUp: {
+              //   $size: {
+              //     $arrayElemAt: [
+              //       '$replies.thumbsUp',
+              //       { '$indexOfArray': ['$replies.userId', '$$i._id'] }
+              //     ]
+              //   }
+              // },
+              isRePort: {
+                $arrayElemAt: [
+                  "$replies.created_at",
+                  { $indexOfArray: ["$replies.isRePort", "$$i._id"] }
+                ]
+              },
+              created_at: {
+                $arrayElemAt: [
+                  "$replies.created_at",
+                  { $indexOfArray: ["$replies.userId", "$$i._id"] }
+                ]
+              },
+              content: {
+                $arrayElemAt: [
+                  "$replies.content",
+                  { $indexOfArray: ["$replies.userId", "$$i._id"] }
+                ]
+              }
             }
           }
         }
+        // thumbsUp: {
+        //   $size: '$thumbsUp'
+        // },
+        // thumbsDown: {
+        //   $size: '$thumbsDown'
+        // }
       }
-      // thumbsUp: {
-      //   $size: '$thumbsUp'
-      // },
-      // thumbsDown: {
-      //   $size: '$thumbsDown'
-      // }
-    }},
-    { $project: {
-      userId: 0,
-      articleId: 0,
-      repliesT: 0,
-      __v: 0,
-      user: {
-        password: 0,
-        activeKey: 0,
-        updated_at: 0,
-        isActive: 0,
-        level: 0,
-        __v: 0
-      },
-      replies: {
-        __v: 0
-      },
-      "replies.user": {
-        password: 0,
-        activeKey: 0,
-        updated_at: 0,
-        isActive: 0,
-        level: 0,
-        __v: 0
+    },
+    {
+      $project: {
+        userId: 0,
+        articleId: 0,
+        repliesT: 0,
+        __v: 0,
+        user: {
+          password: 0,
+          activeKey: 0,
+          updated_at: 0,
+          isActive: 0,
+          level: 0,
+          __v: 0
+        },
+        replies: {
+          __v: 0
+        },
+        "replies.user": {
+          password: 0,
+          activeKey: 0,
+          updated_at: 0,
+          isActive: 0,
+          level: 0,
+          __v: 0
+        }
       }
-    }}
-  )
+    }
+  );
 };
 
 exports.getAllCommentsCount = () => {
-  return Comments.count()
-                 .exec();
-}
-
-exports.getCommentsCount = (articleId) => {
-  return Comments.count({articleId: articleId}).exec();
+  return Comments.count().exec();
 };
 
-exports.deleteCommentsByArticleId = (articleId) => {
-  return Comments.remove({articleId: articleId})
-                 .exec();
+exports.getCommentsCount = articleId => {
+  return Comments.count({ articleId: articleId }).exec();
+};
+
+exports.deleteCommentsByArticleId = articleId => {
+  return Comments.remove({ articleId: articleId }).exec();
 };
 
 exports.getCommentsByNotChecked = () => {
-  return Comments.count({isChecked: false})
-                 .exec()
+  return Comments.count({ isChecked: false }).exec();
 };
 
-exports.deleteCommentById = (id) => {
-  return Comments.remove({_id: id})
-                 .exec()
-}
+exports.deleteCommentById = id => {
+  return Comments.remove({ _id: id }).exec();
+};
 
-exports.setCommentChecked = (id) => {
+exports.setCommentChecked = id => {
   return Comments.update({ _id: id }, { isChecked: true }, function(error) {
     console.log(error);
-  })
-}
+  });
+};
 
 /**
  * 添加二级评论
@@ -181,12 +183,8 @@ exports.setCommentChecked = (id) => {
  * @param  {Object} data     子评论数据
  */
 exports.addSubComment = (parentId, data) => {
-  return Comments.update(
-    { _id: parentId },
-    { $addToSet: { replies: data }}
-  )
-}
-
+  return Comments.update({ _id: parentId }, { $addToSet: { replies: data } });
+};
 
 // exports.thumbsUpById = (commentId, userId) => {
 //   return Comments.findOne({ _id: commentId })
@@ -211,14 +209,18 @@ exports.addSubComment = (parentId, data) => {
 // }
 
 exports.thumbsUp = (commentId, val) => {
-  return Comments.update({ _id: commentId }, { $inc: { thumbsUp: val } })
-                 .exec()
-}
+  return Comments.update(
+    { _id: commentId },
+    { $inc: { thumbsUp: val } }
+  ).exec();
+};
 
 exports.thumbsDown = (commentId, val) => {
-  return Comments.update({ _id: commentId }, { $inc: { thumbsDown: val } })
-                 .exec()
-}
+  return Comments.update(
+    { _id: commentId },
+    { $inc: { thumbsDown: val } }
+  ).exec();
+};
 
 // exports.thumbsDownById = (commentId, userId) => {
 //   return Comments.findOne({ _id: commentId })
@@ -242,8 +244,16 @@ exports.thumbsDown = (commentId, val) => {
 //                  })
 // }
 
-exports.reportComment = (commentId) => {
-  console.log('commentId mongo', commentId)
-  return Comments.update({ _id: commentId }, { isRePort: true })
-                 .exec()
-}
+exports.reportComment = commentId => {
+  return Comments.update({ _id: commentId }, { isRePort: true }).exec();
+};
+
+exports.reportSubComment = params => {
+  let { commentId, parentId } = params;
+  console.log("commentId", commentId);
+  console.log("parentId", parentId);
+  return Comments.update(
+    { _id: parentId, "replies._id": commentId },
+    { "replies.$.isRePort": true }
+  );
+};
