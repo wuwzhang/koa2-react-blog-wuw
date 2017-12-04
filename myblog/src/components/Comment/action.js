@@ -9,7 +9,8 @@ import {
   SET_COMMENT_FILTER,
   SET_SHOW_REPLY,
   SET_THUMBSUP,
-  SET_THUMBSDOWN
+  SET_THUMBSDOWN,
+  SET_REPORT,
 } from './actionType.js';
 
 export const commentInit = (comments) => ({
@@ -68,6 +69,12 @@ export const setThumbsUp = ({state, commentIndex}) => ({
 
 export const setThumbsDown = ({state, commentIndex}) => ({
   type: SET_THUMBSDOWN,
+  state,
+  commentIndex
+})
+
+export const setCommentReportedState = ({state, commentIndex}) => ({
+  type: SET_REPORT,
   state,
   commentIndex
 })

@@ -159,7 +159,7 @@ async function thumbsDownById(params) {
 
 async function getThumbs(commentId) {
   if (utils.isEmpty(commentId)) {
-    console.error('redis - getThumbs 参数');
+    console.error('redis - getThumbs 参数错误');
   }
 
   let keyLikes = COMMENT_KEY + '_likes:' + commentId,
@@ -172,6 +172,16 @@ async function getThumbs(commentId) {
                         })
 
   return result
+}
+
+async function reportCommentById(commentId, userId) {
+  if (utils.isEmpty(commentId, userId)) {
+    console.log('redis - reportCommentById 参数错误');
+  }
+
+  let keys = COMMENT_KEY + '_report:' + commentId;
+
+  return await client.sadd(keys, userId);
 }
 
 /**
@@ -245,7 +255,9 @@ async function setCommentCount(params) {
       value = articleId + ':' + title;
 
   await client.zincrby(keys, num, value);
- }
+}
+
+
 
 module.exports = {
   start,
@@ -263,5 +275,6 @@ module.exports = {
   incPv,
   getTopCommentsArticle,
   setTopCommentsArticle,
-  setCommentCount
+  setCommentCount,
+  reportCommentById
 }

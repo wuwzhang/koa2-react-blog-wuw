@@ -9,7 +9,8 @@ import {
   DELETE_COMMENT,
   NOTCHECKED_COMMENT,
   SET_THUMBSUP,
-  SET_THUMBSDOWN
+  SET_THUMBSDOWN,
+  SET_REPORT
 } from './actionType.js';
 
 export default (state, action) => {
@@ -125,6 +126,15 @@ export default (state, action) => {
         articleComments: [
           ...state.articleComments[action.commentIndex].dislikesState = dislikesState,
           ...state.articleComments[action.commentIndex].thumbsDown += dislikesState,
+          ...state.articleComments
+        ]
+      }
+    }
+    case SET_REPORT: {
+      return {
+        ...state,
+        articleComments: [
+          ...state.articleComments[action.commentIndex].report = action.state,
           ...state.articleComments
         ]
       }

@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'; import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import { view as SubCommentInput } from '../subCommentInput/';
 import SubCommentItem from '../SubCommentItem/index.js';
@@ -12,13 +12,20 @@ import {
   Row,
   Col
 } from 'react-bootstrap';
-import { notification, Button, Icon } from 'antd';
+import { notification, Button, Icon, Popconfirm } from 'antd';
 import FontAwesome from 'react-fontawesome';
 import './style.css';
 
-// import { FormattedMessage } from 'react-intl';
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 
 const marked = require('marked');
+
+const message = defineMessages({
+  CommentReport: {
+    id: 'CommentReport',
+    defaultMessage: '确认是否举报'
+  }
+})
 
 class CommentItem extends Component {
 
@@ -70,6 +77,56 @@ class CommentItem extends Component {
       notification.open({
         message: 'Sign In',
         description: '回复，要先登录一下哦，点击下方传送门',
+        btn,
+        icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
+        style: {
+          color: '#ff7e67',
+          bacground: '#fafafa'
+        }
+      });
+    }
+  }
+
+  async _handleReport(commentId, event) {
+    event.preventDefault(event);
+
+    const btn = (
+      <Button
+        className="submit-btn subComment-btn"
+        onClick={()=>this._login()}
+      >
+        Sign In
+      </Button>
+    );
+
+    let { user, commentIndex } = this.props;
+
+    if (user) {
+      if (commentId) {
+        let result = await commentFetchs.reportCommentById(commentId, user._id);
+
+        if (result.code) {
+          let state = result.state;
+          this.props.setCommentReportedState({state, commentIndex});
+          notification.open({
+            message: 'report success',
+            description: '评论举报成功',
+            icon: <Icon type='smile-o' style={{color: '#ff7e67'}} />,
+            style: {
+              color: '#A2D5F2',
+              bacground: '#fafafa'
+            }
+          })
+        } else {
+
+        }
+      } else {
+        console.log('CommentItem - commentId 参数错误')
+      }
+    } else {
+      notification.open({
+        message: 'Sign In',
+        description: '路见不平，要先登录一下哦，点击下方传送门',
         btn,
         icon: <Icon type="meh-o" style={{ color: '#A2D5F2' }} />,
         style: {
@@ -164,7 +221,7 @@ class CommentItem extends Component {
         { pathname, redirectState } = this.state,
         { replies = [], user = {} } = comment;
 
-        // console.log('commentItem - parentId', comment._id)
+        console.log('commentItem - parentId', comment._id)
 
     if (pathname) {
       return <Redirect to={{
@@ -172,8 +229,6 @@ class CommentItem extends Component {
               state: redirectState
             }}/>
     }
-
-
 
     return (
       <Row>
@@ -230,14 +285,33 @@ class CommentItem extends Component {
                 </li>
                 <li>
                   <span
-                    onClick={ () => this._handleShowRepliy() }
+                    onClick={ () => this._handleShowRepliy(comment._id) }
                     className='commentItem-option-btn'
                   >
-                    回复
+                    <FormattedMessage
+                      id='Reply'
+                      defaultMessage='Reply'
+                    />
                   </span>
                 </li>
                 <li>
-                  <span className='commentItem-option-btn'>举报</span>
+                  <Popconfirm
+                    title = {
+                      this.props.intl.formatMessage(message.CommentReport)
+                    }
+                    onConfirm={(e) => this._handleReport(comment._id, e)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <span
+                      className='commentItem-option-btn'
+                    >
+                      <FormattedMessage
+                        id='Report'
+                        defaultMessage='Report'
+                      />
+                    </span>
+                  </Popconfirm>
                 </li>
               </ul>
             </Col>
@@ -273,6 +347,10 @@ class CommentItem extends Component {
   }
 }
 
+CommentItem.propTypes = {
+  intl: PropTypes.object.isRequired
+};
+
 const mapStateToProps = (state) => {
   return {
     user: state.login.user,
@@ -291,8 +369,13 @@ const mapDispatchToProps = (dispatch) => {
     },
     setThumbsDown: ({state, commentIndex}) => {
       dispatch(commentAction.setThumbsDown({state, commentIndex}));
+    },
+    setCommentReportedState: ({state, commentIndex}) => {
+      dispatch(commentAction.setCommentReportedState({state, commentIndex}))
     }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CommentItem);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CommentItem, {
+  withRef: true
+}));

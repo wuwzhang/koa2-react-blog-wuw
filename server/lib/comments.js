@@ -187,10 +187,7 @@ exports.addSubComment = (parentId, data) => {
   )
 }
 
-/**
- * 一级平评论点赞
- * @param  {ObjectId} commentId 评论Id
- */
+
 // exports.thumbsUpById = (commentId, userId) => {
 //   return Comments.findOne({ _id: commentId })
 //                  .then((res) => {
@@ -223,24 +220,30 @@ exports.thumbsDown = (commentId, val) => {
                  .exec()
 }
 
-exports.thumbsDownById = (commentId, userId) => {
-  return Comments.findOne({ _id: commentId })
-                 .then((res) => {
-                    let thumbsDown = res.thumbsDown;
-                    if (thumbsDown && thumbsDown instanceof Array) {
-                      if (thumbsDown.indexOf(userId) === -1) {
-                        return Comments.update(
-                          { _id: commentId },
-                          { $addToSet: { thumbsDown: userId } }
-                        )
-                      } else {
-                        return Comments.update(
-                          { _id: commentId },
-                          { $pull: { thumbsDown: userId } }
-                        )
-                      }
-                    } else {
+// exports.thumbsDownById = (commentId, userId) => {
+//   return Comments.findOne({ _id: commentId })
+//                  .then((res) => {
+//                     let thumbsDown = res.thumbsDown;
+//                     if (thumbsDown && thumbsDown instanceof Array) {
+//                       if (thumbsDown.indexOf(userId) === -1) {
+//                         return Comments.update(
+//                           { _id: commentId },
+//                           { $addToSet: { thumbsDown: userId } }
+//                         )
+//                       } else {
+//                         return Comments.update(
+//                           { _id: commentId },
+//                           { $pull: { thumbsDown: userId } }
+//                         )
+//                       }
+//                     } else {
 
-                    }
-                 })
+//                     }
+//                  })
+// }
+
+exports.reportComment = (commentId) => {
+  console.log('commentId mongo', commentId)
+  return Comments.update({ _id: commentId }, { isRePort: true })
+                 .exec()
 }

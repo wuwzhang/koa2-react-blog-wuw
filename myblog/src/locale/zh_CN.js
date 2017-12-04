@@ -49,6 +49,9 @@ const zh_CN = {
   Time: '时 间',
   Tags: '标 签',
   Catalog: '分 类',
-  Rank: '排行榜'
+  Rank: '排行榜',
+  Reply: '回复',
+  Report: '举报',
+  CommentReport: '确认举报？'
 }
 export default zh_CN;

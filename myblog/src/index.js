@@ -10,6 +10,8 @@ import store from './Store.js';
 import { Provider } from 'react-redux';
 import registerServiceWorker from './registerServiceWorker';
 import { IntlProvider, addLocaleData } from 'react-intl';
+import antdEn from 'antd/lib/locale-provider/en_US';
+import { LocaleProvider } from 'antd';
 
 import zh from 'react-intl/locale-data/zh';
 import en from 'react-intl/locale-data/en';
@@ -43,18 +45,22 @@ if (localePrefix !== 'en') {
 }
 // end
 
-let messages = {};
+let messages = {}, antd = {};
 messages['zh-CN'] = zh_CN;
 messages['en-US'] = en_US;
+antd['zh-CN'] = null;
+antd['en-US'] = antdEn;
 
 addLocaleData([...en, ...zh]);
 
 ReactDOM.render(
+  <LocaleProvider locale={antd[locale]}>
   <IntlProvider locale= { locale } messages={ messages[locale] }>
     <Provider store={store}>
       <Routes />
     </Provider>
-  </IntlProvider>,
+  </IntlProvider>
+  </LocaleProvider>,
   document.getElementById('root')
 );
 

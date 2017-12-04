@@ -273,3 +273,32 @@ export const thumbsDown = async (commentId, userId) => {
     }
   }
 }
+
+export const reportCommentById = async (commentId, userId) => {
+  let url = DOMAIN + `/api/comment/${commentId}/report`;
+
+  try {
+    var result = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId
+      }),
+      credentials: CREDENTIALS
+    })
+  } catch (e) {
+    console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: '-2',
+      message: '未知错误'
+    }
+  }
+}

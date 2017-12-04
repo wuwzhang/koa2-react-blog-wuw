@@ -2,7 +2,7 @@ server/config/*
 !config/default.*
 npm-debug.log
 node_modules
-myblog/build
+myblog/build/*
 server/logs/*
 # build folder
 server/build

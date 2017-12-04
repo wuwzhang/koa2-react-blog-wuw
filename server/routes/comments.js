@@ -313,27 +313,27 @@ router.post('/api/comment/:commentId/thumbsDown', async(ctx, next) => {
 
   try {
     var result = await redisUtils.thumbsDownById({commentId, userId})
-                              .then(async (res) => {
-                                if (res === -1) {
-                                  try {
-                                    await $Comments.thumbsDown(commentId, -1);
-                                  } catch (e) {
-                                    code = '-1';
-                                    message = e.message;
-                                  }
+                                 .then(async (res) => {
+                                  if (res === -1) {
+                                    try {
+                                      await $Comments.thumbsDown(commentId, -1);
+                                    } catch (e) {
+                                      code = '-1';
+                                      message = e.message;
+                                    }
 
-                                  return -1;
-                                } else if (res === 1) {
-                                  try {
-                                    await $Comments.thumbsDown(commentId, 1);
-                                  } catch (e) {
-                                    code = '-2';
-                                    message = e.message;
-                                  }
+                                    return -1;
+                                  } else if (res === 1) {
+                                    try {
+                                      await $Comments.thumbsDown(commentId, 1);
+                                    } catch (e) {
+                                      code = '-2';
+                                      message = e.message;
+                                    }
 
-                                  return 1;
-                                }
-                              })
+                                    return 1;
+                                  }
+                                })
   } catch (e) {
     code = '-3';
     message = e.message;
@@ -345,4 +345,40 @@ router.post('/api/comment/:commentId/thumbsDown', async(ctx, next) => {
     'thumbsDown': result
   }
 })
+
+router.post('/api/comment/:commentId/report', async(ctx, next) => {
+  let code = '1', message = '评论举报成功';
+  const { commentId } = ctx.params;
+  let { userId } = ctx.request.body;
+
+  try {
+    var result = await redisUtils.reportCommentById(commentId, userId)
+                                 .then(async () => {
+                                  try {
+                                    let res = await $Comments.reportComment(commentId);
+                                    if (res.ok === 1) {
+                                      return true;
+                                    } else {
+                                      code = '-1';
+                                      message = '存入mongodb错误'
+                                      return false;
+                                    }
+                                  } catch (e) {
+                                    code = '-2';
+                                    message = e.message;
+                                  }
+                                })
+  } catch (e) {
+    code = '-3';
+    message = e.message;
+  }
+
+  ctx.response.body = {
+    'code': code,
+    'message': message,
+    'state': result
+  }
+})
+
+
 module.exports = router;

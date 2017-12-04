@@ -49,7 +49,9 @@ const en_US = {
   Time: 'Time',
   Tags: 'Tags',
   Catalog: 'Catalog',
-  Rank: 'Rank'
-
+  Rank: 'Rank',
+  Reply: 'Reply',
+  Report: 'Report',
+  CommentReport: 'Are you sure'
 }
 export default en_US;
