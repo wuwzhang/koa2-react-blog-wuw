@@ -32,11 +32,11 @@ ul.commentPagination-list li {
   color: #ff7e67;
   background: #fafafa;
 }
-ul.commentPagination-list li:hover{
+ul.commentPagination-list li:hover {
   cursor: pointer;
   background: rgba(255, 126, 103, 0.3);
 }
-ul.commentPagination-list li.active{
+ul.commentPagination-list li.active {
   background: #ff7e67;
   color: #fafafa;
 }

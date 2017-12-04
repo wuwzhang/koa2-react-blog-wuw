@@ -45,11 +45,11 @@ const message = defineMessages({
   },
   ReportSuccessMsg: {
     id: "ReportSuccessMsg",
-    defaultMessage: "Report Success"
+    defaultMessage: "Report Succeed"
   },
   ReportSuccessDes: {
     id: "ReportSuccessDes",
-    defaultMessage: "Report Success"
+    defaultMessage: "Report Succeed"
   },
   ReportFailMsg: {
     id: "ReportFailMsg",

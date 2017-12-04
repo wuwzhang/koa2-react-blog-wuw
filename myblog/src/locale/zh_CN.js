@@ -63,6 +63,10 @@ const zh_CN = {
   ReportFailMsg: "举报失败",
   ReportFailDes: "代码君又抽抽了",
   PopcomfirmCancel: "取消",
-  PopcomfirmCheck: "确认"
+  PopcomfirmCheck: "确认",
+  CommentSucceedMsg: "评论成功",
+  CommentSucceedDes: "哈哈哈哈哈哈，成功了，作者君也没想到",
+  CommentFailedMsg: "评论失败",
+  CommentFailedDes: "啊啊啊啊啊啊，失败了，八成是睡着了吧"
 };
 export default zh_CN;

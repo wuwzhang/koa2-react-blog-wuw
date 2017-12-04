@@ -59,11 +59,15 @@ const en_US = {
   thumbsDownLoginCheackDes: "Please sign in first",
   ReplyLoginCheackDes: "Please sign in first",
   ReportLoginCheackDes: "Please sign in first",
-  ReportSuccessMsg: "Report Success",
-  ReportSuccessDes: "report success",
+  ReportSuccessMsg: "Report Succeed",
+  ReportSuccessDes: "report succeed",
   ReportFailMsg: "Report Failed",
   ReportFailDes: "report failed， pelease try angin",
   PopcomfirmCheck: "yes",
-  PopcomfirmCancel: "cancle"
+  PopcomfirmCancel: "cancle",
+  CommentSucceedMsg: "Comment Succeed",
+  CommentSucceedDes: "Comment Succeed",
+  CommentFailedMsg: "Comment Failed",
+  CommentFailedDes: "Comment Failed"
 };
 export default en_US;
