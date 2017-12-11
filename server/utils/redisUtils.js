@@ -156,6 +156,19 @@ async function thumbsDownById(params) {
   }
 }
 
+async function delThumbs(commentId) {
+  if (utils.isEmpty(commentId)) {
+    console.error("redis - delThumbs 参数错误");
+  }
+
+  let key1 = COMMENT_KEY + "_likes:" + commentId,
+    key2 = COMMENT_KEY + "_dislikes:" + commentId;
+
+  return await Promise.all([client.del(key1), client.del(key2)]).then(res => {
+    return res;
+  });
+}
+
 async function getThumbs(commentId) {
   if (utils.isEmpty(commentId)) {
     console.error("redis - getThumbs 参数错误");
@@ -184,11 +197,21 @@ async function getThumbs(commentId) {
 async function reportCommentById(commentId, userId) {
   if (utils.isEmpty(commentId, userId)) {
     console.log("redis - reportCommentById 参数错误");
+  } else {
+    let keys = COMMENT_KEY + "_report:" + commentId;
+
+    return await client.sadd(keys, userId);
   }
+}
 
-  let keys = COMMENT_KEY + "_report:" + commentId;
+async function cancleCommentById(commentId) {
+  if (utils.isEmpty(commentId)) {
+    console.log("redis - cancelCommentById 参数错误");
+  } else {
+    let keys = COMMENT_KEY + "_report:" + commentId;
 
-  return await client.sadd(keys, userId);
+    return await client.del(keys);
+  }
 }
 
 /**
@@ -206,6 +229,16 @@ async function reportSubCommentById(params) {
     keys = "sub_" + COMMENT_KEY + "_report:" + parentId + ":" + commentId;
 
   return await client.sadd(keys, userId);
+}
+
+async function deleteSubComment(parentId, commentId) {
+  if (utils.isEmpty(parentId, commentId)) {
+    console.error("redis - deleteSubComment 参数错误");
+  } else {
+    let keys = "sub_" + COMMENT_KEY + "_report:" + parentId + ":" + commentId;
+
+    await client.del(keys);
+  }
 }
 
 /**
@@ -247,6 +280,21 @@ async function incPv(params) {
   await client.zincrby(keys, 1, value);
 }
 
+async function getArticleCatalogs() {
+  let keys = "catalog_count_" + ARTICLE_KEY;
+
+  return client.zrevrange(keys, 0, -1, "WITHSCORES");
+}
+
+async function setArticleCatalogs(catalog, count) {
+  if (utils.isEmpty(catalog, count)) {
+    console.error("redis - setArticleCatalogs 参数错误");
+  } else {
+    let keys = "catalog_count_" + ARTICLE_KEY;
+    return client.zadd(keys, count, catalog);
+  }
+}
+
 /**
  * 查询文章评论量默认前5的文章
  */
@@ -268,16 +316,15 @@ async function setTopCommentsArticle(params) {
   await client.zadd(keys, commentCount, value);
 }
 
-async function setCommentCount(params) {
-  if (utils.isEmpty(params, params.articleId, params.title, params.num)) {
+async function setCommentCount(articleId, title, num) {
+  if (utils.isEmpty(articleId, title, num)) {
     console.error("redis - incComment 参数错误");
+  } else {
+    let keys = "comments:" + ARTICLE_KEY,
+      value = articleId + ":" + title;
+
+    await client.zincrby(keys, num, value);
   }
-
-  let keys = "comments:" + ARTICLE_KEY,
-    { articleId, title, num } = params,
-    value = articleId + ":" + title;
-
-  await client.zincrby(keys, num, value);
 }
 
 module.exports = {
@@ -291,12 +338,17 @@ module.exports = {
   thumbsUpById,
   thumbsDownById,
   getThumbs,
+  delThumbs,
   getTopPreviewArticle,
   setTopPreviewArticle,
   incPv,
   getTopCommentsArticle,
   setTopCommentsArticle,
   setCommentCount,
+  getArticleCatalogs,
+  setArticleCatalogs,
   reportCommentById,
-  reportSubCommentById
+  reportSubCommentById,
+  cancleCommentById,
+  deleteSubComment
 };

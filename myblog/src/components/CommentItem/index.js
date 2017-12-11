@@ -14,60 +14,9 @@ import { notification, Button, Icon, Popconfirm } from "antd";
 import FontAwesome from "react-fontawesome";
 import "./style.css";
 
-import { injectIntl, FormattedMessage, defineMessages } from "react-intl";
-
+import { injectIntl, FormattedMessage } from "react-intl";
+import message from "../../locale/message";
 const marked = require("marked");
-
-const message = defineMessages({
-  CommentReport: {
-    id: "CommentReport",
-    defaultMessage: "Are you sure"
-  },
-  LoginCheckMes: {
-    id: "LoginCheckMes",
-    defaultMessage: "Sign In"
-  },
-  ReplyLoginCheckDes: {
-    id: "ReplyLoginCheckDes",
-    defaultMessage: "Please sign in first"
-  },
-  thumbsUpLoginCheackDes: {
-    id: "thumbsUpLoginCheackDes",
-    defaultMessage: "Please sign in first"
-  },
-  thumbsDownLoginCheackDes: {
-    id: "thumbsDownLoginCheackDes",
-    defaultMessage: "Please sign in first"
-  },
-  ReportLoginCheackDes: {
-    id: "ReportLoginCheackDes",
-    defaultMessage: "Please sign in first"
-  },
-  ReportSuccessMsg: {
-    id: "ReportSuccessMsg",
-    defaultMessage: "Report Succeed"
-  },
-  ReportSuccessDes: {
-    id: "ReportSuccessDes",
-    defaultMessage: "Report Succeed"
-  },
-  ReportFailMsg: {
-    id: "ReportFailMsg",
-    defaultMessage: "Report Failed"
-  },
-  ReportFailDes: {
-    id: "ReportFailDes",
-    defaultMessage: "Report Failed"
-  },
-  PopcomfirmCheck: {
-    id: "PopcomfirmCheck",
-    defaultMessage: "yes"
-  },
-  PopcomfirmCancel: {
-    id: "PopcomfirmCancel",
-    defaultMessage: "cancle"
-  }
-});
 
 class CommentItem extends Component {
   constructor(props) {
@@ -89,7 +38,7 @@ class CommentItem extends Component {
     });
   }
 
-  _handleShowRepliy() {
+  _handleShowReply() {
     const btn = (
       <Button
         className="submit-btn subComment-btn"
@@ -144,7 +93,7 @@ class CommentItem extends Component {
       if (commentId) {
         let result = await commentFetchs.reportCommentById(commentId, user._id);
 
-        if (result.code) {
+        if (result.code === "1") {
           let state = result.state;
           this.props.setCommentReportedState({
             state,
@@ -345,7 +294,7 @@ class CommentItem extends Component {
                 </li>
                 <li>
                   <span
-                    onClick={() => this._handleShowRepliy(comment._id)}
+                    onClick={() => this._handleShowReply(comment._id)}
                     className="commentItem-option-btn"
                   >
                     <FormattedMessage id="Reply" defaultMessage="Reply" />
@@ -387,10 +336,7 @@ class CommentItem extends Component {
           <Row>
             <Col md={12} sm={12}>
               {comment.isShowReply ? (
-                <SubCommentInput
-                  parentId={comment._id}
-                  commentIndex={commentIndex}
-                />
+                <SubCommentInput commentIndex={commentIndex} />
               ) : null}
             </Col>
           </Row>
@@ -401,7 +347,10 @@ class CommentItem extends Component {
 }
 
 CommentItem.propTypes = {
-  intl: PropTypes.object.isRequired
+  intl: PropTypes.object.isRequired,
+  user: PropTypes.object,
+  comments: PropTypes.object,
+  location: PropTypes.object
 };
 
 const mapStateToProps = state => {

@@ -54,7 +54,9 @@ class SubCommentInput extends Component {
   }
 
   async _addSubComment() {
-    let { parentId, user, commentIndex } = this.props,
+    let { user, commentIndex, comments } = this.props,
+      comment = comments[commentIndex],
+      parentId = comment.id,
       { subComment } = this.state;
 
     const data = {
@@ -62,9 +64,6 @@ class SubCommentInput extends Component {
       subComment: subComment,
       userId: user._id
     };
-
-    console.log("subCommentInput - userId", user._id);
-    console.log("subCommentInput - parentId", parentId);
 
     let result = await commentFetchs.addSubComment(data);
 
@@ -179,13 +178,19 @@ class SubCommentInput extends Component {
 }
 
 SubCommentInput.propTypes = {
-  intl: PropTypes.object.isRequired
+  intl: PropTypes.object.isRequired,
+  commentIndex: PropTypes.number.isRequired,
+  user: PropTypes.object,
+  location: PropTypes.object,
+  comments: PropTypes.object,
+  successComment: PropTypes.func
 };
 
 const mapStateToProps = state => {
   return {
     user: state.login.user,
-    location: state.routing.location
+    location: state.routing.location,
+    comments: state.comment.articleComments
   };
 };
 

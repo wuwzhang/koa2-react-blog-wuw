@@ -1,12 +1,17 @@
 import {
   INIT_COMMENT,
+  INIT_COMMENT_NOTCHECKED_COUNT,
   INIT_ALL_COMMENT,
   ADD_COMMENT,
-  ADD_SUBCOMMENT,
+  ADD_SUB_COMMENT,
   SET_COMMENT_FILTER,
   SET_SHOW_REPLY,
+  SET_ADMIN_SHOW_REPLY,
   CHECK_COMMENT,
+  CANCEL_COMMENT,
   DELETE_COMMENT,
+  DELETE_SUB_COMMENT,
+  CHANCEL_SUB_COMMENT,
   NOTCHECKED_COMMENT,
   SET_THUMBSUP,
   SET_THUMBSDOWN,
@@ -18,9 +23,8 @@ export default (state, action) => {
     state = {
       articleComments: [],
       allComment: [],
-      NotCheckedCount: 0,
-      ReportCount: 0,
-      filter: "ALL"
+      filter: "ALL",
+      NotCheckedCount: 0
     };
   }
 
@@ -39,7 +43,12 @@ export default (state, action) => {
     case INIT_ALL_COMMENT: {
       return {
         ...state,
-        allComment: action.comments
+        allComment: action.comments.map(comment => {
+          return {
+            ...comment,
+            isShowReply: false
+          };
+        })
       };
     }
     case ADD_COMMENT: {
@@ -49,7 +58,7 @@ export default (state, action) => {
         NotCheckedCount: state.NotCheckedCount + 1
       };
     }
-    case ADD_SUBCOMMENT: {
+    case ADD_SUB_COMMENT: {
       return {
         ...state,
         articleComments: [
@@ -57,6 +66,27 @@ export default (state, action) => {
             action.subComment
           ),
           ...state.articleComments
+        ]
+      };
+    }
+    case DELETE_SUB_COMMENT: {
+      let comment = state,
+        { commentIndex, subCommentIndex } = action;
+      let { allComment } = comment;
+      let replies = [
+        ...allComment[commentIndex].replies.slice(0, subCommentIndex),
+        ...allComment[commentIndex].replies.slice(subCommentIndex + 1)
+      ];
+      allComment[commentIndex].replies = replies;
+      comment.allComment = allComment;
+      return comment;
+    }
+    case CHANCEL_SUB_COMMENT: {
+      return {
+        ...state,
+        allComment: [
+          ...(state.allComment[action.commentIndex].isRePort = false),
+          ...state.allComment
         ]
       };
     }
@@ -68,6 +98,15 @@ export default (state, action) => {
           ...state.allComment
         ],
         NotCheckedCount: state.NotCheckedCount - 1
+      };
+    }
+    case CANCEL_COMMENT: {
+      return {
+        ...state,
+        allComment: [
+          ...(state.allComment[action.commentIndex].isRePort = action.state),
+          ...state.allComment
+        ]
       };
     }
     case DELETE_COMMENT: {
@@ -94,6 +133,15 @@ export default (state, action) => {
       return {
         ...state,
         filter: action.filter
+      };
+    }
+    case SET_ADMIN_SHOW_REPLY: {
+      return {
+        ...state,
+        allComment: [
+          ...(state.allComment[action.commentIndex].isShowReply = action.state),
+          ...state.allComment
+        ]
       };
     }
     case SET_SHOW_REPLY: {

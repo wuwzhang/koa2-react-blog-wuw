@@ -236,6 +236,14 @@ exports.getArticlesByCatalog = (catalog, page, range) => {
     .exec();
 };
 
+exports.deleteComment = (articleId, commentId) => {
+  console.log("articleId", articleId, "commentId", commentId);
+  return Article.updateOne(
+    { _id: articleId },
+    { $pull: { comments: mongoose.Types.ObjectId(commentId) } }
+  );
+};
+
 exports.getArticleBySearch = (keyword, page, range) => {
   const regex = { $regex: new RegExp(keyword, "i") };
 

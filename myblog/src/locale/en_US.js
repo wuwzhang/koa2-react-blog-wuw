@@ -38,6 +38,7 @@ const en_US = {
   Submit: "Submit",
   Edit: "Edit",
   Delete: "Delete",
+  Cancel: "Cancel",
   Checked: "Checked",
   Check: "Check",
   All: "All",
@@ -68,6 +69,16 @@ const en_US = {
   CommentSucceedMsg: "Comment Succeed",
   CommentSucceedDes: "Comment Succeed",
   CommentFailedMsg: "Comment Failed",
-  CommentFailedDes: "Comment Failed"
+  CommentFailedDes: "Comment Failed",
+  MessageSucceedMsg: "Message Succeed",
+  MessageSucceedDes: "Message Succeed",
+  MessageFailedMsg: "Message Failed",
+  MessageFailedDes: "Message Failed",
+  DeleteSucceedMsg: "Delete Succeed",
+  DeleteSucceedDes: "Delete Succeed",
+  DeleteFailMsg: "Delete Succeed",
+  DeleteFailDes: "Delete Succeed",
+  CheckDelete: "Are you sure",
+  CheckChancel: "Are you sure"
 };
 export default en_US;

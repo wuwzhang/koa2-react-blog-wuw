@@ -81,13 +81,15 @@ class CommentInput extends Component {
     const { commentValid } = this.state;
 
     if (commentValid === "success") {
-      const { user } = this.props,
-        { comment } = this.state,
-        articleId = this.props.location.pathname.split("/")[2];
+      const { user, article } = this.props,
+        { comment } = this.state;
 
       const data = {
         userId: user._id,
-        articleId: articleId,
+        article: {
+          _id: article._id,
+          title: article.title
+        },
         comment: comment
       };
 
@@ -206,12 +208,17 @@ class CommentInput extends Component {
 }
 
 CommentInput.propTypes = {
-  intl: PropTypes.object.isRequired
+  intl: PropTypes.object.isRequired,
+  user: PropTypes.object,
+  location: PropTypes.object,
+  article: PropTypes.object,
+  addComment: PropTypes.func
 };
 
 const mapStateToProps = state => ({
   user: state.login.user,
-  location: state.routing.location
+  location: state.routing.location,
+  article: state.articleDetails.article
 });
 
 const mapDispatchToProps = dispatch => {

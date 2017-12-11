@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 // const chalk = require('chalk');
 const STATUS_COLORS = {
-  error: 'red',
-  warn: 'yellow',
-  info: 'green'
+  error: "red",
+  warn: "yellow",
+  info: "green"
 };
 
 /**
@@ -19,16 +19,17 @@ function logger(winstonInstance) {
 
     let logLevel;
     if (ctx.status >= 500) {
-      logLevel = 'error';
+      logLevel = "error";
     }
     if (ctx.status >= 400) {
-      logLevel = 'warn';
+      logLevel = "warn";
     }
     if (ctx.status >= 100) {
-      logLevel = 'info';
+      logLevel = "info";
     }
 
-    let msg = (`${ctx.method} ${ctx.originalUrl}`) +(` ${ctx.status} `) +(`${ms}ms`);
+    let msg =
+      `${ctx.method} ${ctx.originalUrl}` + ` ${ctx.status} ` + `${ms}ms`;
 
     winstonInstance.log(logLevel, msg);
   };

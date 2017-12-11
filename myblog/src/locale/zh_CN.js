@@ -37,6 +37,7 @@ const zh_CN = {
   Submit: "提 交",
   Edit: "编 辑",
   Delete: "删 除",
+  Cancel: "取 消",
   Checked: "已确认",
   Check: "确 认",
   All: "全 部",
@@ -67,6 +68,16 @@ const zh_CN = {
   CommentSucceedMsg: "评论成功",
   CommentSucceedDes: "哈哈哈哈哈哈，成功了，作者君也没想到",
   CommentFailedMsg: "评论失败",
-  CommentFailedDes: "啊啊啊啊啊啊，失败了，八成是睡着了吧"
+  CommentFailedDes: "啊啊啊啊啊啊，失败了，八成是睡着了吧",
+  MessageSucceedMsg: "发送消息成功",
+  MessageSucceedDes: "哈哈哈哈哈哈，成功了，作者君会尽快回复的",
+  MessageFailedMsg: "发送消息失败",
+  MessageFailedDes: "啊啊啊啊啊啊，失败了，八成是睡着了吧",
+  DeleteSucceedMsg: "删除成功",
+  DeleteSucceedDes: "删除成功",
+  DeleteFailMsge: "删除失败",
+  DeleteFailDes: "删除失败",
+  CheckDelete: "确认删除",
+  CheckChancel: "确认取消"
 };
 export default zh_CN;

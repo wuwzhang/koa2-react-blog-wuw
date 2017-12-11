@@ -2,9 +2,9 @@ export const DOMAIN = "";
 const CREDENTIALS = process.env.ORIGIN ? "include" : "same-origin";
 
 export const addComment = async params => {
-  let { articleId, userId, comment } = params;
+  let { article, userId, comment } = params;
 
-  let url = DOMAIN + `/api/article_details/${articleId}/comment`;
+  let url = DOMAIN + `/api/article_details/${article._id}/comment`;
 
   try {
     var result = await fetch(url, {
@@ -15,7 +15,7 @@ export const addComment = async params => {
       },
       body: JSON.stringify({
         userId: userId,
-        articleId: articleId,
+        article: article,
         content: comment
       }),
       credentials: CREDENTIALS
@@ -50,6 +50,70 @@ export const addSubComment = async params => {
         userId: userId,
         content: subComment,
         parentId: parentId
+      }),
+      credentials: CREDENTIALS
+    });
+  } catch (e) {
+    // console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: "-2",
+      message: "未知错误"
+    };
+  }
+};
+
+export const deleteSubComment = async params => {
+  let { commentId, subCommentId } = params;
+
+  let url = DOMAIN + "/api/deleteSubComment";
+
+  try {
+    var result = await fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        commentId,
+        subCommentId
+      }),
+      credentials: CREDENTIALS
+    });
+  } catch (e) {
+    // console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: "-2",
+      message: "未知错误"
+    };
+  }
+};
+
+export const chancelSubComment = async params => {
+  let { commentId, subCommentId } = params;
+
+  let url = DOMAIN + "/api/chancelSubComment";
+
+  try {
+    var result = await fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        commentId,
+        subCommentId
       }),
       credentials: CREDENTIALS
     });
@@ -153,7 +217,7 @@ export const getNotCheckedComments = async () => {
   }
 };
 
-export const deleteComment = async (commentId, articleId) => {
+export const deleteComment = async (commentId, article) => {
   let url = DOMAIN + `/api/comment_delete/${commentId}`;
   try {
     var result = await fetch(url, {
@@ -163,7 +227,35 @@ export const deleteComment = async (commentId, articleId) => {
         "Content-type": "application/json"
       },
       body: JSON.stringify({
-        articleId: articleId
+        article: article
+      }),
+      credentials: CREDENTIALS
+    });
+  } catch (e) {
+    // console.log(e);
+  }
+
+  if (result) {
+    return result.json();
+  } else {
+    return {
+      code: "-2",
+      message: "未知错误"
+    };
+  }
+};
+
+export const cancleComment = async commentId => {
+  let url = DOMAIN + "/api/comment_cancel";
+  try {
+    var result = await fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        commentId
       }),
       credentials: CREDENTIALS
     });

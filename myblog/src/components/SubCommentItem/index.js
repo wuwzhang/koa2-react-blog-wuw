@@ -88,9 +88,10 @@ class SubCommentItem extends Component {
       comment = comments[commentIndex],
       parentId = comment._id;
 
-    console.log(parentId);
+    // console.log(parentId);
 
     if (user) {
+      console.log("parentId", parentId, "commentId", commentId);
       if (parentId && commentId) {
         let userId = user._id,
           result = await commentFetchs.subCommentReport({
@@ -105,7 +106,6 @@ class SubCommentItem extends Component {
             description: this.props.intl.formatMessage(
               message.ReportSuccessDes
             ),
-            btn,
             icon: <Icon type="smile-o" style={{ color: "#ff7e67" }} />,
             style: {
               color: "#A2D5F2",
@@ -118,7 +118,6 @@ class SubCommentItem extends Component {
             description: this.props.intl.formatMessage(
               message.ReportSuccessDes
             ),
-            btn,
             icon: <Icon type="meh-o" style={{ color: "#A2D5F2" }} />,
             style: {
               color: "#ff7e67",

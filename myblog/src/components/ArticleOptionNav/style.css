@@ -1,10 +1,9 @@
 .article-option-nav {
-
 }
 .article-option-nav ul {
-
 }
-.article-option-nav li, .article-option-nav li:hover {
+.article-option-nav li,
+.article-option-nav li:hover {
   display: inline-block;
   list-style: none;
 }
@@ -13,5 +12,5 @@
 }
 .article-option-nav span {
   font-weight: bold;
-  padding: 3px 2px;
+  padding: 3px 1px;
 }

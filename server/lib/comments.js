@@ -29,11 +29,14 @@ exports.getPageComments = (page, range) => {
     created_at: -1
   };
   return Comments.find({})
-    .populate({ path: "userId" })
-    .populate({ path: "articleId" })
     .sort(sort)
     .skip(range * (page - 1))
     .limit(range)
+    .populate({ path: "userId", select: { account: 1 } })
+    .populate({
+      path: "articleId",
+      select: { title: 1, _id: 1 }
+    })
     .exec();
 };
 
@@ -47,10 +50,10 @@ exports.getPageComments = (page, range) => {
 //                  .sort(sort)
 //                  .exec();
 // };
-
+//$match 不支持ObjectId， 需要使用mongoose.Types.ObjectId
 exports.getCommentsByArticleId = (articleId, page, range) => {
   return Comments.aggregate(
-    { $match: { articleId: mongoose.Types.ObjectId(articleId) } }, //$match 不支持ObjectId， 需要使用mongoose.Types.ObjectId
+    { $match: { articleId: mongoose.Types.ObjectId(articleId) } },
     { $sort: { created_at: -1 } },
     { $skip: range * (page - 1) },
     { $limit: range },
@@ -113,12 +116,6 @@ exports.getCommentsByArticleId = (articleId, page, range) => {
             }
           }
         }
-        // thumbsUp: {
-        //   $size: '$thumbsUp'
-        // },
-        // thumbsDown: {
-        //   $size: '$thumbsDown'
-        // }
       }
     },
     {
@@ -167,8 +164,17 @@ exports.getCommentsByNotChecked = () => {
   return Comments.count({ isChecked: false }).exec();
 };
 
-exports.deleteCommentById = id => {
-  return Comments.remove({ _id: id }).exec();
+exports.deleteCommentById = async id => {
+  return await Comments.findOne({ _id: id }, { replies: 1 }).then(
+    async (res, err) => {
+      if (res) {
+        await Comments.remove({ _id: id });
+        return res;
+      } else {
+        throw new Error(err);
+      }
+    }
+  );
 };
 
 exports.setCommentChecked = id => {
@@ -184,6 +190,18 @@ exports.setCommentChecked = id => {
  */
 exports.addSubComment = (parentId, data) => {
   return Comments.update({ _id: parentId }, { $addToSet: { replies: data } });
+};
+
+/**
+ * 删除二级评论
+ * @param  {ObjectId} parentId 父评论Id
+ * @param  {ObjectId} commentId  子评论Id
+ */
+exports.deleteSubComment = (parentId, commentId) => {
+  return Comments.update(
+    { _id: parentId },
+    { $pull: { replies: { _id: commentId } } }
+  );
 };
 
 // exports.thumbsUpById = (commentId, userId) => {
@@ -244,16 +262,25 @@ exports.thumbsDown = (commentId, val) => {
 //                  })
 // }
 
+exports.cancelComment = commentId => {
+  return Comments.updateOne({ _id: commentId }, { isRePort: false }).exec();
+};
+
 exports.reportComment = commentId => {
   return Comments.update({ _id: commentId }, { isRePort: true }).exec();
 };
 
 exports.reportSubComment = params => {
   let { commentId, parentId } = params;
-  console.log("commentId", commentId);
-  console.log("parentId", parentId);
   return Comments.update(
     { _id: parentId, "replies._id": commentId },
     { "replies.$.isRePort": true }
+  );
+};
+
+exports.cancelSubComment = (parentId, commentId) => {
+  return Comments.updateOne(
+    { _id: parentId, "replies._id": commentId },
+    { $set: { "replies.$.isRePort": false } }
   );
 };
