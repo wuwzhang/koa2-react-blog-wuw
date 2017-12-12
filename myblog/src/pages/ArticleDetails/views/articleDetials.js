@@ -17,8 +17,7 @@ import Footer from "../../../components/Footer/index.js";
 
 import { actions as deleteActions } from "../../ArticleList/";
 
-import { Grid, Col, Row } from "react-bootstrap";
-import { BackTop, Button } from "antd";
+import { BackTop, Button, Col, Row } from "antd";
 import FontAwesome from "react-fontawesome";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FormattedMessage } from "react-intl";
@@ -176,16 +175,16 @@ class ArticleDetails extends Component {
           <section className="All-Nav">
             <TopMenu />
           </section>
-          <Grid>
+          <div className="container">
             <section>
-              <Row>
+              <Row gutter={16}>
                 <section className="ArticleDetials-titleContainer">
-                  <Col md={6} sm={6} xs={6}>
+                  <Col md={12} sm={12} xs={12}>
                     <h3 className="ArticleDetails-articleTitle">
                       {article.title}
                     </h3>
                   </Col>
-                  <Col md={6} sm={6} xs={6}>
+                  <Col md={12} sm={12} xs={12}>
                     {this.props.user && this.props.user.level === 0 ? (
                       <ArticleOptionNav
                         myStyle={{
@@ -211,7 +210,7 @@ class ArticleDetails extends Component {
                 </section>
               </Row>
               <Row>
-                <Col md={10} sm={10} xs={12}>
+                <Col md={20} sm={20} xs={24}>
                   {article.content ? (
                     <div
                       className="article-content marked-preview"
@@ -221,7 +220,7 @@ class ArticleDetails extends Component {
                     />
                   ) : null}
                 </Col>
-                <Col md={2} sm={2} xsHidden>
+                <Col md={4} sm={4} xs={0}>
                   <Aside
                     color="#07689f"
                     tags={article.tags}
@@ -328,7 +327,7 @@ class ArticleDetails extends Component {
               </Row>
               <Row>
                 {article.isComment ? (
-                  <Col md={10} ms={10} xs={10}>
+                  <Col md={20} ms={20} xs={20}>
                     <Comment />
                   </Col>
                 ) : (
@@ -337,7 +336,7 @@ class ArticleDetails extends Component {
               </Row>
               <BackTop />
             </section>
-          </Grid>
+          </div>
           <Footer />
         </section>
       );

@@ -7,8 +7,7 @@ import { actions as commentsActions } from "../Comment/";
 import SubCommentLi from "../subCommentLi";
 import CommentOptionNav from "../CommentOptionNav/commentOptionNav.js";
 
-import { Row, Col } from "react-bootstrap";
-import { Icon, Badge } from "antd";
+import { Icon, Badge, Row, Col } from "antd";
 
 import "./style.css";
 
@@ -27,8 +26,8 @@ class CommentLi extends Component {
     return (
       <section className="ArticleLi">
         <Row>
-          <li className="ArticleLi-li">
-            <Col md={2}>
+          <li className="ArticleLi-li commentLi-li">
+            <Col md={4}>
               {replies && replies.length > 0 && !comment.isShowReply ? (
                 <span
                   className="commentLi-toggle-btn"
@@ -53,25 +52,32 @@ class CommentLi extends Component {
                 <span>{article.title}</span>
               </Link>
             </Col>
+            <Col md={8}>
+              <p className="commentLi-li-message">
+                <span>{comment.content}</span>
+                <span
+                  style={{ color: "#999" }}
+                  className="ArticleLi-UpdateTime"
+                >
+                  ( {user.account}){" "}
+                </span>
+              </p>
+            </Col>
             <Col md={4}>
-              <span>{comment.content}</span>
-              <span style={{ color: "#999" }} className="ArticleLi-UpdateTime">
-                ( {user.account}){" "}
-              </span>
+              <p className="commentLi-li-message commentAdmin-message">
+                <span>{created_at}</span>
+                <span>{comment.thumbsUp}</span>
+                <span>{comment.thumbsDown}</span>
+              </p>
             </Col>
-            <Col md={2}>
-              <span>{created_at}</span>
-              <span>{comment.thumbsUp}</span>
-              <span>{comment.thumbsDown}</span>
-            </Col>
-            <Col md={2}>
+            <Col md={4}>
               {comment.isRePort ? (
                 <Badge status="error" text="reported" />
               ) : (
                 <Badge status="success" text="not reported" />
               )}
             </Col>
-            <Col md={2}>
+            <Col md={4}>
               <CommentOptionNav
                 commentIndex={commentIndex}
                 myStyle={{ color: "#FF7E67" }}

@@ -20,11 +20,9 @@ import {
   FormControl,
   Button,
   ControlLabel,
-  HelpBlock,
-  Row,
-  Col
+  HelpBlock
 } from "react-bootstrap";
-import { notification, Icon } from "antd";
+import { notification, Icon, Row, Col } from "antd";
 import "./style.css";
 
 const message = defineMessages({
@@ -148,7 +146,7 @@ class CommentInput extends Component {
       <Form>
         <FormGroup>
           <Row>
-            <Col md={1}>
+            <Col md={2}>
               <ControlLabel
                 validationState={this.state.commentValid}
                 style={{ color: "#07689f" }}
@@ -163,7 +161,7 @@ class CommentInput extends Component {
                 )}
               </ControlLabel>
             </Col>
-            <Col md={11}>
+            <Col md={22}>
               <FormControl
                 componentClass="textarea"
                 placeholder="Enter Comment"
@@ -183,7 +181,7 @@ class CommentInput extends Component {
             </Col>
           </Row>
           <Row>
-            <Col md={2} mdOffset={10}>
+            <Col md={4} mdOffset={20}>
               {this.props.user ? (
                 <Button
                   className="commentButton submit-btn"

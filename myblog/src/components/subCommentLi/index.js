@@ -7,8 +7,7 @@ import {
   fetchs as commentsFetchs
 } from "../Comment/";
 
-import { Row, Col } from "react-bootstrap";
-import { notification, Icon, Popconfirm } from "antd";
+import { notification, Badge, Icon, Popconfirm, Row, Col } from "antd";
 
 import { injectIntl, FormattedMessage } from "react-intl";
 
@@ -94,18 +93,22 @@ class SubCommentLi extends Component {
     created_at = created_at ? created_at.slice(0, 10) : created_at;
 
     return (
-      <Row>
-        <section className="subCommentLi">
-          <Col md={5}>
+      <section className="subCommentLi">
+        <Row>
+          <Col md={{ span: 8, offset: 4 }}>
             <span>{content}</span>
           </Col>
-          <Col md={2}>
+          <Col md={4}>
             <span>{created_at}</span>
           </Col>
-          <Col md={2}>
-            <span>{isRePort}</span>
+          <Col md={4}>
+            {isRePort ? (
+              <Badge status="error" text="reported" />
+            ) : (
+              <Badge status="success" text="not reported" />
+            )}
           </Col>
-          <Col md={3}>
+          <Col md={4}>
             <Popconfirm
               title={this.props.intl.formatMessage(message.CheckChancel)}
               onConfirm={e => this._handleDeleteSubComment(_id, comment.id, e)}
@@ -114,7 +117,7 @@ class SubCommentLi extends Component {
                 message.PopcomfirmCancel
               )}
             >
-              <span className="commentItem-option-btn">
+              <span className="commentItem-option-btn subCommentItem-option-btn">
                 <FormattedMessage id="Delete" defaultMessage="Delete" />
               </span>
             </Popconfirm>
@@ -129,14 +132,14 @@ class SubCommentLi extends Component {
                   message.PopcomfirmCancel
                 )}
               >
-                <span className="commentItem-option-btn">
+                <span className="commentItem-option-btn subCommentItem-option-btn">
                   <FormattedMessage id="Cancel" defaultMessage="Cancel" />
                 </span>
               </Popconfirm>
             ) : null}
           </Col>
-        </section>
-      </Row>
+        </Row>
+      </section>
     );
   }
 }

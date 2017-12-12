@@ -53,6 +53,8 @@ const zh_CN = {
   Rank: "排行榜",
   Reply: "回复",
   Report: "举报",
+  Likes: "点赞",
+  Dislikes: "踩",
   CommentReport: "确认举报？",
   LoginCheckMes: "登 录",
   thumbsUpLoginCheackDes: "点赞，要先登录一下哦，点击下方传送门",
@@ -78,6 +80,7 @@ const zh_CN = {
   DeleteFailMsge: "删除失败",
   DeleteFailDes: "删除失败",
   CheckDelete: "确认删除",
-  CheckChancel: "确认取消"
+  CheckChancel: "确认取消",
+  Setting: "博客设置"
 };
 export default zh_CN;

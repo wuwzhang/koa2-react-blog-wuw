@@ -10,15 +10,8 @@ import {
   actions as commentAction
 } from "../../Comment/";
 
-import {
-  Form,
-  FormGroup,
-  FormControl,
-  Button,
-  Row,
-  Col
-} from "react-bootstrap";
-import { notification, Icon } from "antd";
+import { Form, FormGroup, FormControl, Button } from "react-bootstrap";
+import { notification, Icon, Row, Col } from "antd";
 import "./style.css";
 
 import { injectIntl, FormattedMessage, defineMessages } from "react-intl";
@@ -136,14 +129,14 @@ class SubCommentInput extends Component {
         <Form>
           <FormGroup>
             <Row>
-              <Col md={1}>
+              <Col md={2}>
                 {this.props.user ? (
                   <Avatar avatarNum={user.avatar} />
                 ) : (
                   <FormattedMessage id="Comment" defaultMessage="Comment" />
                 )}
               </Col>
-              <Col md={10}>
+              <Col md={20}>
                 <FormControl
                   componentClass="textarea"
                   placeholder="Enter Comment"
@@ -152,7 +145,7 @@ class SubCommentInput extends Component {
                   }
                 />
               </Col>
-              <Col md={1}>
+              <Col md={2}>
                 {this.props.user ? (
                   <Button
                     className="submit-btn subComment-btn"

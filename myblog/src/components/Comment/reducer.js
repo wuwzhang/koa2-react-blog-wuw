@@ -1,6 +1,5 @@
 import {
   INIT_COMMENT,
-  INIT_COMMENT_NOTCHECKED_COUNT,
   INIT_ALL_COMMENT,
   ADD_COMMENT,
   ADD_SUB_COMMENT,
@@ -190,7 +189,8 @@ export default (state, action) => {
       return {
         ...state,
         articleComments: [
-          ...(state.articleComments[action.commentIndex].report = action.state),
+          ...(state.articleComments[action.commentIndex].isRePort =
+            action.state),
           ...state.articleComments
         ]
       };

@@ -9,8 +9,7 @@ import { Avatar } from "../Avatar/index.js";
 
 import { actions as commentAction, fetchs as commentFetchs } from "../Comment";
 
-import { Row, Col } from "react-bootstrap";
-import { notification, Button, Icon, Popconfirm } from "antd";
+import { notification, Button, Icon, Popconfirm, Row, Col } from "antd";
 import FontAwesome from "react-fontawesome";
 import "./style.css";
 
@@ -237,15 +236,15 @@ class CommentItem extends Component {
 
     return (
       <Row>
-        <Col md={1}>
+        <Col md={2}>
           <Avatar avatarNum={user.avatar} />
         </Col>
-        <Col md={11}>
+        <Col md={22}>
           <Row>
-            <Col md={12} sm={12}>
+            <Col md={24} sm={24}>
               <p className="commentItem-username">{user.username}</p>
             </Col>
-            <Col md={12} sm={12}>
+            <Col md={24} sm={24}>
               {comment.content ? (
                 <span
                   className="commentItem-content"
@@ -259,7 +258,7 @@ class CommentItem extends Component {
             </Col>
           </Row>
           <Row>
-            <Col md={12} sm={12}>
+            <Col md={24} sm={24}>
               <ul className="commentItem-Ul commentItem-option">
                 <li>
                   {comment && comment.created_at
@@ -321,7 +320,7 @@ class CommentItem extends Component {
           </Row>
 
           <Row>
-            <Col md={12} sm={12}>
+            <Col md={24} sm={24}>
               {replies.map((reply, index) => {
                 return (
                   <SubCommentItem
@@ -334,7 +333,7 @@ class CommentItem extends Component {
             </Col>
           </Row>
           <Row>
-            <Col md={12} sm={12}>
+            <Col md={24} sm={24}>
               {comment.isShowReply ? (
                 <SubCommentInput commentIndex={commentIndex} />
               ) : null}

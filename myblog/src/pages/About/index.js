@@ -1,61 +1,53 @@
-import React from 'react';
-import { view as TopMenu } from '../../components/TopMenu/';
-import Footer from '../../components/Footer/index.js';
+import React from "react";
+import { view as TopMenu } from "../../components/TopMenu/";
+import Footer from "../../components/Footer/index.js";
 
-import {
-  Grid,
-  Col,
-  Row
-} from 'react-bootstrap';
-
-import pieChart from '../../media/about-2.png';
-import QueueAnim from 'rc-queue-anim';
-import './style.css';
+import { Row, Col } from "antd";
+import pieChart from "../../media/about-2.png";
+import QueueAnim from "rc-queue-anim";
+import "./style.css";
 
 const About = () => (
-  <section className='About'>
-    <section className='All-Nav'>
+  <section className="About">
+    <section className="All-Nav">
       <TopMenu />
     </section>
-    <Grid>
+    <div className="container">
       <section className="about-container">
-      <QueueAnim
-        type={['right', 'left']}
-      >
-          <section key='0' className='about-me'>
+        <QueueAnim type={["right", "left"]}>
+          <section key="0" className="about-me">
             <Row>
-              <QueueAnim
-                type={['top', 'bottom']}
-              >
-                <Col key='a' md={4} sm={4} xs={6}>
-
-                </Col>
-                <Col key='b' md={7} smOffset={1} sm={7} xs={6}>
+              <QueueAnim type={["top", "bottom"]}>
+                <Col key="a" md={8} sm={8} xs={12} />
+                <Col key="b" md={14} sm={{ span: 14, offset: 2 }} xs={12}>
                   <section className="about-me-container">
                     <h3>About Me</h3>
-                    <h4>I'm a Front End Developer, and I want to be a Full Stack Developer.</h4>
-                    <p>I enjoy turning complex problems into simple, beautiful and intuitive interface Web Developer.
-                    When I'm not coding, you'll find me to read a book or watch a movie.</p>
+                    <h4>
+                      I'm a Front End Developer, and I want to be a Full Stack
+                      Developer.
+                    </h4>
+                    <p>
+                      I enjoy turning complex problems into simple, beautiful
+                      and intuitive interface Web Developer. When I'm not
+                      coding, you'll find me to read a book or watch a movie.
+                    </p>
                   </section>
                 </Col>
               </QueueAnim>
             </Row>
           </section>
-          <section key='1' className='skill'>
+          <section key="1" className="skill">
             <Row>
-              <QueueAnim
-                delay={200}
-                type={['bottom', 'top']}
-              >
-                <Col key='a' md={3} mdOffset={1} sm={4} xs={12}>
+              <QueueAnim delay={200} type={["bottom", "top"]}>
+                <Col key="a" md={{ span: 6, offset: 2 }} sm={8} xs={24}>
                   <h4>Back End</h4>
                   <p>Koa</p>
                   <p>Django/Python</p>
                 </Col>
-                <Col key='b' md={4} sm={4} xsHidden>
-                  <img src={pieChart} width='100%' alt='pie chart' />
+                <Col key="b" md={8} sm={8} xs={0}>
+                  <img src={pieChart} width="100%" alt="pie chart" />
                 </Col>
-                <Col key='c' md={3} mdOffset={1} sm={4} xs={12}>
+                <Col key="c" md={{ span: 6, offset: 2 }} sm={8} xs={24}>
                   <h4>Front End</h4>
                   <p>HTML/HTML5</p>
                   <p>CSS/SASS</p>
@@ -67,13 +59,10 @@ const About = () => (
               </QueueAnim>
             </Row>
           </section>
-          <section key='2' className='random-facts'>
-            <QueueAnim
-              delay={200}
-              type={['left', 'right']}
-            >
-              <Col md={4} sm={4} xs={6}>
-                <section key='a' className="random-facts-container">
+          <section key="2" className="random-facts">
+            <QueueAnim delay={200} type={["left", "right"]}>
+              <Col md={8} sm={8} xs={12}>
+                <section key="a" className="random-facts-container">
                   <h3>Tools</h3>
                   <p>I like use Sublime</p>
                   <p>I can use Git</p>
@@ -82,8 +71,8 @@ const About = () => (
                   <p>I use a Mac</p>
                 </section>
               </Col>
-              <Col md={4} sm={4} xs={6}>
-                <section key='b' className="random-facts-container">
+              <Col md={8} sm={8} xs={12}>
+                <section key="b" className="random-facts-container">
                   <h3>Random facts</h3>
                   <p>I want to be a Full Stack Developer</p>
                   <p>I love One Piece</p>
@@ -95,9 +84,9 @@ const About = () => (
               </Col>
             </QueueAnim>
           </section>
-      </QueueAnim>
+        </QueueAnim>
       </section>
-    </Grid>
+    </div>
     <Footer />
   </section>
 );

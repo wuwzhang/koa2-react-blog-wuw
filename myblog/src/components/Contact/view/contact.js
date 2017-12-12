@@ -11,10 +11,9 @@ import {
   ControlLabel,
   FormControl,
   HelpBlock,
-  Form,
-  Col
+  Form
 } from "react-bootstrap";
-import { notification, Icon } from "antd";
+import { notification, Icon, Col } from "antd";
 
 import message from "../../../locale/message";
 import { injectIntl, FormattedMessage } from "react-intl";
@@ -119,7 +118,7 @@ class Contact extends Component {
     return (
       <section className="Contact">
         <Form horizontal>
-          <Col sm={10} smOffset={2} md={10} mdOffset={2} xs={12}>
+          <Col sm={20} smOffset={4} md={20} mdOffset={4} xs={24}>
             <FormGroup validationState={this.state.accountValid}>
               <ControlLabel style={{ color: "#FAFAFA" }}>
                 <FormattedMessage id="labelEmail" defaultMessage="Email" />
@@ -136,7 +135,7 @@ class Contact extends Component {
               )}
             </FormGroup>
           </Col>
-          <Col sm={10} smOffset={2} md={10} mdOffset={2} xs={12}>
+          <Col sm={20} smOffset={4} md={20} mdOffset={4} xs={24}>
             <FormGroup validationState={this.state.contentValid}>
               <ControlLabel style={{ color: "#FAFAFA" }}>
                 <FormattedMessage id="labelContent" defaultMessage="Conent" />
@@ -155,7 +154,7 @@ class Contact extends Component {
             </FormGroup>
           </Col>
           <FormGroup>
-            <Col sm={4} smOffset={2} mdOffset={2} md={5} xs={12}>
+            <Col sm={8} smOffset={4} mdOffset={4} md={10} xs={24}>
               <Button
                 className="submit-btn"
                 block

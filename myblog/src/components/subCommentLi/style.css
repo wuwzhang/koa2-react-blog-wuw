@@ -1,1 +1,14 @@
-
+.subCommentLi {
+  background: #eee;
+  color: #999;
+}
+.subCommentItem-option-btn {
+  color: #ff7e67;
+}
+.subCommentItem-option-btn:hover {
+  color: rgba(255, 126, 103, 0.5);
+}
+.subCommentLi > .row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}

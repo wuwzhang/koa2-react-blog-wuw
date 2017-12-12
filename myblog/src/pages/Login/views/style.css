@@ -1,20 +1,46 @@
+input,
+textarea,
+[contenteditable] {
+  color: #ff7e67;
+  text-shadow: 0px 0px 0px #495057;
+  -webkit-text-fill-color: transparent;
+}
+@supports (caret-color: #ff7e67) {
+  input,
+  textarea,
+  [contenteditable] {
+    color: #495057; /* 文本颜色 */
+    caret-color: #ff7e67; /* 光标颜色 */
+  }
+}
 .Login-Bg {
   width: 100%;
   height: 100vh;
-  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.1) 0%, rgba(256, 256, 256, 0.4) 100%), url(../../../media/login-bg.png) no-repeat;
-  background: -o-linear-gradient(rgba(256, 256, 256, 0.1) 0%, rgba(256, 256, 256, 0.4) 100%), url(../../../media/login-bg.png) no-repeat;
-  background: linear-gradient(rgba(256, 256, 256, 0.1) 0%, rgba(256, 256, 256, 0.4) 100%), url(../../../media/login-bg.png) no-repeat;
+  background: -webkit-linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.4) 100%
+    ),
+    url(../../../media/login-bg.png) no-repeat;
+  background: -o-linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.4) 100%
+    ),
+    url(../../../media/login-bg.png) no-repeat;
+  background: linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.4) 100%
+    ),
+    url(../../../media/login-bg.png) no-repeat;
   background-size: 8 0% 70vh;
   background-position: left bottom;
 }
 .login-cover {
-
 }
 .login-container {
   margin-top: 80px;
-  border: 1px solid #A2D5F2;
+  border: 1px solid #a2d5f2;
   padding: 10px 20px;
-  background: #FAFAFA;
+  background: #fafafa;
   border-radius: 5px;
 }
 
@@ -31,9 +57,8 @@
 }
 
 .submit-btn {
-  background: #FF7E67 !important;
-  color: #FAFAFA !important;
+  background: #ff7e67 !important;
+  color: #fafafa !important;
   text-shadow: 1px 1px #999 !important;
   margin-top: 15px;
 }
-

@@ -11,7 +11,8 @@ import {
   actions as commentAction
 } from "../../../components/Comment/";
 
-import { Grid, Col, Row } from "react-bootstrap";
+// import { Grid, Col, Row } from "react-bootstrap";
+import { Row, Col } from "antd";
 import { Radio } from "antd";
 import QueueAnim from "rc-queue-anim";
 import { FormattedMessage } from "react-intl";
@@ -91,13 +92,13 @@ class CommentAdmin extends Component {
         <section className="All-Nav">
           <TopMenu />
         </section>
-        <Grid>
+        <div className="container">
           <section className="ArticleList-bg">
             <section className="ArticleList">
               <ul>
                 <QueueAnim className="demo-content">
                   <Row key="a">
-                    <Col md={9} sm={9} xs={12}>
+                    <Col md={18} sm={18} xs={24}>
                       <h2>
                         <FormattedMessage
                           id="CommentListHeading"
@@ -105,7 +106,7 @@ class CommentAdmin extends Component {
                         />
                       </h2>
                     </Col>
-                    <Col md={3} sm={3} xs={12}>
+                    <Col md={6} sm={6} xs={24}>
                       <section>
                         <Radio.Group value={filter} onChange={this.handleView}>
                           <Radio.Button value="ALL">
@@ -133,44 +134,65 @@ class CommentAdmin extends Component {
                       </section>
                     </Col>
                   </Row>
-                  {/*
-                    <Row key="b">
-                      <section
-                        className="ArticleLi-head"
-                        style={{ color: "#999" }}
-                      >
-                        <Col md={3}>
-                          <span>
-                            <FormattedMessage id="Title" defaultMessage="Title" />
-                          </span>
-                        </Col>
-                        <Col md={5}>
-                          <span>
-                            <FormattedMessage
-                              id="Comment"
-                              defaultMessage="Comment"
-                            />
-                          </span>
-                        </Col>
-                        <Col md={2}>
+
+                  <Row key="b">
+                    <section
+                      className="ArticleLi-head"
+                      style={{ color: "#999" }}
+                    >
+                      <Col md={4}>
+                        <span>
+                          <FormattedMessage id="Title" defaultMessage="Title" />
+                        </span>
+                      </Col>
+                      <Col md={8}>
+                        <span>
+                          <FormattedMessage
+                            id="Comment"
+                            defaultMessage="Comment"
+                          />
+                        </span>
+                      </Col>
+                      <Col md={4}>
+                        <p className="ArticleLi-secondRow-head">
                           <span>
                             <FormattedMessage
                               id="CreateTime"
                               defaultMessage="Create Time"
                             />
                           </span>
-                        </Col>
-                        <Col md={2}>
                           <span>
                             <FormattedMessage
-                              id="Option"
-                              defaultMessage="Option"
+                              id="Likes"
+                              defaultMessage="Create Time"
                             />
                           </span>
-                        </Col>
-                      </section>
-                    </Row>
-                  */}
+                          <span>
+                            <FormattedMessage
+                              id="CreateTime"
+                              defaultMessage="Create Time"
+                            />
+                          </span>
+                        </p>
+                      </Col>
+                      <Col md={4}>
+                        <span>
+                          <FormattedMessage
+                            id="Report"
+                            defaultMessage="Report"
+                          />
+                        </span>
+                      </Col>
+                      <Col md={4}>
+                        <span>
+                          <FormattedMessage
+                            id="Option"
+                            defaultMessage="Option"
+                          />
+                        </span>
+                      </Col>
+                    </section>
+                  </Row>
                   <section key="c">
                     {comments.map((comment, index) => {
                       return comment ? (
@@ -188,7 +210,7 @@ class CommentAdmin extends Component {
               onChange={this.handlePage}
             />
           </section>
-        </Grid>
+        </div>
       </section>
     );
   }

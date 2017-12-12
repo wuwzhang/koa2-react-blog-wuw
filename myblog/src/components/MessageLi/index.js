@@ -2,8 +2,7 @@ import React, { Component } from "react";
 
 import MessageOptionNav from "../MessageOptionNav/messageOptionNav.js";
 
-import { Row, Col } from "react-bootstrap";
-import { Modal, Button } from "antd";
+import { Modal, Button, Row, Col } from "antd";
 
 import "./style.css";
 
@@ -50,18 +49,18 @@ class view extends Component {
       <section className="ArticleLi MessageLi">
         <Row>
           <li className="ArticleLi-li MessageLi-li">
-            <Col md={3}>
+            <Col md={6}>
               <span>{user}</span>
             </Col>
-            <Col md={5}>
+            <Col md={10}>
               <span className="subContent" onClick={this.showModal}>
                 {subContent}
               </span>
             </Col>
-            <Col md={2}>
+            <Col md={4}>
               <span>{create_time}</span>
             </Col>
-            <Col md={2}>
+            <Col md={4}>
               <MessageOptionNav
                 id={id}
                 isChecked={isChecked}

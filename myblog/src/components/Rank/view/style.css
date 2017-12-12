@@ -2,13 +2,14 @@
   padding: 20px;
   margin-top: 10px;
 }
-.ArticleDetails-Title, .ArticleDetails-sub-Title {
+.ArticleDetails-Title,
+.ArticleDetails-sub-Title {
   font-size: 17px;
   font-weight: bolder;
   margin-bottom: 10px;
   color: rgb(51, 102, 153);
   font-weight: 700;
-  text-shadow: rgba(16, 142, 233, .5);
+  text-shadow: rgba(16, 142, 233, 0.5);
 }
 .ArticleDetails-Title {
   line-height: 32px;
@@ -17,7 +18,7 @@
 .ArticleDetails-sub-Title {
   font-size: 13px;
   color: #369;
-  text-shadow: 1px 1px rgba(16, 142, 233, .5);
+  text-shadow: 1px 1px rgba(16, 142, 233, 0.5);
 }
 .topRank {
   /*position: absolute;*/
@@ -30,14 +31,28 @@
 .topRank .topRank-li {
   display: block !important;
   color: #999;
-  line-height: 24px;
+  padding-left: 2px;
+  line-height: 30px;
   border-bottom: 1px solid #eee;
+  /*background-image: linear-gradient(
+    to right,
+    rgba(162, 213, 242, 0.5),
+    rgba(162, 213, 242, 0.3) 45%,
+    transparent 55%,
+    transparent
+  );
+  background-position: 100% 0;
+  background-size: 200% 100%;*/
+  /*transition: all 0.2s ease-in;*/
+}
+.topRank .topRank-li:hover {
+  /*background-position: 0 0;*/
 }
 .topRank .topRank-li:hover span {
   color: #ff7e67;
 }
 .topRank-li span {
-  /*float: left;*/
+  transition: all 0.2s ease-in;
 }
 .articleDetail-rank-count {
   color: #ff7e67;

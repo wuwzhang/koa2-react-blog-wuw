@@ -1,3 +1,17 @@
 .commentLi-toggle-btn:hover {
   cursor: pointer;
 }
+.commentLi-li-message {
+  font-size: 13px;
+  font-weight: 500;
+  color: #666;
+}
+.commentAdmin-message {
+}
+.commentAdmin-message span {
+  display: inline-block;
+}
+.commentAdmin-message span:nth-child(n + 2) {
+  width: 20px;
+  text-align: center;
+}

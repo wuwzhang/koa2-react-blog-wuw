@@ -26,6 +26,8 @@ router.get("/api/article_details/:articleId", async (ctx, next) => {
           pre: values[2] ? values[2] : null,
           next: values[3] ? values[3] : null
         };
+      } else {
+        throw new Error("参数错误");
       }
     });
   } catch (e) {

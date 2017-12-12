@@ -19,9 +19,8 @@ import {
 } from "../../../pages/Login/";
 
 import "./style.css";
-import { Grid, Row, Col } from "react-bootstrap";
 import FontAwesome from "react-fontawesome";
-import { Badge, Icon, Menu, Dropdown, message } from "antd";
+import { Badge, Icon, Menu, Dropdown, message, Row, Col } from "antd";
 
 class Topmenu extends Component {
   constructor(props) {
@@ -65,7 +64,7 @@ class Topmenu extends Component {
           this.props.loginByToken(user);
         }
 
-        if (user.level === 0) {
+        if (user && user.level === 0) {
           try {
             return await Promise.all([
               messageFetchs.getNotCheckedMessages(),
@@ -107,10 +106,10 @@ class Topmenu extends Component {
     } = this.props;
 
     return (
-      <Grid>
+      <div className="container">
         <Row>
           <nav className="top-menu">
-            <Col md={8} sm={12} xs={12}>
+            <Col md={16} sm={24} xs={24}>
               <ul className="base-option">
                 <li className="base-item">
                   <Link to="/home">
@@ -132,7 +131,7 @@ class Topmenu extends Component {
                 </li>
               </ul>
             </Col>
-            <Col md={3} sm={4} xs={9}>
+            <Col md={6} sm={8} xs={18}>
               {this.props.user ? (
                 <ul className="base-option">
                   <li className="base-item">
@@ -201,7 +200,7 @@ class Topmenu extends Component {
                 </ul>
               )}
             </Col>
-            <Col md={1} sm={2} xs={3}>
+            <Col md={2} sm={4} xs={6}>
               <section className="languageToggle base-option TopMenu-language">
                 <ul>
                   <li>
@@ -223,7 +222,7 @@ class Topmenu extends Component {
             </Col>
           </nav>
         </Row>
-      </Grid>
+      </div>
     );
   }
 }
@@ -242,6 +241,11 @@ const menu = (
     <Menu.Item>
       <Link to="/message_admin">
         <FormattedMessage id="Message" defaultMessage="Message" />
+      </Link>
+    </Menu.Item>
+    <Menu.Item>
+      <Link to="/setting_admin">
+        <FormattedMessage id="Setting" defaultMessage="Setting" />
       </Link>
     </Menu.Item>
   </Menu>

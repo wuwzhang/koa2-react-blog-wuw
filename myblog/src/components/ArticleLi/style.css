@@ -1,15 +1,14 @@
 .ArticleLi {
-
 }
 .ArticleLi-li {
   height: 40px;
   line-height: 40px;
+  transition: background 0.4s ease-in;
 }
 .ArticleLi-li:hover {
   background: #eee;
 }
 .ArticleLi-firstRow {
-
 }
 .ArticleLi-firstRow .ArticleLi-Title {
   font-size: 16px;

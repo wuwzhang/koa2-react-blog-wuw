@@ -54,6 +54,8 @@ const en_US = {
   Rank: "Rank",
   Reply: "Reply",
   Report: "Report",
+  Likes: "Likes",
+  Dislikes: "Dislikes",
   CommentReport: "Are you sure",
   LoginCheckMes: "Please sign in first",
   thumbsUpLoginCheackDes: "Please sign in first",
@@ -79,6 +81,7 @@ const en_US = {
   DeleteFailMsg: "Delete Succeed",
   DeleteFailDes: "Delete Succeed",
   CheckDelete: "Are you sure",
-  CheckChancel: "Are you sure"
+  CheckChancel: "Are you sure",
+  Setting: "Setting"
 };
 export default en_US;

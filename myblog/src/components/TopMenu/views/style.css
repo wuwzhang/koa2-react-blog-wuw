@@ -1,13 +1,13 @@
 .top-menu {
-
 }
 .base-option {
   padding: 15px 0;
 }
-.base-item, .login-tip {
+.base-item,
+.login-tip {
   display: inline;
   margin: 8px;
-  color: #FAFAFA;
+  color: #fafafa;
   font-size: 16px;
 }
 .login-tip {
@@ -15,23 +15,24 @@
   font-size: 14px;
 }
 .base-item a {
-  color: #FAFAFA;
+  color: #fafafa;
 }
-.base-item a:hover, .base-item:hover {
+.base-item a:hover,
+.base-item:hover {
   text-decoration: none;
-  color: #FF7E67;
+  color: #ff7e67;
 }
 .base-item span {
   display: inline-block;
   margin-left: 5px;
-  }
+}
 .base-item:hover {
   padding-bottom: 2px;
   cursor: pointer;
 }
 .logout:hover {
   cursor: pointer;
-  text-decoration:underline;
+  text-decoration: underline;
 }
 .All-Nav {
   background: #07689f;
@@ -39,6 +40,6 @@
   /*margin-bottom: 20px;*/
 }
 .TopMenu-language li a {
-  color: #FAFAFA;
+  color: #fafafa;
   line-height: 34px;
 }

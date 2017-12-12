@@ -273,13 +273,13 @@ class ArticlePostOrEdit extends Component {
                   </FormGroup>
                 </Col>
 
-                <Col md={6} ms={6} xsHidden>
+                <Col md={6} ms={6} xs={0}>
                   <Button className="myButton previewButton" onClick={ this.handlePreview }>{ this.state.isPreview ? '<  Hidden Preview' : 'Show Preview  >' }</Button>
                 </Col>
               </Row>
               {
                 this.state.isPreview? <Row>
-                                        <Col xsHidden ms={6} md={6}>
+                                        <Col xs={0} ms={6} md={6}>
                                           <FormGroup
                                             validationState={this.state.contentValid}
                                           >
@@ -300,7 +300,7 @@ class ArticlePostOrEdit extends Component {
                                           </FormGroup>
                                         </Col>
                                         {
-                                            this.state.content? <Col sm={6} xsHidden md={6}>
+                                            this.state.content? <Col sm={6} xs={0} md={6}>
                                                                   <ControlLabel>Preview</ControlLabel>
                                                                   <div
                                                                     className="marked-preview edit-marked-preview"
