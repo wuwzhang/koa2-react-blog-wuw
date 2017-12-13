@@ -5,89 +5,87 @@ import PropTypes from "prop-types";
 import { postContact } from "../fetch.js";
 import { addMessage } from "../action.js";
 
-import {
-  FormGroup,
-  Button,
-  ControlLabel,
-  FormControl,
-  HelpBlock,
-  Form
-} from "react-bootstrap";
-import { notification, Icon, Col } from "antd";
+import { Form, notification, Icon, Col, Button, Input } from "antd";
 
 import message from "../../../locale/message";
 import { injectIntl, FormattedMessage } from "react-intl";
 
 import "./style.css";
 
+const FormItem = Form.Item;
+
+function validateAccount(value) {
+  const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+  if (value.length > 6 && reg.test(value)) {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
+  } else {
+    return {
+      validateStatus: "error",
+      errorMsg: "邮箱格式不正确"
+    };
+  }
+}
+
+function validateContent(value) {
+  if (value.length === 0) {
+    return {
+      validateStatus: "error",
+      errorMsg: "消息不为空"
+    };
+  } else {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
+  }
+}
+
 class Contact extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      account: "",
-      content: "",
-      accountValid: "success",
-      contentValid: "success"
+      account: {
+        value: ""
+      },
+      content: {
+        value: ""
+      }
     };
   }
 
-  async _checkAccount(value) {
+  _handleAccount = e => {
+    let value = e.target.value;
     this.setState({
-      accountValid: null,
-      accountHelp: ""
+      account: {
+        ...validateAccount(value),
+        value: value
+      }
     });
+  };
 
-    function _isEmail(str) {
-      const reg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-      return reg.test(str);
-    }
+  _handleContent = e => {
+    let value = e.target.value;
 
-    if (value.length < 6) {
-      this.setState({
-        accountValid: "error",
-        accountHelp: "账号长度至少大于6"
-      });
-    } else if (!_isEmail(value)) {
-      this.setState({
-        accountValid: "error",
-        accountHelp: "不是合法的邮箱地址"
-      });
-    } else {
-      this.setState({
-        accountValid: "success",
-        accountHelp: "账号可用"
-      });
-    }
-  }
-
-  _checkContent(value) {
     this.setState({
-      contentValid: null,
-      contentHelp: ""
+      content: {
+        ...validateContent(value),
+        value: value
+      }
     });
-
-    if (value.length === 0) {
-      this.setState({
-        contentValid: "error",
-        contentHelp: "内容不为空"
-      });
-    } else {
-      this.setState({
-        contentValid: "success"
-      });
-    }
-  }
+  };
 
   async _contact() {
-    const { account, content, accountValid, contentValid } = this.state;
+    let { account, content } = this.state;
 
-    function _checkComplete() {
-      return accountValid === "success" && contentValid === "success";
-    }
-
-    if (_checkComplete()) {
-      let result = await postContact(account, content);
+    if (
+      account.validateStatus === "success" &&
+      content.validateStatus === "success"
+    ) {
+      let result = await postContact(account.value, content.value);
 
       if (result.code === "1") {
         this.props.postContactMessage(result.result);
@@ -111,60 +109,56 @@ class Contact extends Component {
           }
         });
       }
+    } else {
+      notification.open({
+        message: this.props.intl.formatMessage(message.CheckMsgMsg),
+        description: this.props.intl.formatMessage(message.CheckMsgDes),
+        icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+        style: {
+          color: "#A2D5F2",
+          bacground: "#fafafa"
+        }
+      });
     }
   }
 
   render() {
+    let { account, content } = this.state;
     return (
       <section className="Contact">
-        <Form horizontal>
-          <Col sm={20} smOffset={4} md={20} mdOffset={4} xs={24}>
-            <FormGroup validationState={this.state.accountValid}>
-              <ControlLabel style={{ color: "#FAFAFA" }}>
-                <FormattedMessage id="labelEmail" defaultMessage="Email" />
-              </ControlLabel>
-              <FormControl
-                type="email"
-                onChange={event =>
-                  this.setState({ account: event.target.value })
-                }
-                onBlur={event => this._checkAccount(event.target.value)}
-              />
-              {this.state.accountHelp && (
-                <HelpBlock>{this.state.accountHelp}</HelpBlock>
-              )}
-            </FormGroup>
-          </Col>
-          <Col sm={20} smOffset={4} md={20} mdOffset={4} xs={24}>
-            <FormGroup validationState={this.state.contentValid}>
-              <ControlLabel style={{ color: "#FAFAFA" }}>
-                <FormattedMessage id="labelContent" defaultMessage="Conent" />
-              </ControlLabel>
-              <FormControl
-                componentClass="textarea"
-                onChange={event =>
-                  this.setState({ content: event.target.value })
-                }
-                onBlur={event => this._checkContent(event.target.value)}
+        <Col sm={{ span: 20, offset: 2 }} md={{ span: 20, offset: 2 }} xs={24}>
+          <Form>
+            <FormItem
+              label={this.props.intl.formatMessage(message.Account)}
+              validateStatus={account.validateStatus}
+              help={account.errorMsg}
+            >
+              <Input value={account.value} onChange={this._handleAccount} />
+            </FormItem>
+
+            <FormItem
+              label={this.props.intl.formatMessage(message.Content)}
+              validateStatus={content.validateStatus}
+              help={content.errorMsg}
+            >
+              <Input
+                type="textarea"
                 style={{ height: 150 }}
+                value={content.value}
+                onChange={this._handleContent}
               />
-              {this.state.contentHelp && (
-                <HelpBlock>{this.state.contentHelp}</HelpBlock>
-              )}
-            </FormGroup>
-          </Col>
-          <FormGroup>
-            <Col sm={8} smOffset={4} mdOffset={4} md={10} xs={24}>
+            </FormItem>
+
+            <FormItem>
               <Button
-                className="submit-btn"
-                block
+                className="submit-btn Contact-btn"
                 onClick={() => this._contact()}
               >
                 <FormattedMessage id="Submit" defaultMessage="Submit" />
               </Button>
-            </Col>
-          </FormGroup>
-        </Form>
+            </FormItem>
+          </Form>
+        </Col>
       </section>
     );
   }

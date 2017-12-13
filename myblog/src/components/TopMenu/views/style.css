@@ -25,6 +25,7 @@
 .base-item span {
   display: inline-block;
   margin-left: 5px;
+  transition: color 0.3s ease;
 }
 .base-item:hover {
   padding-bottom: 2px;

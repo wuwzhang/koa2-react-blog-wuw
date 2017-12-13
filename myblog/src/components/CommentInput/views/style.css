@@ -1,3 +1,37 @@
 .commentButton {
-  height: 40px;
+  height: 40px !important;
+}
+.CommentInput-label {
+  margin-left: 15px;
+  color: #07689f;
+  font-weight: 500;
+  font-size: 14px;
+}
+.CommentInput-label-avatar {
+  width: 45px;
+}
+.CommentInput-UnLoginForm,
+.CommentInput-form textarea {
+  border: 1px solid rgba(7, 104, 159, 0.5);
+  height: 100px !important;
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin-right: 15px;
+  background: #fafafa;
+  margin-bottom: 40px;
+  padding: 10px;
+}
+.CommentInput-form textarea {
+  margin-bottom: 0px;
+}
+.CommentInput-form textarea:active {
+  outline: none;
+}
+.CommentInput-form button {
+  float: right;
+}
+.CommentInput-UnLoginForm-text {
+  color: #07689f;
+}
+.CommentInput-form {
 }

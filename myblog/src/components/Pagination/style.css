@@ -4,22 +4,22 @@
 .pagination li span {
   display: inline-block;
   cursor: pointer;
-  padding: 6px 18px;
+  padding: 6px 12px;
   margin-left: -2px;
   line-height: 1.42857143;
   color: #07689f;
   text-decoration: none;
-  background-color: #FAFAFA;
-  border: 1px solid #A2D5F2;
+  background-color: #fafafa;
+  border: 1px solid #a2d5f2;
 }
 .pagination .active span {
-  color: #FAFAFA;
-  background-color: #FF7E67;
-  border-color: #FF7E67;
+  color: #fafafa;
+  background-color: #ff7e67;
+  border-color: #ff7e67;
 }
 .pagination .disabled span {
   color: #777;
   cursor: not-allowed;
-  background-color: #FAFAFA;
-  border-color: #A2D5F2;
+  background-color: #fafafa;
+  border-color: #a2d5f2;
 }

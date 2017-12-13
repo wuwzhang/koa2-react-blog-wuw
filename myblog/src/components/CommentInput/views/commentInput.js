@@ -12,75 +12,47 @@ import {
 } from "../../Comment/";
 import { actions as ArticleAction } from "../../../pages/ArticleDetails/";
 
-import { injectIntl, FormattedMessage, defineMessages } from "react-intl";
+import { injectIntl, FormattedMessage } from "react-intl";
 
-import {
-  Form,
-  FormGroup,
-  FormControl,
-  Button,
-  ControlLabel,
-  HelpBlock
-} from "react-bootstrap";
-import { notification, Icon, Row, Col } from "antd";
+import { notification, Icon, Row, Col, Form, Input, Button } from "antd";
 import "./style.css";
+import message from "../../../locale/message";
 
-const message = defineMessages({
-  CommentSucceedMsg: {
-    id: "CommentSucceedMsg",
-    defaultMessage: "Comment Succeed"
-  },
-  CommentSucceedDes: {
-    id: "CommentSucceedDes",
-    defaultMessage: "Commemnt Succeed"
-  },
-  CommentFailedMsg: {
-    id: "CommentFailedMsg",
-    defaultMessage: "Comment Failed"
-  },
-  CommentFailedDes: {
-    id: "CommentFailedDes",
-    defaultMessage: "Commemnt Failed"
+const FormItem = Form.Item;
+const TextArea = Input.TextArea;
+
+function validateComment(value) {
+  if (value.length === 0) {
+    return {
+      validateStatus: "error",
+      errorMsg: "评论不为空"
+    };
+  } else {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
   }
-});
+}
 
 class CommentInput extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      comment: "",
-      commentValid: null,
-      commentHelp: "",
+      comment: {
+        value: ""
+      },
       pathname: null,
       redirectState: null
     };
   }
 
-  _checkComment(value) {
-    this.setState({
-      commentValid: null,
-      commentHelp: ""
-    });
-
-    if (value.length === 0) {
-      this.setState({
-        commentValid: "error",
-        commentHelp: "评论不为空"
-      });
-    } else {
-      this.setState({
-        commentValid: "success"
-      });
-    }
-  }
-
   async _addComment() {
-    const { commentValid } = this.state;
+    const { comment } = this.state;
 
-    if (commentValid === "success") {
-      const { user, article } = this.props,
-        { comment } = this.state;
+    if (comment.validateStatus === "success") {
+      const { user, article } = this.props;
 
       const data = {
         userId: user._id,
@@ -88,7 +60,7 @@ class CommentInput extends Component {
           _id: article._id,
           title: article.title
         },
-        comment: comment
+        comment: comment.value
       };
 
       let result = await commentFetchs.addComment(data);
@@ -115,8 +87,29 @@ class CommentInput extends Component {
           }
         });
       }
+    } else {
+      notification.open({
+        message: this.props.intl.formatMessage(message.CheckMsgMsg),
+        description: this.props.intl.formatMessage(message.CheckMsgDes),
+        icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+        style: {
+          color: "#A2D5F2",
+          bacground: "#fafafa"
+        }
+      });
     }
   }
+
+  _handleComment = e => {
+    let value = e.target.value;
+
+    this.setState({
+      comment: {
+        ...validateComment(value),
+        value: value
+      }
+    });
+  };
 
   _login() {
     let pathname = "/login",
@@ -128,7 +121,7 @@ class CommentInput extends Component {
     });
   }
   render() {
-    let { pathname, redirectState } = this.state,
+    let { pathname, redirectState, comment } = this.state,
       { user } = this.props;
 
     if (pathname) {
@@ -141,66 +134,57 @@ class CommentInput extends Component {
         />
       );
     }
-
     return (
-      <Form>
-        <FormGroup>
-          <Row>
-            <Col md={2}>
-              <ControlLabel
-                validationState={this.state.commentValid}
-                style={{ color: "#07689f" }}
-              >
-                {user && user.avatar ? (
-                  <Avatar avatarNum={user.avatar.toString()} width="100%" />
-                ) : (
-                  <FormattedMessage
-                    id="Comment"
-                    defaultMessage="defineMessages"
-                  />
-                )}
-              </ControlLabel>
-            </Col>
-            <Col md={22}>
-              <FormControl
-                componentClass="textarea"
-                placeholder="Enter Comment"
-                onChange={event =>
-                  this.setState({ comment: event.target.value })
-                }
-                onBlur={event => this._checkComment(event.target.value)}
-                style={{
-                  height: "100px",
-                  color: "#07689f",
-                  border: "1px solid ##07689f"
-                }}
+      <Row>
+        <Col md={3}>
+          <p className="CommentInput-label">
+            {user && user.avatar ? (
+              <Avatar
+                avatarNum={user.avatar.toString()}
+                className="CommentInput-label-avatar"
               />
-              {this.state.commentHelp && (
-                <HelpBlock>{this.state.commentHelp}</HelpBlock>
-              )}
-            </Col>
-          </Row>
-          <Row>
-            <Col md={4} mdOffset={20}>
-              {this.props.user ? (
-                <Button
-                  className="commentButton submit-btn"
-                  onClick={() => this._addComment()}
-                >
-                  <FormattedMessage id="Submit" defaultMessage="Submit" />
+            ) : (
+              <FormattedMessage id="Comment" defaultMessage="defineMessages" />
+            )}
+          </p>
+        </Col>
+        <Col md={21}>
+          {!user ? (
+            <section className="CommentInput-UnLoginForm">
+              <p className="CommentInput-UnLoginForm-text">
+                <span>Please </span>
+                <Button onClick={() => this._login()} className="submit-btn">
+                  <FormattedMessage id="Login" defaultMessage="Sign In" />
                 </Button>
-              ) : (
-                <Button
-                  className="commentButton submit-btn"
-                  onClick={() => this._login()}
+                <span>（￣工￣lll）</span>
+              </p>
+            </section>
+          ) : (
+            <section className="CommentInput-form">
+              <Form>
+                <FormItem
+                  validateStatus={comment.validateStatus}
+                  help={comment.errorMsg}
                 >
-                  <FormattedMessage id="Login" defaultMessage="Login" />
-                </Button>
-              )}
-            </Col>
-          </Row>
-        </FormGroup>
-      </Form>
+                  <TextArea
+                    value={comment.value}
+                    placeholder="<(▰˘◡˘▰)> 。。。。"
+                    onChange={this._handleComment}
+                  />
+                </FormItem>
+                <FormItem>
+                  <Button
+                    onClick={() => this._addComment()}
+                    className="submit-btn commentButton"
+                  >
+                    <FormattedMessage id="Submit" defaultMessage="Submit" />
+                  </Button>
+                </FormItem>
+              </Form>
+            </section>
+          )}
+        </Col>
+      </Row>
     );
   }
 }

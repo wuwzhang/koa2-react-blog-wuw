@@ -16,7 +16,7 @@ export const Footer = () => {
   return (
     <section className="footer">
       <div className="container">
-        <Row>
+        <Row gutter={48}>
           <Col md={12} sm={12} xs={24}>
             <Row>
               <Col md={24} sm={24} xs={24}>
@@ -169,8 +169,8 @@ export const Footer = () => {
           </Col>
           <Col md={12} sm={12} xs={24}>
             <Col
-              sm={{ span: 20, offset: 4 }}
-              md={{ span: 20, offset: 4 }}
+              sm={{ span: 20, offset: 2 }}
+              md={{ span: 20, offset: 2 }}
               xs={24}
               style={{ paddingLeft: "0px" }}
             >

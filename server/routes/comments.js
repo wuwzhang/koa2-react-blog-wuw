@@ -53,7 +53,7 @@ router.post("/api/article_details/:articleId/comment", async ctx => {
           };
         return {
           user: user,
-          id: commentModel._id,
+          _id: commentModel._id,
           created_at: res[0].created_at,
           thumbsDown: 0,
           thumbsUp: 0,

@@ -1,38 +1,23 @@
-import React from 'react';
+import React from "react";
 
-import {
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  HelpBlock,
-  Col
-} from 'react-bootstrap';
+import { Col, Form, Input } from "antd";
+// import { FormattedMessage } from "react-intl";
 
-import { FormattedMessage } from 'react-intl';
+const FormItem = Form.Item;
 
-const view = ({label, labelColor, defaultMessage, help, validationState, ...props}) => {
+const view = ({ label, labelColor, help, validateStatus, ...props }) => {
   return (
-    <FormGroup
-      style={{color: labelColor}}
-      validationState={validationState}
+    <FormItem
+      style={{ color: labelColor }}
+      validateStatus={validateStatus}
+      label={label}
+      help={help}
     >
-      <Col sm={12}>
-        <ControlLabel>
-          <FormattedMessage
-            id={label}
-            defaultMessage={defaultMessage}
-          />
-        </ControlLabel>
+      <Col sm={24}>
+        <Input {...props} />
       </Col>
-      <Col sm={12}>
-        <FormControl {...props} />
-      </Col>
-      <Col sm={12}>
-        {help && <HelpBlock>{help}</HelpBlock>}
-      </Col>
-
-    </FormGroup>
+    </FormItem>
   );
-}
+};
 
 export { view };

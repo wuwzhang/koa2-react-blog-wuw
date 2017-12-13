@@ -1,4 +1,4 @@
-.marked-preview ol ul, .marked-preview ul ol,.marked-preview ul ul, .marked-preview ol ol  { margin-top: 0; margin-bottom: 0 }
+/*.marked-preview ol ul, .marked-preview ul ol,.marked-preview ul ul, .marked-preview ol ol  { margin-top: 0; margin-bottom: 0 }
 .marked-preview h1{ font-size:2em; margin: .67em 0 !important}
 .marked-preview h2{ font-size:1.5em; margin: .75em 0 !important}
 .marked-preview h3{ font-size:1.17em; margin: .83em 0 !important}
@@ -12,10 +12,21 @@
 .marked-preview li{ display:list-item !important}
 .marked-preview ol{list-style-type: decimal !important}
 .marked-preview dir, .marked-preview menu, .marked-preview dd{ margin-left: 40px !important}
+
+.marked-preview ul, .marked-preview ol {
+  margin: 0 0 0 20px !important;
+}*/
+.marked-preview li {
+  display: list-item !important;
+}
+.marked-preview ol {
+  list-style-type: decimal !important;
+}
 .marked-preview ul {
   list-style-type: disc;
 }
-.marked-preview ul, .marked-preview ol {
+.marked-preview ul,
+.marked-preview ol {
   margin: 0 0 0 20px !important;
 }
 .marked-preview img {
@@ -38,12 +49,11 @@
 }
 .articlePost-title {
   color: #29689a;
-  text-shadow: 1px 0 #A2D5F2;
+  text-shadow: 1px 0 #a2d5f2;
 }
 .katex span {
   top: 0 !important;
 }
-.katex .vlist>span {
-  top: -.39em !important;
+.katex .vlist > span {
+  top: -0.39em !important;
 }
-

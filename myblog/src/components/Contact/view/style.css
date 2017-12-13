@@ -1,6 +1,11 @@
-.Contact .has-error .help-block {
-  color: #FF7E67 !important;
+.Contact-btn {
+  border: 0 !important;
+  width: 140px;
+  height: 35px !important;
+  font-size: 14px !important;
 }
-.Contact .has-success .help-block {
-  color: #A2D5F2 !important;
+.Contact label {
+  color: # !important;
+  font-size: 13px;
+  font-weight: 400;
 }

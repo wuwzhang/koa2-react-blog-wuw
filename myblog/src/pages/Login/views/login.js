@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { withRouter, Redirect, Link } from "react-router-dom";
-// import PreloaderLink from '../../../enhancers/PreloaderLink.js';
 
 import { login, loginByGithub } from "../fetch";
-import { view as FieldGroup } from "../../../components/FieldGroup";
 import { view as TopMenu } from "../../../components/TopMenu/";
+// import { view as FieldGroup } from "../../../components/FieldGroup";
 import {
   fetchs as commentFetch,
   actions as commentAction
@@ -15,7 +14,7 @@ import {
   fetchs as messageFetch,
   actions as messageAction
 } from "../../../components/Contact/";
-import { FormattedMessage } from "react-intl";
+import { injectIntl, FormattedMessage } from "react-intl";
 
 import {
   startLogin,
@@ -25,24 +24,53 @@ import {
   loginSuccess
 } from "../action";
 
-import { FormGroup, Button, Form, Grid, Col } from "react-bootstrap";
-import { notification, message, Icon } from "antd";
+import { notification, Icon, Input, Form, Button, Col, Row } from "antd";
 import QueueAnim from "rc-queue-anim";
 
 import "./style.css";
+import message from "../../../locale/message";
+
+const FormItem = Form.Item;
+
+function validateAccount(value) {
+  if (value.length < 6) {
+    return {
+      validateStatus: "error",
+      errorMsg: "账号长度不小于6"
+    };
+  } else {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
+  }
+}
+
+function validatePassword(value) {
+  if (value.length < 6) {
+    return {
+      validateStatus: "error",
+      errorMsg: "密码长度不小于6"
+    };
+  } else {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
+  }
+}
 
 class Login extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      account: "",
-      password: "",
+      account: { value: "" },
+      password: { value: "" },
       loading: false,
       failMessage: ""
     };
 
-    this._handleKeyPress = this._handleKeyPress.bind(this);
     this._signInByGithub = this._signInByGithub.bind(this);
     let { fromPath } = this.props;
     let path = fromPath.state ? fromPath.state.from.pathname : "";
@@ -52,112 +80,98 @@ class Login extends Component {
   }
 
   async _signIn() {
-    const { account, password } = this.state;
+    let { account, password } = this.state;
+
     this.props.startLogin();
 
-    // let result = await login({ account, password });
-    //
-    // if (result.code === "1") {
-    //   this.props.successLogin(result.user, result.message);
-    //   message.success("登录成功");
-    //
-    //   if (result.token) {
-    //     window.localStorage.setItem("token", result.token);
-    //   }
-    //
-    //   let res = await commentFetch.getNotCheckedComments();
-    //   if (res.code === "1") {
-    //     this.props.initNotCheckedComment(res.result);
-    //   } else {
-    //   }
-    //
-    //   let res1 = await messageFetch.getNotCheckedMessages();
-    //   if (res1.code === "1") {
-    //     this.props.initNotCheckedMessage(res1.result);
-    //   } else {
-    //   }
-    // } else {
-    //   this.props.failLogin(result.message);
-    //   if (result.code === "-1") {
-    //     this.setState({
-    //       failMessage: "亲, 先确认邮箱，确认邮箱"
-    //     });
-    //   } else {
-    //     this.setState({
-    //       failMessage: "用户名密码错误，大概吧，如果作者君没写错代码的话"
-    //     });
-    //   }
-    //
-    //   notification.open({
-    //     message: "登录失败",
-    //     description: this.state.failMessage,
-    //     icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
-    //     style: {
-    //       color: "#ff7e67",
-    //       bacground: "#fafafa"
-    //     }
-    //   });
-    // }
-
-    await login({ account, password })
-      .then(async res => {
-        if (res.code === "1") {
-          this.props.successLogin(res.user, res.message);
-          message.success("登录成功");
-
-          if (res.token) {
-            window.localStorage.setItem("token", res.token);
-          }
-
-          if (res.user && res.user.level === 0) {
-            try {
-              return await Promise.all([
-                messageFetch.getNotCheckedMessages(),
-                commentFetch.getNotCheckedComments()
-              ]);
-            } catch (e) {
-              throw new Error(e);
-            }
-          }
-        } else {
-          this.props.failLogin(res.message);
-          if (res.code === "-1") {
-            this.setState({
-              failMessage: "亲, 先确认邮箱，确认邮箱"
+    if (
+      account.validateStatus === "success" &&
+      password.validateStatus === "success"
+    ) {
+      account = account.value;
+      password = password.value;
+      await login({ account, password })
+        .then(async res => {
+          if (res.code === "1") {
+            this.props.successLogin(res.user, res.message);
+            notification.open({
+              message: this.props.intl.formatMessage(message.LoginSuccessMsg),
+              description: this.props.intl.formatMessage(
+                message.LoginSuccessDsc
+              ),
+              icon: <Icon type="smile-o" style={{ color: "#ff7e67" }} />,
+              style: {
+                color: "#ff7e67",
+                bacground: "#fafafa"
+              }
             });
+
+            if (res.token) {
+              window.localStorage.setItem("token", res.token);
+            }
+
+            if (res.user && res.user.level === 0) {
+              try {
+                return await Promise.all([
+                  messageFetch.getNotCheckedMessages(),
+                  commentFetch.getNotCheckedComments()
+                ]);
+              } catch (e) {
+                throw new Error(e);
+              }
+            }
           } else {
-            this.setState({
-              failMessage: "用户名密码错误，大概吧，如果作者君没写错代码的话"
-            });
-          }
-
-          notification.open({
-            message: "登录失败",
-            description: this.state.failMessage,
-            icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
-            style: {
-              color: "#ff7e67",
-              bacground: "#fafafa"
+            this.props.failLogin(res.message);
+            if (res.code === "-1") {
+              this.setState({
+                failMessage: "LoginFailEmailCheck"
+              });
+            } else {
+              this.setState({
+                failMessage: "LoginFailPswErr"
+              });
             }
-          });
 
-          return false;
-        }
-      })
-      .then(res => {
-        if (Array.isArray(res) && res.length === 2) {
-          let message = res[0],
-            comment = res[1];
+            notification.open({
+              message: this.props.intl.formatMessage(message.LoginFailMsg),
+              description: this.props.intl.formatMessage(
+                message[this.state.failMessage]
+              ),
+              icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+              style: {
+                color: "#ff7e67",
+                bacground: "#fafafa"
+              }
+            });
 
-          if (message.code === "1") {
-            this.props.initNotCheckedMessage(message.result);
+            return false;
           }
+        })
+        .then(res => {
+          if (Array.isArray(res) && res.length === 2) {
+            let message = res[0],
+              comment = res[1];
 
-          if (comment.code === "1") {
-            this.props.initNotCheckedComment(comment.result);
+            if (message.code === "1") {
+              this.props.initNotCheckedMessage(message.result);
+            }
+
+            if (comment.code === "1") {
+              this.props.initNotCheckedComment(comment.result);
+            }
           }
+        });
+    } else {
+      notification.open({
+        message: this.props.intl.formatMessage(message.CheckMsgMsg),
+        description: this.props.intl.formatMessage(message.CheckMsgDes),
+        icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+        style: {
+          color: "#ff7e67",
+          bacground: "#fafafa"
         }
       });
+    }
   }
 
   async _signInByGithub(event) {
@@ -176,44 +190,35 @@ class Login extends Component {
     }
   }
 
-  _checkAccount(value) {
+  _handleAccount = e => {
+    let value = e.target.value;
     this.setState({
-      accountValid: null,
-      accountHelp: ""
+      account: {
+        ...validateAccount(e.target.value),
+        value: value
+      }
     });
+  };
 
-    if (value.length < 6) {
-      this.setState({
-        accountValid: "error",
-        accountHelp: "账号长度至少大于6"
-      });
-    } else {
-      this.setState({
-        accountValid: "success"
-      });
-    }
-  }
-
-  _checkPassword(value) {
+  _handlePassword = e => {
+    let value = e.target.value;
     this.setState({
-      pwdValid: null,
-      pwdHelp: ""
+      password: {
+        ...validatePassword(e.target.value),
+        value: value
+      }
     });
+  };
 
-    if (value.length === 0) {
-      this.setState({
-        pwdValid: "error",
-        pwdHelp: "密码不为空"
-      });
-    } else {
-      this.setState({
-        pwdValid: "success"
-      });
+  _handleKeyPress(event) {
+    if (event.key === "Enter") {
+      this._signIn();
     }
   }
 
   render() {
-    let { user, fromPath, msgType } = this.props;
+    let { user, fromPath, msgType } = this.props,
+      { account, password } = this.state;
 
     if (msgType === "success" && user && fromPath.state) {
       return (
@@ -230,81 +235,94 @@ class Login extends Component {
         <section className="All-Nav">
           <TopMenu />
         </section>
-        <Grid>
+        <div className="container">
           <section className="login-cover">
             <Col
               className="login-container"
-              md={4}
-              xs={10}
-              sm={3}
-              mdOffset={4}
-              smOffset={4}
+              md={{ span: 8, offset: 8 }}
+              xs={20}
+              sm={{ span: 6, offset: 6 }}
             >
-              <QueueAnim className="demo-content">
-                <h2 key="a">
-                  <FormattedMessage id="Login" defaultMessage="Sign In" />
-                </h2>
-                <Form key="b" horizontal>
-                  <FieldGroup
-                    type="email"
-                    label="labelEmail"
-                    labelColor="#07689f"
-                    defaultMessage="Email"
-                    ref={input => (this.email = input)}
-                    onBlur={event => this._checkAccount(event.target.value)}
-                    onChange={event =>
-                      this.setState({ account: event.target.value })
-                    }
-                    validationState={this.state.accountValid}
-                    help={this.state.accountHelp}
-                  />
-
-                  <FieldGroup
-                    type="password"
-                    label="labelPassword"
-                    labelColor="#07689f"
-                    defaultMessage="Password"
-                    onKeyPress={this._handleKeyPress}
-                    onChange={event =>
-                      this.setState({ password: event.target.value })
-                    }
-                    onBlur={event => this._checkPassword(event.target.value)}
-                    validationState={this.state.pwdValid}
-                    help={this.state.pwdHelp}
-                  />
-                  {/*
-                    <FormGroup>
-                      <Col sm={10}>
-                        <Checkbox>Remember me</Checkbox>
-                      </Col>
-                    </FormGroup>
-                  */}
-
-                  <FormGroup>
-                    <Col sm={4} md={5} xs={10}>
-                      <Button
-                        className="submit-btn"
-                        block
-                        onClick={() => this._signIn()}
+              <QueueAnim className="login">
+                <Row key="a">
+                  <Col md={{ span: 22, offset: 1 }}>
+                    <h2>
+                      <FormattedMessage id="Login" defaultMessage="Sign In" />
+                    </h2>
+                  </Col>
+                </Row>
+                <Row key="b">
+                  <Col md={{ span: 22, offset: 1 }}>
+                    <Form>
+                      <FormItem
+                        label={this.props.intl.formatMessage(message.Account)}
+                        validateStatus={account.validateStatus}
+                        help={account.errorMsg}
                       >
-                        <FormattedMessage id="Login" defaultMessage="Sign In" />
-                      </Button>
-                    </Col>
-                  </FormGroup>
-                  <Link onClick={this._signInByGithub} to="/login/github">
-                    <Icon type="github" />
-                  </Link>
-                </Form>
+                        <Input
+                          value={account.value}
+                          onChange={this._handleAccount}
+                        />
+                      </FormItem>
+                      <FormItem
+                        label={this.props.intl.formatMessage(message.Password)}
+                        validateStatus={password.validateStatus}
+                        help={password.errorMsg}
+                      >
+                        <Input
+                          value={password.value}
+                          onChange={this._handlePassword}
+                          onKeyPress={e => this._handleKeyPress(e)}
+                          type="password"
+                        />
+                      </FormItem>
+                      <Row>
+                        <Col md={10} sm={10} xs={24}>
+                          <FormItem>
+                            <Button
+                              className="submit-btn login-btn"
+                              onClick={() => this._signIn()}
+                            >
+                              <FormattedMessage
+                                id="Login"
+                                defaultMessage="Sign In"
+                              />
+                            </Button>
+                          </FormItem>
+                        </Col>
+                        <Col md={14} sm={14} xs={24}>
+                          <p className="login-other">
+                            <Link to="/forget_psw">Forget password</Link> or{" "}
+                            <Link to="/regist">Regist Now</Link>
+                          </p>
+                        </Col>
+                      </Row>
+                    </Form>
+                    <section className="login-thirdPart">
+                      <Link
+                        style={{
+                          fontSize: "22px",
+                          color: "rgba(0, 0, 0, .65)"
+                        }}
+                        onClick={this._signInByGithub}
+                        to="/login/github"
+                      >
+                        <Icon type="github" />
+                      </Link>
+                    </section>
+                  </Col>
+                </Row>
               </QueueAnim>
             </Col>
           </section>
-        </Grid>
+        </div>
       </section>
     );
   }
 }
 
 Login.propTypes = {
+  intl: PropTypes.object.isRequired,
   user: PropTypes.object,
   msgType: PropTypes.string,
   fromPath: PropTypes.object,
@@ -341,4 +359,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(
+    injectIntl(Login, { withRef: true })
+  )
+);

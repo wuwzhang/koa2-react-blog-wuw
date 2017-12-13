@@ -1,0 +1,59 @@
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+input,
+textarea,
+[contenteditable] {
+  color: #ff7e67;
+  text-shadow: 0px 0px 0px #07689f;
+  -webkit-text-fill-color: transparent;
+}
+@supports (caret-color: #ff7e67) {
+  input,
+  textarea,
+  [contenteditable] {
+    color: #07689f; /* 文本颜色 */
+    caret-color: #ff7e67; /* 光标颜色 */
+  }
+}
+.articleByxx-container {
+  padding-top: 20px;
+  width: 100%;
+  height: calc(100vh - 54px);
+}
+.articleByxx-Aside {
+  background: rgba(162, 213, 242, 0.1);
+  padding: 10px 0;
+}
+.articleByxx-Aside form input {
+  width: 90%;
+}
+.articleByxx-Aside form button {
+  left: 71%;
+}
+.submit-btn {
+  background: #ff7e67 !important;
+  color: #fafafa !important;
+}
+.submit-btn:hover {
+  outline: none;
+  border: 0;
+}

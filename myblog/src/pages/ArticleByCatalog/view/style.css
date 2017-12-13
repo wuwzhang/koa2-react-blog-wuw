@@ -13,27 +13,25 @@
 }
 .ArticleByCatalog-li:hover {
   cursor: pointer;
-  color: #FF7E67;
+  color: #ff7e67;
 }
-.articleByxx-container {
-  padding-top: 20px;
-  width: 100%;
-  height: calc(100vh - 54px);
-}
+
 .ArticleBySearch-bg {
-  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/searchByCatalog.png) no-repeat;
-  background: -o-linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/searchByCatalog.png) no-repeat;
-  background: linear-gradient(rgba(256, 256, 256, 0.3) 0%, rgba(256, 256, 256, 0.6) 100%), url(../../../media/searchByCatalog.png) no-repeat;
+  background: -webkit-linear-gradient(
+      rgba(256, 256, 256, 0.3) 0%,
+      rgba(256, 256, 256, 0.6) 100%
+    ),
+    url(../../../media/searchByCatalog.png) no-repeat;
+  background: -o-linear-gradient(
+      rgba(256, 256, 256, 0.3) 0%,
+      rgba(256, 256, 256, 0.6) 100%
+    ),
+    url(../../../media/searchByCatalog.png) no-repeat;
+  background: linear-gradient(
+      rgba(256, 256, 256, 0.3) 0%,
+      rgba(256, 256, 256, 0.6) 100%
+    ),
+    url(../../../media/searchByCatalog.png) no-repeat;
   background-size: 80% 70vh;
   background-position: left bottom;
-}
-.articleByxx-Aside {
-  background: rgba(162, 213, 242, 0.1);
-  padding: 10px 0;
-}
-.articleByxx-Aside form input {
-  width: 90%;
-}
-.articleByxx-Aside form button {
-  left: 71%;
 }

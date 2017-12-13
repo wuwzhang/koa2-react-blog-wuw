@@ -10,37 +10,37 @@ import {
   actions as commentAction
 } from "../../Comment/";
 
-import { Form, FormGroup, FormControl, Button } from "react-bootstrap";
-import { notification, Icon, Row, Col } from "antd";
+import { notification, Icon, Row, Col, Form, Button, Input } from "antd";
 import "./style.css";
+import message from "../../../locale/message";
 
-import { injectIntl, FormattedMessage, defineMessages } from "react-intl";
+import { injectIntl, FormattedMessage } from "react-intl";
 
-const message = defineMessages({
-  CommentSucceedMsg: {
-    id: "CommentSucceedMsg",
-    defaultMessage: "Comment Succeed"
-  },
-  CommentSucceedDes: {
-    id: "CommentSucceedDes",
-    defaultMessage: "Commemnt Succeed"
-  },
-  CommentFailedMsg: {
-    id: "CommentFailedMsg",
-    defaultMessage: "Comment Failed"
-  },
-  CommentFailedDes: {
-    id: "CommentFailedDes",
-    defaultMessage: "Commemnt Failed"
+const FormItem = Form.Item;
+const TextArea = Input.TextArea;
+
+function validateSubComment(value) {
+  if (value.length === 0) {
+    return {
+      validateStatus: "error",
+      errorMsg: "评论不为空"
+    };
+  } else {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
   }
-});
+}
 
 class SubCommentInput extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      subComment: "",
+      subComment: {
+        value: ""
+      },
       pathname: null,
       redirectState: null
     };
@@ -49,47 +49,61 @@ class SubCommentInput extends Component {
   async _addSubComment() {
     let { user, commentIndex, comments } = this.props,
       comment = comments[commentIndex],
-      parentId = comment.id,
+      parentId = comment._id,
       { subComment } = this.state;
 
-    const data = {
-      parentId: parentId,
-      subComment: subComment,
-      userId: user._id
-    };
+    if (subComment.validateStatus === "success") {
+      const data = {
+        parentId: parentId,
+        subComment: subComment.value,
+        userId: user._id
+      };
 
-    let result = await commentFetchs.addSubComment(data);
+      console.log(data);
 
-    if (result.code === "1") {
-      this.props.successComment(
-        {
-          subComment: {
-            user: user,
-            content: subComment,
-            created_at: result.created_at,
-            isRePort: false
+      let result = await commentFetchs.addSubComment(data);
+
+      if (result.code === "1") {
+        this.props.successComment(
+          {
+            subComment: {
+              user: user,
+              content: subComment.value,
+              created_at: result.created_at,
+              isRePort: false
+            },
+            commentIndex: commentIndex
           },
-          commentIndex: commentIndex
-        },
-        {
-          state: false,
-          commentIndex: commentIndex
-        }
-      );
+          {
+            state: false,
+            commentIndex: commentIndex
+          }
+        );
 
-      notification.open({
-        message: this.props.intl.formatMessage(message.CommentSucceedMsg),
-        description: this.props.intl.formatMessage(message.CommentSucceedDes),
-        icon: <Icon type="smile-o" style={{ color: "#A2D5F2" }} />,
-        style: {
-          color: "#ff7e67",
-          bacground: "#fafafa"
-        }
-      });
+        notification.open({
+          message: this.props.intl.formatMessage(message.CommentSucceedMsg),
+          description: this.props.intl.formatMessage(message.CommentSucceedDes),
+          icon: <Icon type="smile-o" style={{ color: "#A2D5F2" }} />,
+          style: {
+            color: "#ff7e67",
+            bacground: "#fafafa"
+          }
+        });
+      } else {
+        notification.open({
+          message: this.props.intl.formatMessage(message.CommentFailedMsg),
+          description: this.props.intl.formatMessage(message.CommentFailedDes),
+          icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+          style: {
+            color: "#A2D5F2",
+            bacground: "#fafafa"
+          }
+        });
+      }
     } else {
       notification.open({
-        message: this.props.intl.formatMessage(message.CommentFailedMsg),
-        description: this.props.intl.formatMessage(message.CommentFailedDes),
+        message: this.props.intl.formatMessage(message.CheckMsgMsg),
+        description: this.props.intl.formatMessage(message.CheckMsgDes),
         icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
         style: {
           color: "#A2D5F2",
@@ -110,8 +124,19 @@ class SubCommentInput extends Component {
     });
   }
 
+  _handleSubComment = e => {
+    let value = e.target.value;
+
+    this.setState({
+      subComment: {
+        ...validateSubComment(value),
+        value: value
+      }
+    });
+  };
+
   render() {
-    let { pathname, redirectState } = this.state,
+    let { pathname, redirectState, subComment } = this.state,
       { user } = this.props;
     if (pathname && redirectState) {
       return (
@@ -126,45 +151,56 @@ class SubCommentInput extends Component {
 
     return (
       <section className="subCommentInput">
-        <Form>
-          <FormGroup>
+        <Row>
+          <Col md={2}>
+            {user && user.avatar ? (
+              <Avatar
+                avatarNum={user.avatar.toString()}
+                className="CommentInput-label-avatar"
+                width="40px"
+              />
+            ) : (
+              <FormattedMessage id="Comment" defaultMessage="defineMessages" />
+            )}
+          </Col>
+          <Col md={20}>
             <Row>
-              <Col md={2}>
-                {this.props.user ? (
-                  <Avatar avatarNum={user.avatar} />
-                ) : (
-                  <FormattedMessage id="Comment" defaultMessage="Comment" />
-                )}
-              </Col>
-              <Col md={20}>
-                <FormControl
-                  componentClass="textarea"
-                  placeholder="Enter Comment"
-                  onChange={event =>
-                    this.setState({ subComment: event.target.value })
-                  }
-                />
-              </Col>
-              <Col md={2}>
-                {this.props.user ? (
-                  <Button
-                    className="submit-btn subComment-btn"
-                    onClick={() => this._addSubComment()}
+              <Form>
+                <Col md={20}>
+                  <FormItem
+                    validateStatus={subComment.validateStatus}
+                    help={subComment.errorMsg}
                   >
-                    <FormattedMessage id="Submit" defaultMessage="Submit" />
-                  </Button>
-                ) : (
-                  <Button
-                    className="submit-btn subComment-btn"
-                    onClick={e => this._login(e)}
-                  >
-                    <FormattedMessage id="Login" defaultMessage="Login" />
-                  </Button>
-                )}
-              </Col>
+                    <TextArea
+                      value={subComment.value}
+                      placeholder=""
+                      onChange={this._handleSubComment}
+                    />
+                  </FormItem>
+                </Col>
+                <Col md={{ span: 2, offset: 1 }}>
+                  <FormItem>
+                    {this.props.user ? (
+                      <Button
+                        className="submit-btn subComment-btn"
+                        onClick={() => this._addSubComment()}
+                      >
+                        <FormattedMessage id="Submit" defaultMessage="Submit" />
+                      </Button>
+                    ) : (
+                      <Button
+                        className="submit-btn subComment-btn"
+                        onClick={e => this._login(e)}
+                      >
+                        <FormattedMessage id="Login" defaultMessage="Login" />
+                      </Button>
+                    )}
+                  </FormItem>
+                </Col>
+              </Form>
             </Row>
-          </FormGroup>
-        </Form>
+          </Col>
+        </Row>
       </section>
     );
   }

@@ -40,6 +40,6 @@ ul.commentPagination-list li.active {
   background: #ff7e67;
   color: #fafafa;
 }
-ul.commentPagination-list li.disable:hover {
+ul.commentPagination-list li.disable {
   cursor: not-allowed !important;
 }

@@ -1,5 +1,25 @@
 import { defineMessages } from "react-intl";
 const message = defineMessages({
+  Account: {
+    id: "labelEmail",
+    defaultMessage: "Email"
+  },
+  Content: {
+    id: "labelContent",
+    defaultMessage: "Content"
+  },
+  Password: {
+    id: "labelPassword",
+    defaultMessage: "Password"
+  },
+  Username: {
+    id: "labelUserName",
+    defaultMessage: "User Name"
+  },
+  ConfirmPwd: {
+    id: "labelComfirmPassword",
+    defaultMessage: "Password Comfirm"
+  },
   CheckDelete: {
     id: "CheckDelete",
     defaultMessage: "Are you sure"
@@ -8,9 +28,61 @@ const message = defineMessages({
     id: "CheckChancel",
     defaultMessage: "Are you sure"
   },
+  CommentSucceedMsg: {
+    id: "CommentSucceedMsg",
+    defaultMessage: "Comment Succeed"
+  },
+  CommentSucceedDes: {
+    id: "CommentSucceedDes",
+    defaultMessage: "Commemnt Succeed"
+  },
+  CommentFailedMsg: {
+    id: "CommentFailedMsg",
+    defaultMessage: "Comment Failed"
+  },
+  CommentFailedDes: {
+    id: "CommentFailedDes",
+    defaultMessage: "Commemnt Failed"
+  },
   CommentReport: {
     id: "CommentReport",
     defaultMessage: "Are you sure"
+  },
+  CheckMsgMsg: {
+    id: "CheckMsgMsg",
+    defaultMessage: "Cheak Message"
+  },
+  CheckMsgDes: {
+    id: "CheckMsgDes",
+    defaultMessage: "Cheak your message, please"
+  },
+  RegistEmailCheckMsg: {
+    id: "RegistEmailCheckMsg",
+    default: "Email Check"
+  },
+  RegistEmailCheckDes: {
+    id: "RegistEmailCheckDes",
+    default: "Please check the Email first"
+  },
+  LoginFailMsg: {
+    id: "LoginFailMsg",
+    defaultMessage: "Login Failed"
+  },
+  LoginFailEmailCheck: {
+    id: "LoginFailEmailCheck",
+    defaultMessage: "Please check Email first"
+  },
+  LoginFailPswErr: {
+    id: "LoginFailPswErr",
+    defaultMessage: "Account or password error"
+  },
+  LoginSuccessMsg: {
+    id: "LoginSuccessMsg",
+    defaultMessage: "Login Succeed"
+  },
+  LoginSuccessDsc: {
+    id: "LoginSuccessDsc",
+    defaultMessage: "login succeed"
   },
   LoginCheckMes: {
     id: "LoginCheckMes",
