@@ -59,6 +59,7 @@ class Topmenu extends Component {
         if (err) {
           throw new Error(err);
         }
+
         let user = res.user;
         if (res.code === "1") {
           this.props.loginByToken(user);
@@ -91,12 +92,6 @@ class Topmenu extends Component {
           }
         }
       });
-
-    // if (result.code === "1") {
-    //   this.props.loginByToken(result.user);
-    //
-    // } else {
-    // }
   }
 
   render() {

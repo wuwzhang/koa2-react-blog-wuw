@@ -1,454 +1,609 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
-import moment from 'moment';
-import marked from 'marked';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { withRouter, Redirect } from "react-router-dom";
+import moment from "moment";
+import marked from "marked";
 
-import redirect from '../../../components/Redirect';
-import { view as TopMenu } from '../../../components/TopMenu/';
-import './style.css';
+import redirect from "../../../components/Redirect";
+import { view as TopMenu } from "../../../components/TopMenu/";
+import "./style.css";
+
+import { addPost, checkTitle } from "../fetch";
+import {
+  fetchs as catalogFetchs,
+  actions as catalogActions
+} from "../../../components/CatalogAside/";
 
 import {
-  addPost,
-  checkTitle
-} from '../fetch';
+  fetchs as tagsFetchs,
+  actions as tagsActions
+} from "../../../components/TagsCloud/";
+
+import { initPostArticle } from "../action";
 
 import {
-  initPostArticle,
-  startPostArticle,
-  successPostArticle,
-  failPostArticle,
-  postSuccess,
-  postFail
-} from '../action';
-
-import {
+  Button,
+  Icon,
   Form,
-  FormGroup,
-  ControlLabel,
-  FormControl,
-  HelpBlock,
-  Grid,
-  Row,
-  Col
-} from 'react-bootstrap';
-import { Alert, Button, BackTop } from 'antd';
+  Input,
+  Modal,
+  Tag,
+  notification,
+  Popconfirm
+} from "antd";
+import { injectIntl, FormattedMessage } from "react-intl";
+import message from "../../../locale/message";
 
-moment.locale('zh-cn');
+const FormItem = Form.Item;
+const TextArea = Input.TextArea;
 
-class ArticlePostOrEdit extends Component {
+moment.locale("zh-cn");
+
+function validateIsEmpty(value) {
+  if (value.length === 0) {
+    return {
+      validateStatus: "error",
+      errorMsg: "不为空"
+    };
+  } else {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
+  }
+}
+
+function validateCatalog(value) {
+  if (value.length === 0) {
+    return {
+      validateStatus: "error",
+      errorMsg: "分类不为空"
+    };
+  } else if (value.indexOf("；") === "-1") {
+    return {
+      validateStatus: "warning",
+      errorMsg: "使用英文;分割"
+    };
+  } else {
+    return {
+      validateStatus: "success",
+      errorMsg: null
+    };
+  }
+}
+
+async function validateTitle(value) {
+  if (value.length === 0) {
+    return {
+      validateStatus: "error",
+      errorMsg: "标题不为空"
+    };
+  } else {
+    let result = await checkTitle(value);
+
+    if (result.code === "1") {
+      return {
+        validateStatus: "success",
+        errorMsg: null
+      };
+    } else {
+      return {
+        validateStatus: "warning",
+        errorMsg: "已存在同名文章"
+      };
+    }
+  }
+}
+
+class ArticlePost extends Component {
   constructor(props) {
     super(props);
 
-    import('highlight').then(({hljs}) => {
-      marked.setOptions({
-        renderer: new marked.Renderer(),
-        gfm: true,
-        tables: true,
-        breaks: false,
-        pedantic: false,
-        sanitize: true,
-        smartLists: true,
-        smartypants: false,
-        highlight: (code) => hljs.highlightAuto(code).value
-      });
-    }).catch(err => {
-      console.log(err);
-    })
-
-    this.state = {
-      title: localStorage.getItem('title') || this.props.articleTitle || '',
-      content: localStorage.getItem('content') || this.props.articleContent || '',
-      tags: '',
-      catalog: '',
-      tagsValid: 'success',
-      catalogValid: 'success',
-      titleValid: 'success',
-      contentValid: 'success',
-      isPreview: false      //是否预览，默认关闭预览
+    if (true) {
+      var katex = import("katex")
+        .then(res => {
+          return res;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
 
-    this.handlePreview = this.handlePreview.bind(this);
-    this.handleClear = this.handleClear.bind(this);
+    import("highlight")
+      .then(({ hljs }) => {
+        marked.setOptions({
+          renderer: new marked.Renderer(),
+          gfm: true,
+          tables: true,
+          breaks: false,
+          pedantic: false,
+          sanitize: true,
+          smartLists: true,
+          smartypants: false,
+          math: true,
+          kaTex: katex,
+          highlight: code => hljs.highlightAuto(code).value
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    this.state = {
+      title: {
+        value: localStorage.getItem("title") || this.props.articleTitle || ""
+      },
+      content: {
+        value:
+          localStorage.getItem("content") || this.props.articleContent || ""
+      },
+      tags: {
+        value: "",
+        validateStatus: "success",
+        errorMsg: null
+      },
+      catalog: {
+        value: "",
+        validateStatus: "success",
+        errorMsg: null
+      },
+      isShowHead: true,
+      isShowPreview: true,
+      isSubmit: false
+    };
   }
 
   componentDidMount() {
-
     this.props.initPost();
   }
 
-  /**
-   * 检测标题是否合法，当标题为空时，不合法
-   * @param  {[string]} value [文章标题]
-   */
-  async _checkTitle(value) {
+  async _handleSubModel() {
+    let isSubmit = this.state.isSubmit,
+      title = this.state.title.value,
+      content = this.state.content.value,
+      { catalogs, tags } = this.props;
+
     this.setState({
-      titleValid: null,
-      titleHelp: ''
+      isSubmit: !isSubmit,
+      title: {
+        ...(await validateTitle(title)),
+        value: title
+      },
+      content: {
+        ...validateIsEmpty(content),
+        value: content
+      }
     });
 
-    if (value.length === 0) {
-      this.setState({
-        titleValid: 'error',
-        titleHelp: '标题不为空'
-      });
-    } else {
-      let result = await checkTitle(value);
+    if (catalogs.length === 0) {
+      let result = await catalogFetchs.getCatalogsAndCount();
 
-      if (result.code === '1') {
-        this.setState({
-          titleValid: 'success'
-        })
-      } else {
-        this.setState({
-          titleValid: 'error',
-          titleHelp: '存在同名标题文章'
-        })
+      if (result.code === "1") {
+        this.props.setCatalog(result.catalogs);
+      }
+    }
+
+    if (tags.length === 0) {
+      let result = await tagsFetchs.getTags(10);
+
+      if (result.code === "1") {
+        this.props.setTags(result.tags);
       }
     }
   }
 
-  /**
-   * 检测内容是否合法，为空不合法
-   * @param  {string} value 文章内容
-   */
-  _checkContent(value) {
+  async _postArticle() {
+    let { title, content, tags, catalog } = this.state;
+    // console.log(title, content, tags, catalog);
+    if (
+      title.validateStatus === "success" &&
+      content.validateStatus === "success" &&
+      tags.validateStatus === "success" &&
+      catalog.validateStatus === "success"
+    ) {
+      let result = await addPost({
+        article: {
+          title: title.value,
+          content: content.value,
+          tags: tags.value,
+          catalog: catalog.value
+        }
+      });
+
+      if (result.code === "1") {
+        notification.open({
+          message: this.props.intl.formatMessage(message.PostSucceedMsg),
+          description: this.props.intl.formatMessage(message.PostSucceedDes),
+          icon: <Icon type="smile-o" style={{ color: "#A2D5F2" }} />,
+          style: {
+            color: "#ff7e67",
+            bacground: "#fafafa"
+          }
+        });
+      } else {
+        notification.open({
+          message: this.props.intl.formatMessage(message.PostFailedMsg),
+          description: this.props.intl.formatMessage(message.PostFailedDes),
+          icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+          style: {
+            color: "#A2D5F2",
+            bacground: "#fafafa"
+          }
+        });
+      }
+    } else {
+      notification.open({
+        message: this.props.intl.formatMessage(message.CheckMsgMsg),
+        description: this.props.intl.formatMessage(message.CheckMsgDes),
+        icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+        style: {
+          color: "#A2D5F2",
+          bacground: "#fafafa"
+        }
+      });
+    }
+
     this.setState({
-      contentValid: null,
-      contentHelp: ''
+      isSubmit: false
+    });
+  }
+
+  _handleTitle = async e => {
+    let value = e.target.value;
+
+    localStorage.setItem("title", value);
+
+    this.setState({
+      title: {
+        ...(await validateTitle(value)),
+        value: value
+      }
+    });
+  };
+
+  _handleContent = e => {
+    let value = e.target.value;
+
+    localStorage.setItem("content", value);
+
+    this.setState({
+      content: {
+        ...validateIsEmpty(value),
+        value: value
+      }
+    });
+  };
+
+  _handleCatalog = e => {
+    let value = e.target.value;
+    this.setState({
+      catalog: {
+        ...validateCatalog(value),
+        value: value
+      }
+    });
+  };
+
+  _handleTags = e => {
+    let value = e.target.value;
+    this.setState({
+      tags: {
+        ...validateCatalog(value),
+        value: value
+      }
+    });
+  };
+
+  _setTitle = e => {
+    localStorage.setItem("content", e.target.value);
+    this.setState({ title: { value: e.target.value } });
+  };
+
+  _addCatalog(e, catalogIndex) {
+    let { catalog } = this.state;
+
+    catalog = catalog.value;
+
+    if (catalog.length !== 0 && catalog[catalog.length - 1] !== ";") {
+      catalog = catalog + ";";
+    }
+
+    let catalogs = this.props.catalogs;
+    let tmpCatalog =
+      catalogs && catalogs[catalogIndex]
+        ? catalogs[catalogIndex]._id + ";"
+        : "";
+
+    if (catalog.indexOf(tmpCatalog) === -1) {
+      let catalogValue = "" + catalog + tmpCatalog;
+
+      this.setState({
+        catalog: {
+          ...validateCatalog(catalogValue),
+          value: catalogValue
+        }
+      });
+    }
+  }
+
+  _addTag(e, tagIndex) {
+    let { tags } = this.state;
+
+    let tagsArr = this.props.tags;
+    let tmpTag =
+      tagsArr && tagsArr[tagIndex] ? tagsArr[tagIndex].tag + ";" : "";
+
+    if (tags.value.indexOf(tmpTag) === -1) {
+      let tagsValue = "" + tags.value + tmpTag;
+
+      this.setState({
+        tags: {
+          ...validateCatalog(tagsValue),
+          value: tagsValue
+        }
+      });
+    }
+  }
+
+  _newArticle() {
+    this.setState({
+      title: {
+        value: "",
+        validateStatus: "success",
+        errorMsg: null
+      },
+      content: {
+        value: "",
+        validateStatus: "success",
+        errorMsg: null
+      },
+      tags: {
+        value: "",
+        validateStatus: "success",
+        errorMsg: null
+      },
+      catalog: {
+        value: "",
+        validateStatus: "success",
+        errorMsg: null
+      }
     });
 
-    if (value.length === 0) {
-      this.setState({
-        contentValid: 'error',
-        contentHelp: '内容不为空'
-      });
-    } else {
-      this.setState({
-        contentValid: 'success'
-      })
-    }
-  }
-  _setTitle(value) {
-    localStorage.setItem('title', value)
-    this.setState({
-      title: value
-    })
-  }
-  _setContent(value) {
-    localStorage.setItem('content', value)
-    this.setState({
-      content: value
-    })
-  }
-  /**
-   * 检测标签是否合法，由中文;分割为不合法
-   * @param  {string} value 标签字符串
-   */
-  _checkTags(value) {
-    // console.log(value);
-    this.setState({
-      tagsValid: null,
-      tagsHelp: ''
-    })
-
-    if (value.indexOf('；') === '-1') {
-      this.setState({
-        tagsValid: 'error',
-        tagsHelp: '使用英文;分割'
-      })
-    } else {
-      this.setState({
-        tagsValid: 'success',
-        tagsHelp: ''
-      })
-    }
+    localStorage.removeItem("title");
+    localStorage.removeItem("content");
   }
 
-  /**
-   * 检测文章分类是否合法,多于一个分类为不合法
-   * @param  {string} value 文章分类
-   */
-  _checkCatalog(value) {
-    this.setState({
-      catalogValid: null,
-      catalogHelp: ''
-    })
+  async _uploadArticle() {}
 
-    if (value.indexOf(';') === '-1') {
-      this.setState({
-        catalogValid: 'error',
-        catalogHelp: '分类不得多于一个'
-      })
-    } else {
-      this.setState({
-        catalogValid: 'success',
-        catalogHelp: ''
-      })
-    }
-  }
-
-  handlePreview() {
-    this.setState(prevState => ({
-      isPreview: !prevState.isPreview
-    }))
-  }
-
-  handleClear() {
-    this.setState({
-      title: '',
-      content: localStorage.getItem('content') || this.props.articleContent || '',
-      tags: '',
-      catalog: '',
-      tagsValid: 'success',
-      catalogValid: 'success',
-      titleValid: 'success',
-      contentValid: 'success'
-    })
-
-    localStorage.removeItem('title');
-    localStorage.removeItem('content')
-  }
-
-  /**
-   * 发布文章
-   */
-  async _postArticle() {
-    // console.log(this.state);
-    const {
+  render() {
+    let {
       title,
       content,
       tags,
       catalog,
-      titleValid,
-      contentValid,
-      tagsValid,
-      catalogValid
+      isSubmit,
+      isShowHead,
+      isShowPreview
     } = this.state;
-
-    function _checkComplete() {
-
-      return (titleValid === 'success'
-              && contentValid === 'success'
-              && tagsValid === 'success'
-              && catalogValid === 'success');
-    }
-
-    if (_checkComplete()) {
-      this.props.addPost({
-        article: {
-          title,
-          content,
-          tags,
-          catalog
-        }
-      })
-    }
-  }
-
-  render() {
-    let { title, content, tags, catalog } = this.state;
-    let { location, user, articlePost: {msgType, msg} } = this.props;
-    let pathname ='/login',
-        redirectState = { from: location };
+    let { location, user } = this.props,
+      tagsArr = this.props.tags,
+      catalogsArr = this.props.catalogs;
+    let pathname = "/login",
+      redirectState = { from: location };
 
     if (!user) {
-      return <Redirect to={{
-              pathname: pathname,
-              state: redirectState
-            }}/>
+      return (
+        <Redirect
+          to={{
+            pathname: pathname,
+            state: redirectState
+          }}
+        />
+      );
     }
-
-    return(
-      <section>
-        <section className='All-Nav'>
-          <TopMenu />
-        </section>
-        <Grid>
-          <section>
-            <Row>
-              <Col md={6} ms={6} xs={12}>
-                <h2 className='articlePost-title'>Article Post</h2>
-              </Col>
-            </Row>
-            <Form horizontal>
-              <Row>
-                <Col md={6} ms={6} xs={12}>
-                  <FormGroup
-                    validationState={this.state.titleValid}
-                  >
-                    <ControlLabel>Title</ControlLabel>
-                    <FormControl
-                        type='text'
-                        placeholder='Enter title'
-                        value={title}
-                        onChange={(event)=>this._setTitle(event.target.value)}
-                        onBlur={(event)=>this._checkTitle(event.target.value)}
-                      />
-                    {this.state.titleHelp && <HelpBlock>{ this.state.titleHelp }</HelpBlock>}
-
-                  </FormGroup>
-                </Col>
-
-                <Col md={6} ms={6} xs={0}>
-                  <Button className="myButton previewButton" onClick={ this.handlePreview }>
-                    { this.state.isPreview ? '<  Hidden Preview' : 'Show Preview  >' }
-                  </Button>
-                  <Button className="myButton previewButton" onClick={ this.handleClear }>
-                    Clear
-                  </Button>
-                </Col>
-              </Row>
-              {
-                this.state.isPreview? <Row>
-                                        <Col sm={12} md={6}>
-                                          <FormGroup
-                                            validationState={this.state.contentValid}
-                                          >
-
-                                              <ControlLabel>Content</ControlLabel>
-                                              <FormControl
-                                                componentClass="textarea"
-                                                placeholder='Enter Content'
-                                                value={content}
-                                                onChange={(event) => this._setContent(event.target.value)}
-                                                onBlur={(event)=>this._checkContent(event.target.value)}
-                                                style={{ height: 800 }}
-                                              />
-                                              {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
-                                          </FormGroup>
-                                        </Col>
-                                        {
-                                            this.state.content? <Col sm={6} xs={0} md={6}>
-                                                                  <ControlLabel>Preview</ControlLabel>
-                                                                  <div
-                                                                    className="marked-preview edit-marked-preview"
-
-                                                                    dangerouslySetInnerHTML={{
-                                                                      __html: marked(this.state.content, {sanitize: true})
-                                                                    }}
-                                                                  />
-                                                                </Col>
-                                                              : null
-                                          }
-                                      </Row>
-                                    : <Row>
-                                        <Col sm={12} md={12} xs={12}>
-                                          <FormGroup
-                                            validationState={this.state.contentValid}
-                                          >
-
-                                              <ControlLabel>Content</ControlLabel>
-                                              <FormControl
-                                                componentClass="textarea"
-                                                placeholder='Enter Content'
-                                                value={content}
-                                                onChange={(event)=>this._setContent(event.target.value)}
-                                                onBlur={(event)=>this._checkContent(event.target.value)}
-                                                style={{ height: 800 }}
-                                              />
-                                              {this.state.contentHelp && <HelpBlock>{this.state.contentHelp}</HelpBlock>}
-                                          </FormGroup>
-                                        </Col>
-                                      </Row>
-
-              }
-              <Row>
-                <Col sm={6} md={6}>
-                  <FormGroup>
-                    <ControlLabel
-                      validationState={this.state.commentValid}
-                    >Input Tags</ControlLabel>
-                    <FormControl
-                      type='text'
-                      label='tags'
-                      placeholder='不同标签之间由;间隔'
-                      value={ (tags instanceof Array) ? Array.from(tags).join(';') : tags }
-                      onChange={(event)=>this.setState({tags:event.target.value})}
-                      onBlur={(event)=>this._checkTags(event.target.value)}
-                    />
-                    {this.state.tagsHelp && <HelpBlock>{this.state.tagsHelp}</HelpBlock>}
-                  </FormGroup>
-                </Col>
-                <Col sm={6} md={6}>
-                  <FormGroup>
-                    <ControlLabel
-                      validationState={this.state.commentValid}
-                    >Input Catalog</ControlLabel>
-                    <FormControl
-                      type='text'
-                      label='catalog'
-                      placeholder='catalog'
-                      value={ catalog }
-                      onChange={(event)=>this.setState({catalog:event.target.value})}
-                      onBlur={(event)=>this._checkTags(event.target.value)}
-                    />
-                    {this.state.catalogHelp && <HelpBlock>{this.state.catalogHelp}</HelpBlock>}
-                  </FormGroup>
-                </Col>
-
-              </Row>
-              <Row>
-                <Col xs={12} sm={3} md={3}>
-                  <Button
-                    className="myButton postButton submit-btn"
-                    onClick={()=>this._postArticle()}
-                  >POST</Button>
-                </Col>
-              </Row>
-              {
-                msgType === 'warning' ? <Alert className="myAlert" message={ msg } type="warning" showIcon closable/> : null
-              }
-              {
-                msgType === 'success' ? <Alert className="myAlert" message={ msg } type="success" showIcon closable/> : null
-              }
-            </Form>
-            <BackTop />
+    return (
+      <section className="ArticlePost-Page">
+        {isShowHead ? (
+          <section className="All-Nav">
+            <TopMenu />
           </section>
-        </Grid>
+        ) : null}
+        <section className="ArticlePost">
+          <Form>
+            {isShowHead ? (
+              <section className="ArticlePost-header">
+                <section className="Article-mainOption">
+                  <Input value={title.value} onChange={this._setTitle} />
+
+                  <Button
+                    className="submit-btn ArticlePost-btn"
+                    onClick={() => this._handleSubModel()}
+                  >
+                    <FormattedMessage id="Post" defaultMessage="Post" />
+                  </Button>
+                </section>
+                <section className="ArticlePost-subOption">
+                  <ul>
+                    <li>
+                      <Popconfirm
+                        placement="bottomRight"
+                        title="Are you sure write a new article"
+                        onConfirm={() => this._newArticle()}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <p>
+                          <Icon type="edit" />
+                        </p>
+                      </Popconfirm>
+                    </li>
+                    <li>
+                      <Popconfirm
+                        placement="bottomRight"
+                        title="Are you sure write a new article"
+                        onConfirm={() => this._uploadArticle()}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <p>
+                          <Icon type="upload" />
+                        </p>
+                      </Popconfirm>
+                    </li>
+                  </ul>
+                </section>
+              </section>
+            ) : null}
+
+            <section
+              className="article-wrtite-part"
+              style={{ height: isShowHead ? "88%" : "107%" }}
+            >
+              <section
+                className="Article-Edit"
+                style={{ width: isShowPreview ? "49%" : "98%" }}
+              >
+                <TextArea
+                  value={content.value}
+                  onChange={this._handleContent}
+                />
+              </section>
+              <section
+                className="ArticlePost-showOption"
+                style={{ left: isShowPreview ? "49%" : "98%" }}
+              >
+                <p
+                  className="ArticlePost-showOptio-button"
+                  onClick={() => this.setState({ isShowHead: !isShowHead })}
+                >
+                  <Icon type="appstore-o" />
+                </p>
+                <p
+                  className="ArticlePost-showOptio-button showPreview-btn"
+                  onClick={() =>
+                    this.setState({ isShowPreview: !isShowPreview })
+                  }
+                >
+                  {isShowPreview ? <Icon type="right" /> : <Icon type="left" />}
+                </p>
+              </section>
+              {isShowPreview ? (
+                <section
+                  className="ArticlePost-Preview"
+                  style={{ width: isShowPreview ? "49%" : "0%" }}
+                >
+                  {content.value ? (
+                    <div
+                      className="marked-preview edit-marked-preview"
+                      dangerouslySetInnerHTML={{
+                        __html: marked(content.value, {
+                          sanitize: true
+                        })
+                      }}
+                    />
+                  ) : null}
+                </section>
+              ) : null}
+              <Modal
+                visible={isSubmit}
+                onCancel={() => this.setState({ isSubmit: false })}
+                onOk={() => this._postArticle()}
+              >
+                <FormItem
+                  label="title"
+                  validateStatus={title.validateStatus}
+                  hasFeedback
+                  help={title.errorMsg}
+                >
+                  <Input value={title.value} onChange={this._handleTitle} />
+                </FormItem>
+                <FormItem
+                  label="catalog"
+                  validateStatus={catalog.validateStatus}
+                  help={catalog.errorMsg}
+                >
+                  <Input value={catalog.value} onChange={this._handleCatalog} />
+                </FormItem>
+                {catalogsArr.map((catalog, index) => {
+                  return (
+                    <Tag
+                      key={index}
+                      checked={index}
+                      onClick={e => this._addCatalog(e, index)}
+                    >
+                      {catalog._id}
+                    </Tag>
+                  );
+                })}
+                <FormItem
+                  label="Tags"
+                  validateStatus={tags.validateStatus}
+                  help={tags.errorMsg}
+                >
+                  <Input value={tags.value} onChange={this._handleTags} />
+                </FormItem>
+                {tagsArr.map((tag, index) => {
+                  return (
+                    <Tag
+                      key={index}
+                      checked={index}
+                      onClick={e => this._addTag(e, index)}
+                    >
+                      {tag.tag}
+                    </Tag>
+                  );
+                })}
+              </Modal>
+            </section>
+          </Form>
+        </section>
       </section>
     );
   }
 }
 
-ArticlePostOrEdit.propTypes = {
+ArticlePost.propTypes = {
+  intl: PropTypes.object.isRequired,
   article: PropTypes.object,
-  addPost: PropTypes.func
+  setTags: PropTypes.func,
+  setCatalog: PropTypes.func,
+  initPost: PropTypes.func,
+  user: PropTypes.object,
+  catalog: PropTypes.object,
+  tags: PropTypes.object
 };
 
-const mapStateToProps = (state) => {
-
+const mapStateToProps = state => {
   return {
     user: state.login.user,
     location: state.routing.location,
-    articlePost: state.articlePost
-  }
+    articlePost: state.articlePost,
+    catalogs: state.catalog.catalog,
+    tags: state.tag.tags
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     initPost: async () => {
-      dispatch(initPostArticle())
+      dispatch(initPostArticle());
     },
-    addPost: async (article) => {
-
-      dispatch(startPostArticle());
-
-      let result = await addPost(article);
-
-      if (result.code === '1') {
-        dispatch(successPostArticle());
-        dispatch(postSuccess());
-      } else {
-        dispatch(failPostArticle());
-        dispatch(postFail());
-      }
+    setCatalog: catalog => {
+      dispatch(catalogActions.setCatalog(catalog));
+    },
+    setTags: tags => {
+      dispatch(tagsActions.initTags(tags));
     }
-  }
-}
+  };
+};
 
-export default redirect(withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ArticlePostOrEdit)));
+export default redirect(
+  withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(
+      injectIntl(ArticlePost, {
+        withRef: true
+      })
+    )
+  )
+);

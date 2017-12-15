@@ -1,15 +1,15 @@
-export const DOMAIN = '';
-const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
+export const DOMAIN = "";
+const CREDENTIALS = process.env.ORIGIN ? "include" : "same-origin";
 
-export const getArticlesByCatalog = async(content, page, eachPageArticles) => {
-  let url = DOMAIN + '/api/getArticlesByCatalog';
+export const getArticlesByCatalog = async (content, page, eachPageArticles) => {
+  let url = DOMAIN + "/api/getArticlesByCatalog";
 
   try {
     var result = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json'
+        Accept: "application/json",
+        "Content-type": "application/json"
       },
       body: JSON.stringify({
         catalog: content,
@@ -17,17 +17,15 @@ export const getArticlesByCatalog = async(content, page, eachPageArticles) => {
         eachPageArticles
       }),
       credentials: CREDENTIALS
-    })
-  } catch(e) {
-
-  }
+    });
+  } catch (e) {}
 
   if (result) {
     return result.json();
   } else {
     return {
-      code: '-2',
-      message: '未知错误'
-    }
+      code: "-2",
+      message: "未知错误"
+    };
   }
-}
+};

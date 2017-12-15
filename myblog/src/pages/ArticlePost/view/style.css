@@ -1,41 +1,3 @@
-/*.marked-preview ol ul, .marked-preview ul ol,.marked-preview ul ul, .marked-preview ol ol  { margin-top: 0; margin-bottom: 0 }
-.marked-preview h1{ font-size:2em; margin: .67em 0 !important}
-.marked-preview h2{ font-size:1.5em; margin: .75em 0 !important}
-.marked-preview h3{ font-size:1.17em; margin: .83em 0 !important}
-.marked-preview h4, .marked-preview p, .marked-preview blockquote, .marked-preview ul, .marked-preview fieldset, .marked-preview form, .marked-preview ol, .marked-preview dl, .marked-preview dir, .marked-preview menu { margin: 1.12em 0!important}
-.marked-preview h5 { font-size:.83em; margin: 1.5em 0 !important}
-.marked-preview h6{ font-size:.75em; margin: 1.67em 0 !important}
-.marked-preview blockquote{ margin-left: 40px;margin-right: 40px !important}
-.marked-preview abbr, .marked-preview acronym{ font-variant: small-caps; letter-spacing:0.1em !important}
-.marked-preview pre {padding: 5px !important}
-.marked-preview p {padding: 5px !important}
-.marked-preview li{ display:list-item !important}
-.marked-preview ol{list-style-type: decimal !important}
-.marked-preview dir, .marked-preview menu, .marked-preview dd{ margin-left: 40px !important}
-
-.marked-preview ul, .marked-preview ol {
-  margin: 0 0 0 20px !important;
-}*/
-.marked-preview li {
-  display: list-item !important;
-}
-.marked-preview ol {
-  list-style-type: decimal !important;
-}
-.marked-preview ul {
-  list-style-type: disc;
-}
-.marked-preview ul,
-.marked-preview ol {
-  margin: 0 0 0 20px !important;
-}
-.marked-preview img {
-  max-width: 100%;
-}
-.edit-marked-preview {
-  height: 800px;
-  overflow: scroll;
-}
 .previewButton {
   margin-top: 24px;
   display: inline-block;
@@ -51,9 +13,132 @@
   color: #29689a;
   text-shadow: 1px 0 #a2d5f2;
 }
-.katex span {
-  top: 0 !important;
+
+#root {
+  height: 100%;
 }
-.katex .vlist > span {
-  top: -0.39em !important;
+.ArticlePost-Page {
+  height: 100%;
+}
+.ArticlePost-Page .All-Nav {
+  height: 7%;
+}
+.ArticlePost {
+  height: 93%;
+}
+.ArticlePost form {
+  height: 100%;
+}
+.ArticlePost-header {
+  height: 12%;
+  max-height: 95px;
+  box-sizing: border-box;
+}
+.Article-mainOption {
+  height: 70%;
+  background: #fafafa;
+}
+.Article-mainOption input {
+  font-size: 20px;
+  font-weight: 700;
+  background: #fafafa;
+}
+.ArticlePost-showOption {
+  width: 2%;
+  height: 100%;
+  min-width: 15px;
+  position: absolute;
+  background: rgba(162, 213, 242, 0.59);
+  z-index: 1;
+}
+.ArticlePost-showOptio-button {
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
+  transition: background 0.3s ease-out;
+  color: #ff7e67;
+}
+.ArticlePost-showOptio-button:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.4);
+}
+.showPreview-btn {
+  position: absolute;
+  width: 100%;
+  top: 40%;
+}
+.Article-mainOption input {
+  width: 50%;
+  height: 100%;
+  border: 0;
+  margin-left: 15px;
+}
+.Article-mainOption input:focus {
+  outline: none;
+  border: 0;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+.ArticlePost-btn {
+  height: 46px !important;
+  width: 120px !important;
+  float: right;
+  margin: 7px 15px;
+  font-size: 18px !important;
+  font-weight: 700;
+}
+.ArticlePost-subOption {
+  height: 30%;
+  background: rgba(162, 213, 242, 0.59);
+}
+.article-wrtite-part {
+  position: relative;
+}
+.ArticlePost-Preview {
+  height: 100%;
+  position: absolute;
+  background: #fafafa;
+  left: 51%;
+  padding: 10px;
+}
+.marked-preview {
+  height: 100%;
+}
+.edit-marked-preview {
+  height: 100%;
+}
+.Article-Edit {
+  height: 100% !important;
+  border: 0;
+  position: absolute !important;
+}
+.Article-Edit textarea {
+  height: 100% !important;
+  border: 0;
+  background: #fafafa;
+  border-radius: 0 !important;
+  padding: 10px;
+}
+.ArticlePost-subOption ul {
+  height: 100%;
+  float: right;
+  margin-right: 20px;
+}
+.ArticlePost-subOption ul li {
+  margin: 0;
+  height: 100%;
+  display: inline-block;
+}
+.ArticlePost-subOption ul li p {
+  height: 100%;
+  ont-weight: 700;
+  font-size: 16px;
+  color: #ff7e67;
+  padding: 0 8px;
+}
+.ArticlePost-subOption ul li:hover {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.4);
 }

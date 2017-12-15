@@ -217,7 +217,7 @@ class Register extends Component {
         const btn = (
           <Button
             className="submit-btn"
-            onClick={() => this._checkEmail(account)}
+            onClick={() => this._checkEmail(account.value)}
           >
             Check
           </Button>

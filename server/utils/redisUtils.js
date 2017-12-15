@@ -291,7 +291,7 @@ async function setArticleCatalogs(catalog, count) {
     console.error("redis - setArticleCatalogs 参数错误");
   } else {
     let keys = "catalog_count_" + ARTICLE_KEY;
-    return client.zadd(keys, count, catalog);
+    return client.zincrby(keys, count, catalog);
   }
 }
 

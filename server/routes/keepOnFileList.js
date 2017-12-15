@@ -1,6 +1,7 @@
 const router = require("koa-router")();
 const Models = require("../lib/core");
 const $Article = Models.$Article;
+const $Catalog = Models.$Catalog;
 const redisUtils = require("../utils/redisUtils");
 
 router.get("/api/getArticleDateList", async ctx => {
@@ -61,9 +62,9 @@ router.post("/api/article_Catalog_And_Count", async ctx => {
         });
       }
     } else {
-      resultArr = await $Article.getArticleCatalogs();
+      resultArr = await $Catalog.getArticleCatalogs();
       resultArr.forEach(async catalog => {
-        await redisUtils.setArticleCatalogs(catalog._id, catalog.count);
+        await redisUtils.setArticleCatalogs(catalog.catalog, catalog.count);
       });
     }
   } catch (e) {

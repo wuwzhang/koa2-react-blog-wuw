@@ -1,180 +1,43 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { Redirect, withRouter } from "react-router-dom";
-import { PropTypes } from "prop-types";
-
-import { Avatar } from "../../Avatar/index.js";
-
-import {
-  fetchs as commentFetchs,
-  actions as commentAction
-} from "../../Comment/";
-
-import { notification, Icon, Row, Col, Form, Input } from "antd";
-import "./style.css";
-import message from "../../../locale/message";
-
-import { injectIntl, FormattedMessage } from "react-intl";
-
-class SubCommentInput extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      subComment: "",
-      pathname: null,
-      redirectState: null
-    };
-  }
-
-  async _addSubComment() {
-    let { user, commentIndex, comments } = this.props,
-      comment = comments[commentIndex],
-      parentId = comment.id,
-      { subComment } = this.state;
-
-    const data = {
-      parentId: parentId,
-      subComment: subComment,
-      userId: user._id
-    };
-
-    let result = await commentFetchs.addSubComment(data);
-
-    if (result.code === "1") {
-      this.props.successComment(
-        {
-          subComment: {
-            user: user,
-            content: subComment,
-            created_at: result.created_at,
-            isRePort: false
-          },
-          commentIndex: commentIndex
-        },
-        {
-          state: false,
-          commentIndex: commentIndex
-        }
-      );
-
-      notification.open({
-        message: this.props.intl.formatMessage(message.CommentSucceedMsg),
-        description: this.props.intl.formatMessage(message.CommentSucceedDes),
-        icon: <Icon type="smile-o" style={{ color: "#A2D5F2" }} />,
-        style: {
-          color: "#ff7e67",
-          bacground: "#fafafa"
-        }
-      });
-    } else {
-      notification.open({
-        message: this.props.intl.formatMessage(message.CommentFailedMsg),
-        description: this.props.intl.formatMessage(message.CommentFailedDes),
-        icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
-        style: {
-          color: "#A2D5F2",
-          bacground: "#fafafa"
-        }
-      });
+tagsArr.map(async iteam => {
+  if (iteam) {
+    let exist = await $Tag.findTagByTagName(iteam);
+    if (!exist) {
+      // console.log('标签不存在')
+      await $Tag.create({ tag: iteam });
     }
   }
+});
 
-  _login(e) {
-    e.preventDefault();
-    let pathname = "/login",
-      redirectState = { from: this.props.location };
+try {
+  const articleModel = {
+    title: article.title,
+    content: article.content,
+    tags: tagsArr.length === 0 ? ["其他"] : tagsArr,
+    catalog: article.catalog || "其他"
+  };
 
-    this.setState({
-      pathname: pathname,
-      redirectState: redirectState
+  var result = await $Article
+    .getArticleByTitle(article.title)
+    .then(async res => {
+      console.log(res);
+      if (res) {
+        return $Article.create(articleModel);
+      } else {
+        throw new Error("getArticleByTitle Error");
+      }
     });
-  }
-
-  render() {
-    let { pathname, redirectState } = this.state,
-      { user } = this.props;
-    if (pathname && redirectState) {
-      return (
-        <Redirect
-          to={{
-            pathname: pathname,
-            state: redirectState
-          }}
-        />
-      );
+  if (articleModel.catalog) {
+    var exist = await $Catalog.getCatalogrByCatalogName(article.catalog);
+    if (!exist) {
+      await $Catalog.create({ catalog: article.catalog });
     }
-
-    return (
-      <section className="subCommentInput">
-        <Form>
-          <FormGroup>
-            <Row>
-              <Col md={2} />
-              <Col md={20}>
-                <FormControl
-                  componentClass="textarea"
-                  placeholder="Enter Comment"
-                  onChange={event =>
-                    this.setState({ subComment: event.target.value })
-                  }
-                />
-              </Col>
-              <Col md={2}>
-                {this.props.user ? (
-                  <Button
-                    className="submit-btn subComment-btn"
-                    onClick={() => this._addSubComment()}
-                  >
-                    <FormattedMessage id="Submit" defaultMessage="Submit" />
-                  </Button>
-                ) : (
-                  <Button
-                    className="submit-btn subComment-btn"
-                    onClick={e => this._login(e)}
-                  >
-                    <FormattedMessage id="Login" defaultMessage="Login" />
-                  </Button>
-                )}
-              </Col>
-            </Row>
-          </FormGroup>
-        </Form>
-      </section>
-    );
+  }
+} catch (e) {
+  if (e.message.match("E11000 duplicate key")) {
+    code = "-1";
+    message = "存在同名标题文章";
+  } else {
+    code = "-2";
+    message = e.message;
   }
 }
-
-SubCommentInput.propTypes = {
-  intl: PropTypes.object.isRequired,
-  commentIndex: PropTypes.number.isRequired,
-  user: PropTypes.object,
-  location: PropTypes.object,
-  comments: PropTypes.object,
-  successComment: PropTypes.func
-};
-
-const mapStateToProps = state => {
-  return {
-    user: state.login.user,
-    location: state.routing.location,
-    comments: state.comment.articleComments
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    successComment: (addSubData, replyState) => {
-      dispatch(commentAction.setIsShowReply(replyState));
-      dispatch(commentAction.addSubComment(addSubData));
-    }
-  };
-};
-
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(
-    injectIntl(SubCommentInput, {
-      withRef: true
-    })
-  )
-);

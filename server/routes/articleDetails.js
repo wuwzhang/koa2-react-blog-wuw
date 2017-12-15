@@ -3,7 +3,7 @@ const Models = require("../lib/core");
 const $Article = Models.$Article;
 const redisUtils = require("../utils/redisUtils");
 
-router.get("/api/article_details/:articleId", async (ctx, next) => {
+router.get("/api/article_details/:articleId", async ctx => {
   let code = "1",
     message = "ok";
   const { articleId } = ctx.params;

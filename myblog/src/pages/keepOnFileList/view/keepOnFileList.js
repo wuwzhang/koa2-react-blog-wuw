@@ -84,21 +84,14 @@ class KeepOnFileList extends Component {
                 <Radio.Group value={catalogView} onChange={this.handleView}>
                   <Radio.Button value="catalog">
                     <FontAwesome className="KeepOnFile-ViewIcon" name="list" />
-                    <span>
-                      <FormattedMessage
-                        id="ArticleList"
-                        defaultMessage="List"
-                      />
-                    </span>
+                    <FormattedMessage id="ArticleList" defaultMessage="List" />
                   </Radio.Button>
                   <Radio.Button value="summary">
                     <FontAwesome
                       className="KeepOnFile-ViewIcon"
                       name="list-alt"
                     />
-                    <span>
-                      <FormattedMessage id="Summary" defaultMessage="Summary" />
-                    </span>
+                    <FormattedMessage id="Summary" defaultMessage="Summary" />
                   </Radio.Button>
                 </Radio.Group>
               </section>

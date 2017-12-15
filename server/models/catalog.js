@@ -1,13 +1,17 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-const CatalogSchema = new Schema({
-  catalog: {type: String, default: ''},
-  created_at: { type: Date, default: Date.now },
-  updatad_at: { type: Date, default: Date.now }
-}, { versionKey: false });
+const CatalogSchema = new Schema(
+  {
+    catalog: { type: String, default: "" },
+    articleId: [{ type: Schema.Types.ObjectId, ref: "Article" }],
+    created_at: { type: Date, default: Date.now },
+    updatad_at: { type: Date, default: Date.now }
+  },
+  { versionKey: false }
+);
 
-CatalogSchema.set('toJSON', { getters: true, virtuals: true })
-CatalogSchema.set('toObject', { getters: true, virtuals: true })
+CatalogSchema.set("toJSON", { getters: true, virtuals: true });
+CatalogSchema.set("toObject", { getters: true, virtuals: true });
 
-module.exports = mongoose.model('Catalog', CatalogSchema);
+module.exports = mongoose.model("Catalog", CatalogSchema);

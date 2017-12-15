@@ -1,82 +1,103 @@
-const router = require('koa-router')();
-const Models = require('../lib/core');
+const mongoose = require("mongoose");
+const router = require("koa-router")();
+const Models = require("../lib/core");
+const utils = require("../utils/utils");
+const redisUtils = require("../utils/redisUtils");
 const $Article = Models.$Article;
 const $Tag = Models.$Tag;
 const $Catalog = Models.$Catalog;
 
-router.post('/api/article_post', async(ctx, next) => {
+router.post("/api/article_post", async ctx => {
   let { article } = ctx.request.body;
-  let code = '1', message = '发表成功';
+  let code = "1",
+    message = "发表成功",
+    result = {};
 
-  let tagsStr = article.tags;
-  let tagsArr = tagsStr.split(';');
+  let { tags, catalog, title, content } = article;
 
-  let tagsIdArr = [];
-  tagsArr.map(async (iteam, index) => {
-    if (iteam) {
-      let exist = await $Tag.findTagByTagName(iteam);
-      if (!exist) {
-        // console.log('标签不存在')
-        let res = await $Tag.create({ tag: iteam });
-      }
-    }
-  })
+  if (utils.isEmpty(tags, catalog, title, content)) {
+    code = "-1";
+    message = "参数错误";
+    console.log("TopMenu - loginByToken- func");
+  } else {
+    let tagsArr = tags.split(";"),
+      catalogArr = catalog.split(";"),
+      _id = new mongoose.Types.ObjectId();
 
-  try {
-    const articleModel = {
-      title: article.title,
-      content: article.content,
-      tags: tagsArr.length === 0 ? ['其他'] : tagsArr,
-      catalog: article.catalog || '其他'
-    };
+    //去空去重的tag和catalog
+    let tagAns = [...new Set(tagsArr)].filter(tag => {
+      return tag.length > 0;
+    });
+    let catalogAns = [...new Set(catalogArr)].filter(catalog => {
+      return catalog.length > 0;
+    });
 
-    var result = await $Article.create(articleModel);
-    if (articleModel.catalog) {
-      var exist = await $Catalog.getCatalogrByCatalogName(article.catalog);
-      if (!exist) {
-        let res = await $Catalog.create({ catalog: article.catalog });
-      }
-    }
-    // var res = await $Catalog.create({catalog: article.catalog})
-        // res = await $Catalog.create({ catalog: article.catalog });
-
-    // console.log(res);
-  }catch (e) {
-    if (e.message.match('E11000 duplicate key')) {
-      code = '-1';
-      message = '存在同名标题文章'
-    } else {
-      code = '-2';
-      message = e.message
-    }
+    await Promise.all([
+      $Article.create({
+        title,
+        content,
+        tags: tagAns,
+        catalog: catalogAns,
+        _id: _id
+      }),
+      $Tag.addTags(tagAns, _id),
+      $Catalog.addCatalog(catalogAns, _id)
+    ])
+      .then(async (res, err) => {
+        if (err) {
+          throw new Error(err);
+        } else {
+          return await Promise.all([
+            redisUtils.setTopCommentsArticle({
+              _id: _id,
+              title: title,
+              commentCount: 0
+            }),
+            redisUtils.setTopPreviewArticle({
+              _id: _id,
+              title: title,
+              pv: 0
+            })
+          ]);
+        }
+      })
+      .then(async (res, err) => {
+        if (err) {
+          code = "-2";
+          message = err;
+          throw new Error(err);
+        } else {
+          return catalogAns.forEach(async catalog => {
+            await redisUtils.setArticleCatalogs(catalog, 1);
+          });
+        }
+      });
   }
 
   ctx.response.body = {
-    'code': code,
-    'message': message,
-    'post': result
-  }
+    code: code,
+    message: message,
+    post: result
+  };
 });
 
-
-router.post('/api/checkTitle', async(ctx, next) => {
+router.post("/api/checkTitle", async ctx => {
   const { title } = ctx.request.body,
-        article = await $Article.getArticleByTitle(title);
+    article = await $Article.getArticleByTitle(title);
 
-  let code = '1', message = 'ok';
+  let code = "1",
+    message = "ok";
 
   if (article) {
-    code = '-1',
-    message = '存在同名标题文章'
+    (code = "-1"), (message = "存在同名标题文章");
   } else {
-    code,
-    message
+    code, message;
   }
 
   ctx.response.body = {
-    'code': code,
-    'message': message
-  }
-})
+    code: code,
+    message: message
+  };
+});
 
 module.exports = router;

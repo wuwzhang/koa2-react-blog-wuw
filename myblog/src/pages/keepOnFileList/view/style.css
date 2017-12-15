@@ -1,15 +1,30 @@
 section.keepOnFile-page {
   width: 100%;
   height: calc(100vh - 54px);
-  background: -webkit-linear-gradient(rgba(256, 256, 256, 0.6) 0%, rgba(256, 256, 256, 0.8) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
-  background: -o-linear-gradient(rgba(256, 256, 256, 0.6) 0%, rgba(256, 256, 256, 0.8) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
-  background: linear-gradient(rgba(256, 256, 256, 0.6) 0%, rgba(256, 256, 256, 0.8) 100%), url(../../../media/keepOnFile-bg.png) no-repeat;
+  background: -webkit-linear-gradient(
+      rgba(256, 256, 256, 0.6) 0%,
+      rgba(256, 256, 256, 0.8) 100%
+    ),
+    url(../../../media/keepOnFile-bg.png) no-repeat;
+  background: -o-linear-gradient(
+      rgba(256, 256, 256, 0.6) 0%,
+      rgba(256, 256, 256, 0.8) 100%
+    ),
+    url(../../../media/keepOnFile-bg.png) no-repeat;
+  background: linear-gradient(
+      rgba(256, 256, 256, 0.6) 0%,
+      rgba(256, 256, 256, 0.8) 100%
+    ),
+    url(../../../media/keepOnFile-bg.png) no-repeat;
   background-size: 80% 80vh;
   background-position: left bottom;
-  padding-top: 20px;
+  padding-top: 30px;
 }
 .timeline {
   background: rgba(250, 250, 250, 0.6);
+}
+.timeline .pagination {
+  margin-top: 20px;
 }
 .aside {
   position: absolute;
@@ -21,7 +36,9 @@ section.keepOnFile-page {
 .KeepOnFile-View {
   position: absolute;
   top: -5px;
-
+}
+section.KeepOnFile-View span {
+  font-weight: 700;
 }
 .KeepOnFile-ViewIcon {
   margin-right: 5px !important;

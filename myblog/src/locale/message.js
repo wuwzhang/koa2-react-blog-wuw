@@ -34,11 +34,31 @@ const message = defineMessages({
   },
   CommentSucceedDes: {
     id: "CommentSucceedDes",
-    defaultMessage: "Commemnt Succeed"
+    defaultMessage: "Comment Succeed"
   },
   CommentFailedMsg: {
     id: "CommentFailedMsg",
     defaultMessage: "Comment Failed"
+  },
+  CommentFailedDes: {
+    id: "CommentFailedDes",
+    defaultMessage: "Commemnt Failed"
+  },
+  PostSucceedMsg: {
+    id: "PostSucceedMsg",
+    defaultMessage: "Post Succeed"
+  },
+  PostSucceedDes: {
+    id: "PostSucceedDes",
+    defaultMessage: "Post Succeed"
+  },
+  PostFailedMsg: {
+    id: "PostFailedMsg",
+    defaultMessage: "Post Failed"
+  },
+  PostFailedDes: {
+    id: "PostFailedDes",
+    defaultMessage: "Sorry, Post Failed"
   },
   CommentFailedDes: {
     id: "CommentFailedDes",
