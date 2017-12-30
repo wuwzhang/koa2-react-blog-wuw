@@ -138,6 +138,7 @@ class ArticlePost extends Component {
         value:
           localStorage.getItem("content") || this.props.articleContent || ""
       },
+      fontSize: localStorage.getItem("fontSize") || 12,
       tags: {
         value: "",
         validateStatus: "success",
@@ -185,7 +186,7 @@ class ArticlePost extends Component {
     }
 
     if (tags.length === 0) {
-      let result = await tagsFetchs.getTags(10);
+      let result = await tagsFetchs.getTags();
 
       if (result.code === "1") {
         this.props.setTags(result.tags);
@@ -296,7 +297,7 @@ class ArticlePost extends Component {
   };
 
   _setTitle = e => {
-    localStorage.setItem("content", e.target.value);
+    localStorage.setItem("title", e.target.value);
     this.setState({ title: { value: e.target.value } });
   };
 
@@ -374,7 +375,57 @@ class ArticlePost extends Component {
     localStorage.removeItem("content");
   }
 
-  async _uploadArticle() {}
+  _uploadArticle = async e => {
+    let file = e.target.files[0];
+    if (file.type.match("text/markdown")) {
+      let reader = new FileReader(),
+        fileName = file.name.split(".")[0];
+
+      reader.onload = () => {
+        let res = reader.result;
+        this.setState({
+          content: {
+            value: res
+          },
+          title: {
+            value: fileName
+          }
+        });
+        localStorage.setItem("title", fileName);
+        localStorage.setItem("content", res);
+      };
+
+      reader.readAsText(file);
+    }
+  };
+
+  _addFontSize() {
+    let fontSize = this.state.fontSize;
+
+    fontSize = parseInt(fontSize) + 1;
+
+    this.setState({
+      fontSize: fontSize
+    });
+
+    localStorage.setItem("fontSize", fontSize);
+  }
+
+  _desFontSize() {
+    let fontSize = this.state.fontSize;
+
+    fontSize = parseInt(fontSize) - 1;
+
+    if (fontSize < 12) {
+      fontSize = 12;
+    }
+
+    this.setState({
+      fontSize: fontSize
+    });
+
+    localStorage.setItem("fontSize", fontSize);
+  }
 
   render() {
     let {
@@ -384,7 +435,8 @@ class ArticlePost extends Component {
       catalog,
       isSubmit,
       isShowHead,
-      isShowPreview
+      isShowPreview,
+      fontSize
     } = this.state;
     let { location, user } = this.props,
       tagsArr = this.props.tags,
@@ -402,6 +454,7 @@ class ArticlePost extends Component {
         />
       );
     }
+
     return (
       <section className="ArticlePost-Page">
         {isShowHead ? (
@@ -426,6 +479,20 @@ class ArticlePost extends Component {
                 <section className="ArticlePost-subOption">
                   <ul>
                     <li>
+                      <label className="custom-file-upload">
+                        <p onClick={() => this._addFontSize()}>
+                          <Icon type="plus-circle-o" />
+                        </p>
+                      </label>
+                    </li>
+                    <li>
+                      <label className="custom-file-upload">
+                        <p onClick={() => this._desFontSize()}>
+                          <Icon type="minus-circle-o" />
+                        </p>
+                      </label>
+                    </li>
+                    <li>
                       <Popconfirm
                         placement="bottomRight"
                         title="Are you sure write a new article"
@@ -439,17 +506,12 @@ class ArticlePost extends Component {
                       </Popconfirm>
                     </li>
                     <li>
-                      <Popconfirm
-                        placement="bottomRight"
-                        title="Are you sure write a new article"
-                        onConfirm={() => this._uploadArticle()}
-                        okText="Yes"
-                        cancelText="No"
-                      >
+                      <label className="custom-file-upload">
                         <p>
                           <Icon type="upload" />
                         </p>
-                      </Popconfirm>
+                        <input type="file" onChange={this._uploadArticle} />
+                      </label>
                     </li>
                   </ul>
                 </section>
@@ -465,6 +527,7 @@ class ArticlePost extends Component {
                 style={{ width: isShowPreview ? "49%" : "98%" }}
               >
                 <TextArea
+                  style={{ fontSize: `${fontSize}px` }}
                   value={content.value}
                   onChange={this._handleContent}
                 />
@@ -524,36 +587,39 @@ class ArticlePost extends Component {
                   help={catalog.errorMsg}
                 >
                   <Input value={catalog.value} onChange={this._handleCatalog} />
+                  {catalogsArr.map((catalog, index) => {
+                    return (
+                      <Tag
+                        color="red"
+                        key={index}
+                        checked={index}
+                        onClick={e => this._addCatalog(e, index)}
+                      >
+                        {catalog._id}
+                      </Tag>
+                    );
+                  })}
                 </FormItem>
-                {catalogsArr.map((catalog, index) => {
-                  return (
-                    <Tag
-                      key={index}
-                      checked={index}
-                      onClick={e => this._addCatalog(e, index)}
-                    >
-                      {catalog._id}
-                    </Tag>
-                  );
-                })}
+
                 <FormItem
                   label="Tags"
                   validateStatus={tags.validateStatus}
                   help={tags.errorMsg}
                 >
                   <Input value={tags.value} onChange={this._handleTags} />
+                  {tagsArr.map((tag, index) => {
+                    return (
+                      <Tag
+                        color="blue"
+                        key={index}
+                        checked={index}
+                        onClick={e => this._addTag(e, index)}
+                      >
+                        {tag.tag}
+                      </Tag>
+                    );
+                  })}
                 </FormItem>
-                {tagsArr.map((tag, index) => {
-                  return (
-                    <Tag
-                      key={index}
-                      checked={index}
-                      onClick={e => this._addTag(e, index)}
-                    >
-                      {tag.tag}
-                    </Tag>
-                  );
-                })}
               </Modal>
             </section>
           </Form>
