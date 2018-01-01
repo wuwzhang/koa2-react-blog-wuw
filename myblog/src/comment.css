@@ -217,6 +217,9 @@ input:-moz-placeholder {
   margin: 0.83em 0 !important;
   color: #07689f;
 }
+.marked-preview h4 {
+  color: #07689f;
+}
 .marked-preview h5 {
   font-size: 0.83em;
   margin: 1.5em 0 !important;
