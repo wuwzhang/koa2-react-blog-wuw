@@ -9,48 +9,11 @@ import { fetchs as commentFetchs } from "../Comment/";
 import "./style.css";
 
 import { notification, Button, Icon, Popconfirm } from "antd";
-import { injectIntl, FormattedMessage, defineMessages } from "react-intl";
+import { injectIntl, FormattedMessage } from "react-intl";
+
+import message from "../../locale/message";
 
 const marked = require("marked");
-
-const message = defineMessages({
-  CommentReport: {
-    id: "CommentReport",
-    defaultMessage: "Are you sure"
-  },
-  LoginCheckMes: {
-    id: "LoginCheckMes",
-    defaultMessage: "Sign In"
-  },
-  ReportLoginCheackDes: {
-    id: "ReportLoginCheackDes",
-    defaultMessage: "Please sign in first"
-  },
-  ReportSuccessMsg: {
-    id: "ReportSuccessMsg",
-    defaultMessage: "Report Success"
-  },
-  ReportSuccessDes: {
-    id: "ReportSuccessDes",
-    defaultMessage: "Report Success"
-  },
-  ReportFailMsg: {
-    id: "ReportFailMsg",
-    defaultMessage: "Report Failed"
-  },
-  ReportFailDes: {
-    id: "ReportFailDes",
-    defaultMessage: "Report Failed"
-  },
-  PopcomfirmCheck: {
-    id: "PopcomfirmCheck",
-    defaultMessage: "yes"
-  },
-  PopcomfirmCancel: {
-    id: "PopcomfirmCancel",
-    defaultMessage: "cancle"
-  }
-});
 
 class SubCommentItem extends Component {
   constructor(props) {
@@ -185,7 +148,7 @@ class SubCommentItem extends Component {
               </li>
             </ul>
             <ul>
-              <li>
+              <li className="commentItem-createTime">
                 {reply.created_at ? reply.created_at.slice(0, 10) : reply}
               </li>
               <li>

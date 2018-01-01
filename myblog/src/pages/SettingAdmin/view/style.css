@@ -1,1 +1,75 @@
-
+.settingAdmin {
+  padding-top: 20px;
+}
+.settingAdmin-block,
+.settingAdmin-Apply-item {
+  min-height: 300px;
+  padding: 10px;
+  overflow-y: auto;
+  border: 1px solid rgba(162, 213, 242, 0.56);
+  width: 90%;
+  margin: 20px auto;
+}
+.settingAdmin-Apply-item {
+  border: 0;
+  background: -webkit-linear-gradient(
+      rgba(256, 256, 256, 0.3) 0%,
+      rgba(256, 256, 256, 0.6) 100%
+    ),
+    url(../../../media/about-1.png) no-repeat;
+  background: -o-linear-gradient(
+      rgba(256, 256, 256, 0.3) 0%,
+      rgba(256, 256, 256, 0.6) 100%
+    ),
+    url(../../../media/about-1.png) no-repeat;
+  background: linear-gradient(
+      rgba(256, 256, 256, 0.3) 0%,
+      rgba(256, 256, 256, 0.6) 100%
+    ),
+    url(../../../media/about-1.png) no-repeat;
+  background-position: 0% 0%;
+  background-size: 45% 70%;
+}
+.settingAdmin-item {
+  margin: 15px 0;
+}
+.settingAdmin-block-title {
+  margin: 5px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ff7e67;
+  border-bottom: 1px solid rgba(7, 104, 159, 0.71);
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+}
+.settingAdmin-itemName {
+  font-size: 14px;
+  font-weight: 500;
+  color: #07689f;
+  padding-left: 15px;
+}
+.settingAdmin-itemName::before {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-right: 1px solid #ff7e67;
+  border-top: 1px solid #ff7e67;
+  transform: translate(-18px, 5px) rotate(45deg);
+  -ms-transform: translate(-18px, 5px) rotate(45deg);
+  -webkit-transform: translate(-18px, 5px) rotate(45deg);
+  -o-transform: translate(-18px, 5px) rotate(45deg);
+  -moz-transform: translate(-18px, 5px) rotate(45deg);
+}
+.settingAdmin-apply-btn {
+  margin: 230px 20px 20px 5px;
+  width: 120px;
+  height: 40px !important;
+  font-size: 15px !important;
+  color: #fafafa !important;
+  border: 1px solid #fafafa !important;
+  background: #ff7e67 !important;
+}
+.settingAdmin-apply-btn:hover {
+  background: rgba(255, 126, 103, 0.85) !important;
+}

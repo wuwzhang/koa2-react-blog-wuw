@@ -176,6 +176,7 @@ class MessageAdmin extends Component {
                       return message ? (
                         <MessageLi
                           id={message._id}
+                          key={message._id}
                           index={index}
                           user={message.email}
                           isChecked={message.isChecked}

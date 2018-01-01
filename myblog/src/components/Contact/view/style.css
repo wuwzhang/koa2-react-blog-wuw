@@ -4,8 +4,8 @@
   height: 35px !important;
   font-size: 14px !important;
 }
-.Contact label {
-  color: # !important;
+.Contact .ant-form-item-label label {
+  color: #fafafa !important;
   font-size: 13px;
   font-weight: 400;
 }

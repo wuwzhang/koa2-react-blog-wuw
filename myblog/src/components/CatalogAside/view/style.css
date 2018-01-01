@@ -1,8 +1,10 @@
 .CatalogAside {
-  margin: 10px 0 0 16px;
+  margin: 15px 0 0 16px;
+  min-height: 25%;
+  max-height: 27%;
+  overflow-y: auto;
 }
 .CatalogAsided-CatalogTitle {
-  font-size: 16px;
   font-weight: bolder;
   margin-bottom: 10px;
 }
@@ -26,7 +28,6 @@
 .CatalogAside ul a li {
   font-size: 14px;
   color: #999;
-
 }
 .CatalogAside ul a:hover {
   cursor: pointer;
@@ -35,7 +36,7 @@
   color: rgba(255, 125, 104, 0.6);
 }
 .catalogCount {
-  color: #FF7E67;
+  color: #ff7e67;
   float: right;
   margin-right: 40px;
 }

@@ -13,10 +13,14 @@ import Pagination from "../../../components/Pagination/pagination";
 
 import { fetchs as TagsFetch } from "../../../components/TagsCloud/";
 import { getArticlesByTag } from "../fetch.js";
+import {
+  fetchs as configFetchs,
+  actions as configActions
+} from "../../SettingAdmin/";
 
 import QueueAnim from "rc-queue-anim";
 
-import { Row, Col } from "antd";
+import { Row, Col, Spin } from "antd";
 import "./style.css";
 import { FormattedMessage } from "react-intl";
 
@@ -30,13 +34,44 @@ class ArticleByTag extends Component {
       articles: [],
       tagContent: this.props.tagContent,
       currentPage: 1,
-      pageArticleCount: 1
+      pageArticleCount: 1,
+      base: true,
+      rank: true,
+      rankCount: 4,
+      articleCount: 4
     };
   }
 
   async componentDidMount() {
+    let ans = localStorage.getItem("config"),
+      config = JSON.parse(ans);
+    if (!config) {
+      let res = await configFetchs.getConfig();
+
+      if (res.code === "1") {
+        this.props.initConfig(res.config);
+        localStorage.setItem("config", JSON.stringify(res.config));
+        let searchPageConfig = res.config.searchPage;
+        this.setState({
+          base: searchPageConfig.base,
+          rank: searchPageConfig.rank,
+          rankCount: searchPageConfig.rankCount,
+          articleCount: searchPageConfig.articleCount
+        });
+      }
+    } else {
+      let searchPageConfig = config.searchPage;
+
+      this.setState({
+        base: searchPageConfig.base,
+        rank: searchPageConfig.rank,
+        rankCount: searchPageConfig.rankCount,
+        articleCount: searchPageConfig.articleCount
+      });
+    }
+
     let result = await Promise.all([
-      getArticlesByTag(this.props.tagContent, 1, 4),
+      getArticlesByTag(this.props.tagContent, 1, this.state.articleCount),
       TagsFetch.getTags()
     ]);
 
@@ -53,14 +88,20 @@ class ArticleByTag extends Component {
 
   async handlePage(curPage) {
     this.setState({
-      currentPage: curPage
+      currentPage: curPage,
+      searchLoading: true
     });
-    let result = await getArticlesByTag(this.props.tagContent, curPage, 4);
+    let result = await getArticlesByTag(
+      this.props.tagContent,
+      curPage,
+      this.state.articleCount
+    );
 
     if (result.code === "1") {
       this.setState({
         articles: result.articles,
-        pageArticleCount: result.count
+        pageArticleCount: result.count,
+        searchLoading: false
       });
     } else {
       console.log(result);
@@ -68,7 +109,7 @@ class ArticleByTag extends Component {
   }
 
   async _handleTags(content) {
-    let result = await getArticlesByTag(content, 1, 4);
+    let result = await getArticlesByTag(content, 1, this.state.articleCount);
 
     if (result.code === "1") {
       this.setState({
@@ -83,17 +124,20 @@ class ArticleByTag extends Component {
 
   render() {
     let {
-      articles,
+      articles = [],
       tagContent = this.props.tagContent,
       currentPage,
-      pageArticleCount
+      pageArticleCount,
+      base,
+      rank,
+      rankCount
     } = this.state;
     let { route } = this.props;
     if (tagContent !== this.props.tagContent) {
       this._handleTags(this.props.tagContent);
     }
 
-    let totalPages = Math.ceil(pageArticleCount / 4);
+    let totalPages = Math.ceil(pageArticleCount / this.state.articleCount);
     return (
       <section>
         <section className="All-Nav">
@@ -103,18 +147,17 @@ class ArticleByTag extends Component {
           <section className="articleByxx-container articleByTag-bg">
             <Row gutter={16}>
               <Col md={4} sm={4} xs={24}>
-                <section className="articleByxx-Aside">
-                  <SearchBox />
-                  <TagsCloud color="#07689f" />
-                  <CatalogAside color="#07689f" />
-                </section>
-                <Rank
-                  showCharNum={8}
-                  style={{ width: "100%", padding: "10px", border: "0" }}
-                />
+                {base ? (
+                  <section className="articleByxx-Aside">
+                    <SearchBox />
+                    <TagsCloud color="#07689f" />
+                    <CatalogAside color="#07689f" />
+                  </section>
+                ) : null}
+                {rank ? <Rank rankCount={rankCount} /> : null}
               </Col>
               <Col md={20} sm={20} xs={24}>
-                <p>
+                <p className="ArticleBySearch-tip">
                   <span>
                     <FormattedMessage
                       id="SearchByTag"
@@ -124,20 +167,22 @@ class ArticleByTag extends Component {
                   </span>
                   <span>{tagContent}</span>
                 </p>
-                <ul>
-                  <QueueAnim className="demo-content">
-                    {articles.map((article, index) => {
-                      return article ? (
-                        <ArticlTagItem
-                          key={index}
-                          ind={index}
-                          article={article}
-                          route={route}
-                        />
-                      ) : null;
-                    })}
-                  </QueueAnim>
-                </ul>
+                <Spin size="large" spinning={this.state.searchLoading === true}>
+                  <ul>
+                    <QueueAnim className="demo-content">
+                      {articles.map((article, index) => {
+                        return article ? (
+                          <ArticlTagItem
+                            key={index}
+                            ind={index}
+                            article={article}
+                            route={route}
+                          />
+                        ) : null;
+                      })}
+                    </QueueAnim>
+                  </ul>
+                </Spin>
                 <Pagination
                   totalPages={totalPages}
                   currentPage={currentPage}
@@ -160,8 +205,19 @@ const mapStateToProps = state => {
     route = pathname.split("/")[1];
   return {
     tagContent: tagContent,
-    route: route
+    route: route,
+    config: state.blog.config
   };
 };
 
-export default withRouter(connect(mapStateToProps)(ArticleByTag));
+const mapDispatchToProps = dispatch => {
+  return {
+    initConfig: config => {
+      dispatch(configActions.initConfig(config));
+    }
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ArticleByTag)
+);

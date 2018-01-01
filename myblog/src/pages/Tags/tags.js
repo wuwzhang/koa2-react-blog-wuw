@@ -3,6 +3,7 @@ import TagItem from "../../components/TagItem/index.js";
 import { view as TopMenu } from "../../components/TopMenu/";
 
 import { getAllTags } from "./fetch.js";
+import { Spin } from "antd";
 
 import "./style.css";
 
@@ -13,7 +14,8 @@ class Tags extends Component {
     super(props);
 
     this.state = {
-      tags: []
+      tags: [],
+      loading: true
     };
   }
   async componentDidMount() {
@@ -21,7 +23,8 @@ class Tags extends Component {
 
     if (result.code === "1") {
       this.setState({
-        tags: result.tags
+        tags: result.tags,
+        loading: false
       });
     } else {
       console.log(result);
@@ -41,15 +44,17 @@ class Tags extends Component {
             <h2 className="TagCloud-Title">
               <FormattedMessage id="AllTags" defaultMessage="All Tags" />
             </h2>
-            <div>
-              <ul>
-                {tags.map((tag, index) => {
-                  return tag ? (
-                    <TagItem key={index} content={tag.tag} id={tag._id} />
-                  ) : null;
-                })}
-              </ul>
-            </div>
+            <Spin size="large" spinning={this.state.loading === true}>
+              <div>
+                <ul>
+                  {tags.map(tag => {
+                    return tag ? (
+                      <TagItem key={tag._id} content={tag.tag} id={tag._id} />
+                    ) : null;
+                  })}
+                </ul>
+              </div>
+            </Spin>
           </section>
         </div>
       </section>

@@ -26,67 +26,72 @@ class CommentLi extends Component {
     return (
       <section className="ArticleLi">
         <Row>
-          <li className="ArticleLi-li commentLi-li">
-            <Col md={4}>
-              {replies && replies.length > 0 && !comment.isShowReply ? (
-                <span
-                  className="commentLi-toggle-btn"
-                  onClick={() =>
-                    this._handleShowReply({ commentIndex, state: true })
-                  }
-                >
-                  <Icon type="right" />&nbsp;&nbsp;
-                </span>
-              ) : null}
-              {replies && replies.length > 0 && comment.isShowReply ? (
-                <span
-                  className="commentLi-toggle-btn"
-                  onClick={() =>
-                    this._handleShowReply({ commentIndex, state: false })
-                  }
-                >
-                  <Icon type="down" />&nbsp;&nbsp;
-                </span>
-              ) : null}
-              <Link to={`/article_details/${article._id}`}>
-                <span>{article.title}</span>
-              </Link>
-            </Col>
-            <Col md={8}>
-              <p className="commentLi-li-message">
-                <span>{comment.content}</span>
-                <span
-                  style={{ color: "#999" }}
-                  className="ArticleLi-UpdateTime"
-                >
-                  ( {user.account}){" "}
-                </span>
-              </p>
-            </Col>
-            <Col md={4}>
-              <p className="commentLi-li-message commentAdmin-message">
-                <span>{created_at}</span>
-                <span>{comment.thumbsUp}</span>
-                <span>{comment.thumbsDown}</span>
-              </p>
-            </Col>
-            <Col md={4}>
-              {comment.isRePort ? (
-                <Badge status="error" text="reported" />
-              ) : (
-                <Badge status="success" text="not reported" />
-              )}
-            </Col>
-            <Col md={4}>
-              <CommentOptionNav
-                commentIndex={commentIndex}
-                myStyle={{ color: "#FF7E67" }}
-              />
-            </Col>
+          <li className="commentLi-li">
+            <section className="comementLi">
+              <Col md={4}>
+                {replies && replies.length > 0 && !comment.isShowReply ? (
+                  <span
+                    className="commentLi-toggle-btn"
+                    onClick={() =>
+                      this._handleShowReply({ commentIndex, state: true })
+                    }
+                  >
+                    <Icon type="right" />&nbsp;&nbsp;
+                  </span>
+                ) : null}
+                {replies && replies.length > 0 && comment.isShowReply ? (
+                  <span
+                    className="commentLi-toggle-btn"
+                    onClick={() =>
+                      this._handleShowReply({ commentIndex, state: false })
+                    }
+                  >
+                    <Icon type="down" />&nbsp;&nbsp;
+                  </span>
+                ) : null}
+                <Link to={`/article_details/${article._id}`}>
+                  <span className="commentLi-articleTitle">
+                    {article.title}
+                  </span>
+                </Link>
+              </Col>
+              <Col md={8}>
+                <p className="commentLi-li-message">
+                  <span>{comment.content}</span>
+                  <span
+                    style={{ color: "#999" }}
+                    className="ArticleLi-UpdateTime"
+                  >
+                    ( {user.account}){" "}
+                  </span>
+                </p>
+              </Col>
+              <Col md={4}>
+                <p className="commentLi-li-message commentAdmin-message">
+                  <span>{created_at}</span>
+                  <span>{comment.thumbsUp}</span>
+                  <span>{comment.thumbsDown}</span>
+                </p>
+              </Col>
+              <Col md={4}>
+                {comment.isRePort ? (
+                  <Badge status="error" text="reported" />
+                ) : (
+                  <Badge status="success" text="not reported" />
+                )}
+              </Col>
+              <Col md={4}>
+                <CommentOptionNav
+                  commentIndex={commentIndex}
+                  myStyle={{ color: "#FF7E67" }}
+                />
+              </Col>
+            </section>
             {comment.isShowReply
               ? replies.map((reply, index) => {
                   return (
                     <SubCommentLi
+                      key={index}
                       commentIndex={commentIndex}
                       subCommentIndex={index}
                     />

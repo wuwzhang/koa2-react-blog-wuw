@@ -1,0 +1,38 @@
+.verifyemail {
+  background: -webkit-linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.9) 100%
+    ),
+    url(../../media/about-3.png) no-repeat;
+  background: -o-linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.9) 100%
+    ),
+    url(../../media/about-3.png) no-repeat;
+  background: linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.9) 100%
+    ),
+    url(../../media/about-3.png) no-repeat;
+  background-position: 0% 30%;
+  background-size: 30% 60%;
+}
+.verifyemail-title {
+  font-size: 43px;
+  color: #07689f;
+  font-weight: 700;
+  top: 27vh;
+  position: absolute;
+}
+.verifyemail-title a.verifyemail-title-link {
+  font-size: 35px;
+  color: #ff7e67 !important;
+  text-decoration: underline !important;
+}
+.verifyemail-title a.verifyemail-title-link:hover {
+  text-decoration: underline;
+  color: rgba(255, 126, 103, 0.63) !important;
+}
+.verifyemail-Msg {
+  width: 85%;
+}

@@ -50,7 +50,6 @@ exports.deleteTags = (tags, articleId) => {
         );
 
         if (ans[0].count === 0) {
-          console.log("remove tags", tags);
           return await Tags.remove({ tag: tag });
         } else {
           return true;
@@ -66,13 +65,4 @@ exports.getTags = count => {
 };
 exports.getAllTags = () => {
   return Tags.find().exec();
-};
-
-exports.updateTag = (tags, articleId) => {
-  tags.forEach(async tag => {
-    try {
-    } catch (e) {
-      throw new Error(e);
-    }
-  });
 };

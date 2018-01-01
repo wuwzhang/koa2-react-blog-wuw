@@ -18,30 +18,22 @@ router.post("/api/article_post", async ctx => {
   if (utils.isEmpty(tags, catalog, title, content)) {
     code = "-1";
     message = "参数错误";
-    console.log("TopMenu - loginByToken- func");
   } else {
-    let tagsArr = tags.split(";"),
-      catalogArr = catalog.split(";"),
-      _id = new mongoose.Types.ObjectId();
+    let _id = new mongoose.Types.ObjectId();
 
-    //去空去重的tag和catalog
-    let tagAns = [...new Set(tagsArr)].filter(tag => {
-      return tag.length > 0;
-    });
-    let catalogAns = [...new Set(catalogArr)].filter(catalog => {
-      return catalog.length > 0;
-    });
+    let tagsArr = utils.getArrBySplitStr(tags, ";"),
+      catalogArr = utils.getArrBySplitStr(catalog, ";");
 
     await Promise.all([
       $Article.create({
         title,
         content,
-        tags: tagAns,
-        catalog: catalogAns,
+        tags: tagsArr,
+        catalog: catalogArr,
         _id: _id
       }),
-      $Tag.addTags(tagAns, _id),
-      $Catalog.addCatalog(catalogAns, _id)
+      $Tag.addTags(tagsArr, _id),
+      $Catalog.addCatalog(catalogArr, _id)
     ])
       .then(async (res, err) => {
         if (err) {
@@ -67,10 +59,13 @@ router.post("/api/article_post", async ctx => {
           message = err;
           throw new Error(err);
         } else {
-          return catalogAns.forEach(async catalog => {
+          return catalogArr.forEach(async catalog => {
             await redisUtils.setArticleCatalogs(catalog, 1);
           });
         }
+      })
+      .catch(e => {
+        throw new Error(e);
       });
   }
 

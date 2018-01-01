@@ -1,3 +1,6 @@
+.subCommentItem {
+  margin: 5px;
+}
 .subCommentItem-ul li {
   display: inline-block;
   vertical-align: middle;

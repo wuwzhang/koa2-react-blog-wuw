@@ -1,19 +1,19 @@
-export const DOMAIN = '';
-const CREDENTIALS = (process.env.ORIGIN) ? 'include' : 'same-origin';
+export const DOMAIN = "";
+const CREDENTIALS = process.env.ORIGIN ? "include" : "same-origin";
 
 export const getCatalogsAndCount = async () => {
-  let url = DOMAIN + '/api/article_Catalog_And_Count';
+  let url = DOMAIN + "/api/article_Catalog_And_Count";
 
   try {
     var result = await fetch(url, {
-      method: 'POST',
+      method: "GET",
       headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json'
+        Accept: "application/json",
+        "Content-type": "application/json"
       },
       credentials: CREDENTIALS
-    })
-  } catch(e) {
+    });
+  } catch (e) {
     console.log(e);
   }
 
@@ -21,8 +21,8 @@ export const getCatalogsAndCount = async () => {
     return result.json();
   } else {
     return {
-      code: '-2',
-      message: '未知错误'
-    }
+      code: "-2",
+      message: "未知错误"
+    };
   }
-}
+};

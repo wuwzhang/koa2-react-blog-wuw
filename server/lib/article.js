@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
 var Article = require("../models").Article;
-var Comments = require("../models").Comments;
 
 /**
  * 创建新文章
@@ -60,23 +59,18 @@ exports.updateArticleById = (articleId, data) => {
     console.log(err);
   });
 };
-
+exports.getDeleteArticle = articleId => {
+  return Article.findOne(
+    { _id: articleId },
+    { comments: 1, catalog: 1, tags: 1, title: 1 }
+  );
+};
 /**
  * 通过文章id删除文章
  * @param  {number} articleId 文章id
  */
 exports.deleteArticleById = articleId => {
-  return Article.remove({ _id: articleId })
-    .exec()
-    .then(res => {
-      if (res.result.ok && res.result.n > 0) {
-        return Comments.remove({
-          articleId: articleId
-        });
-      } else {
-        throw new Error("article delete error");
-      }
-    });
+  return Article.remove({ _id: articleId }).exec();
 };
 
 /**
@@ -237,7 +231,6 @@ exports.getArticlesByCatalog = (catalog, page, range) => {
 };
 
 exports.deleteComment = (articleId, commentId) => {
-  console.log("articleId", articleId, "commentId", commentId);
   return Article.updateOne(
     { _id: articleId },
     { $pull: { comments: mongoose.Types.ObjectId(commentId) } }

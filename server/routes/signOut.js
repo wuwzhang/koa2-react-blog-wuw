@@ -1,31 +1,28 @@
-const router = require('koa-router')();
-const redisUtils = require('../utils/redisUtils')
-const checkLoginUtils = require('../utils/checkLoginUtils')
+const router = require("koa-router")();
+const redisUtils = require("../utils/redisUtils");
+const checkLoginUtils = require("../utils/checkLoginUtils");
 
-router.post('/api/signOut', async(ctx, next) => {
+router.post("/api/signOut", async ctx => {
   let { userId } = ctx.request.body,
-      code = '1', message = '注销成功';
+    code = "1",
+    message = "注销成功";
 
   if (checkLoginUtils.cheackNotLogin(ctx)) {
-
     try {
-      let move = redisUtils.delUser(userId);
-
-      console.log(move)
+      await redisUtils.delUser(userId);
     } catch (e) {
-      code = '-2';
+      code = "-2";
       message = e.message;
     }
-
   } else {
-    code = '-3';
-    message = '未登录'
+    code = "-3";
+    message = "未登录";
   }
 
   ctx.response.body = {
-    'code': code,
-    'message': message
-  }
+    code: code,
+    message: message
+  };
 });
 
 module.exports = router;

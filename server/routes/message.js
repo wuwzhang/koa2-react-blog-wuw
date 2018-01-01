@@ -1,9 +1,12 @@
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const router = require("koa-router")();
 const Models = require("../lib/core");
 const $Messages = Models.$Messages;
+const redisUtils = require("../utils/redisUtils");
 const validator = require("validator");
-const nodemailer = require("nodemailer");
+const emailUtils = require("../utils/emailUtils");
+const configSendEmail = require("../config/blogConfig").basic
+  .NewMessageSendToEmail;
 
 router.post("/api/post_message", async ctx => {
   let { email, content } = ctx.request.body;
@@ -17,37 +20,25 @@ router.post("/api/post_message", async ctx => {
       message = "填写正确的邮箱格式";
     } else {
       email = validator.trim(email);
-      var result = await $Messages.create({ email, content });
+      let model = {
+        email: email,
+        content: content,
+        _id: new mongoose.Types.ObjectId()
+      };
+      var result = await Promise.all([
+        $Messages.create(model),
+        redisUtils.addNotCheckedMessage({ _id: model._id })
+      ]);
 
-      function sendEmail() {
-        var stmpTransport = nodemailer.createTransport({
-          host: "smtp.126.com",
-          secureConnection: true,
-          port: 25,
-          auth: {
-            user: "wuwZhang@126.com", //你的邮箱帐号,
-            pass: "sqwangyi22" //你的邮箱授权码
-          }
-        });
-
-        var mailOptions = {
-          from: "Messages <wuwZhang@126.com>", //标题
-          to: "wuwZhang@126.com", //收件人
-          subject: "Message Check", // 标题
-          html: "<p>博客有新消息待确认</p>" // html 内容
-        };
-
-        stmpTransport.sendMail(mailOptions, function(error, response) {
-          if (error) {
-            console.log("error", error);
-          } else {
-            console.log("Message sent:" + response.message);
-          }
-          stmpTransport.close();
-        });
+      if (configSendEmail) {
+        emailUtils.sendEmail(
+          "New Message Check",
+          "New Message, message from <wuwZhang@126.com>",
+          "wuwZhang@126.com",
+          "<p>博客有新消息待确认，<a href='http://localhost:3000/message_admin'>点击确认</a></p>"
+        );
+      } else {
       }
-
-      sendEmail(email);
     }
   } catch (e) {
     code = "-2";
@@ -61,12 +52,25 @@ router.post("/api/post_message", async ctx => {
   };
 });
 
-router.post("/api/getNotCheckedMessages", async ctx => {
+router.get("/api/getNotCheckedMessages", async ctx => {
   let code = "1",
     message = "获取消息成功";
 
   try {
-    var result = await $Messages.getMessagesByNotChecked();
+    // var result = await $Messages.getMessagesByNotChecked();
+    var result = await redisUtils.getNotCheckedMessage();
+
+    if (result === "-1") {
+      let msg = await $Messages.getMessagesByNotChecked();
+
+      if (msg.length > 0) {
+        msg.map(async item => {
+          return redisUtils.addNotCheckedMessage(item);
+        });
+      }
+
+      result = msg.length;
+    }
   } catch (e) {
     code = "-1";
     message = e.message;
@@ -108,7 +112,10 @@ router.post("/api/message_delete/:messageId", async ctx => {
   const { messageId } = ctx.params;
 
   try {
-    await $Messages.deleteMessageById(messageId);
+    await Promise.all([
+      $Messages.deleteMessageById(messageId),
+      redisUtils.delNotCheckedMessage({ _id: messageId })
+    ]);
   } catch (e) {
     (code = "-1"), (message = e.message);
   }
@@ -125,7 +132,10 @@ router.post("/api/message_checked/:messageId", async ctx => {
   const { messageId } = ctx.params;
 
   try {
-    $Messages.setMessageChecked(messageId);
+    await Promise.all([
+      $Messages.setMessageChecked(messageId),
+      redisUtils.delNotCheckedMessage({ _id: messageId })
+    ]);
   } catch (e) {
     (code = "-1"), (message = e.message);
   }

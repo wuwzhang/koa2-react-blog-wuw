@@ -1,8 +1,10 @@
 .keepOnFile {
-  margin: 10px 0 0 15px;
+  margin: 10px 0 0px 15px;
+  max-height: 33%;
+  min-height: 25%;
+  overflow-y: auto;
 }
 .KeepOnFile-AsideTitle {
-  font-size: 16px;
   font-weight: bolder;
   margin-bottom: 10px;
 }

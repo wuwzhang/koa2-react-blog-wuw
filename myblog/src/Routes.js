@@ -6,11 +6,13 @@ import createHistory from "history/createBrowserHistory";
 
 import { view as Home } from "./pages/Home/";
 import About from "./pages/About/index.js";
-import NotFound from "./pages/NotFound.js";
+import NotFound from "./pages/NotFound/NotFound.js";
 import VerifyMail from "./pages/VerifyMail/index.js";
 import VerifyGithub from "./pages/VerifyGithub/index.js";
 import { view as Tags } from "./pages/Tags/";
 import { view as Login } from "./pages/Login/";
+import { view as ForgetPsw } from "./pages/ForgetPsw/";
+import { view as ResetPassword } from "./pages/ResetPassword/";
 import { view as Register } from "./pages/Register/";
 import { view as ArticlePost } from "./pages/ArticlePost/";
 import { view as ArticleEdit } from "./pages/ArticleEdit/";
@@ -54,6 +56,8 @@ const Routes = () => (
       <Route path="/tags_cloud" component={Tags} />
       <Route path="/about" component={About} />
       <Route path="/login" component={Login} />
+      <Route path="/forget_psw" component={ForgetPsw} />
+      <Route path="/reset_password/:activeKey" component={ResetPassword} />
       <Route path="/signOut" component={Login} />
       <Route path="/regist" component={Register} />
       <Route path="/article_post" component={ArticlePost} />
@@ -72,7 +76,7 @@ const Routes = () => (
       <Route path="article_details/:articleId" getComponent={ getArticleDetailsPage }></Route> */}
       <Route path="/verifyemail/:verifyemail" component={VerifyMail} />
       <Route path="/github/oauth/callback" component={VerifyGithub} />
-      <Route component={NotFound} />
+      <Route path="*" status={404} component={NotFound} />
     </Switch>
   </ConnectedRouter>
 );

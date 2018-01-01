@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { Link } from "react-router-dom";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 
 import {
   actions as messageActions,
@@ -20,9 +20,11 @@ import {
 
 import "./style.css";
 import FontAwesome from "react-fontawesome";
-import { Badge, Icon, Menu, Dropdown, message, Row, Col } from "antd";
+import { Badge, Icon, Menu, Dropdown, Row, Col, notification } from "antd";
 
-class Topmenu extends Component {
+import message from "../../../locale/message";
+
+class TopMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -43,9 +45,25 @@ class Topmenu extends Component {
 
     let result = await loginFetchs.logout(user._id);
     if (result.code === "1") {
-      message.success("注销成功");
+      notification.open({
+        message: this.props.intl.formatMessage(message.LogoutSuccessMsg),
+        description: this.props.intl.formatMessage(message.LogoutSuccessDsc),
+        icon: <Icon type="smile-o" style={{ color: "#ff7e67" }} />,
+        style: {
+          color: "#ff7e67",
+          bacground: "#fafafa"
+        }
+      });
     } else {
-      message.error("啊呀妈呀，失败了");
+      notification.open({
+        message: this.props.intl.formatMessage(message.LogoutFailMsg),
+        description: this.props.intl.formatMessage(message.LogoutFailDsc),
+        icon: <Icon type="meh-o" style={{ color: "#A2D5F2" }} />,
+        style: {
+          color: "#ff7e67",
+          bacground: "#fafafa"
+        }
+      });
     }
 
     this.props.loginOut(user);
@@ -69,7 +87,7 @@ class Topmenu extends Component {
           try {
             return await Promise.all([
               messageFetchs.getNotCheckedMessages(),
-              commentFetchs.getNotCheckedComments()
+              commentFetchs.getNotCheckedAndReportedComments()
             ]);
           } catch (e) {
             throw new Error(e);
@@ -88,7 +106,10 @@ class Topmenu extends Component {
           }
 
           if (comment.code === "1") {
-            this.props.initNotCheckedComment(comment.result);
+            this.props.initNotCheckedAndReportedComment(
+              comment.result.notCheckedCount,
+              comment.result.reportedCount
+            );
           }
         }
       });
@@ -96,12 +117,14 @@ class Topmenu extends Component {
 
   render() {
     let {
-      commentcommentNotCheckedCount,
-      messagecommentNotCheckedCount
+      commentcommentNotCheckedCount = 0,
+      commentcommentReportedCount = 0,
+      messagecommentNotCheckedCount = 0,
+      ...resProps
     } = this.props;
 
     return (
-      <div className="container">
+      <div className="container" {...resProps}>
         <Row>
           <nav className="top-menu">
             <Col md={16} sm={24} xs={24}>
@@ -141,13 +164,20 @@ class Topmenu extends Component {
                   {this.props.user.level === 0 ? (
                     <li className="base-item">
                       {commentcommentNotCheckedCount > 0 ||
+                      commentcommentReportedCount > 0 ||
                       messagecommentNotCheckedCount > 0 ? (
                         <Dropdown overlay={menu}>
                           <Link
                             className="ant-dropdown-link"
                             to="/article_admim"
                           >
-                            <Badge dot>
+                            <Badge
+                              count={
+                                commentcommentNotCheckedCount +
+                                commentcommentReportedCount +
+                                messagecommentNotCheckedCount
+                              }
+                            >
                               <Icon type="bell" style={{ color: "#FAFAFA" }} />
                             </Badge>
                             &nbsp;&nbsp;&nbsp;
@@ -246,7 +276,8 @@ const menu = (
   </Menu>
 );
 
-Topmenu.propTypes = {
+TopMenu.propTypes = {
+  intl: PropTypes.object.isRequired,
   user: PropTypes.object,
   loginOut: PropTypes.func,
   loginByToken: PropTypes.func
@@ -255,8 +286,9 @@ Topmenu.propTypes = {
 const mapStateToProps = state => ({
   user: state.login.user,
   location: state.routing.location,
-  commentcommentNotCheckedCount: state.comment.NotCheckedCount,
-  messagecommentNotCheckedCount: state.message.NotCheckedCount
+  commentcommentNotCheckedCount: state.comment.NotCheckedCount || 0,
+  commentcommentReportedCount: state.comment.ReportCount || 0,
+  messagecommentNotCheckedCount: state.message.NotCheckedCount || 0
 });
 
 const mapDispatchToProps = dispatch => {
@@ -267,8 +299,13 @@ const mapDispatchToProps = dispatch => {
     loginOut: user => {
       dispatch(loginActions.loginOut(user));
     },
-    initNotCheckedComment: count => {
-      dispatch(commentActions.commentNotChecked(count));
+    initNotCheckedAndReportedComment: (notCheckedCount, reportedCount) => {
+      dispatch(
+        commentActions.commentNotCheckedAndReported(
+          notCheckedCount,
+          reportedCount
+        )
+      );
     },
     initNotCheckedMessage: count => {
       dispatch(messageActions.messageNotChecked(count));
@@ -276,4 +313,6 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Topmenu);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  injectIntl(TopMenu, { withRef: true })
+);

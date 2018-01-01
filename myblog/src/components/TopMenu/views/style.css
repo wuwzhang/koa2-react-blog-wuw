@@ -44,3 +44,11 @@
   color: #fafafa;
   line-height: 34px;
 }
+.ant-dropdown-link .ant-badge-count {
+  width: 20px;
+}
+.ant-dropdown-link .ant-badge-count p {
+  width: 20px !important;
+  margin-left: -10px;
+  text-align: center;
+}

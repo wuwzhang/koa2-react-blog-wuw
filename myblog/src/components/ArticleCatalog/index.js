@@ -10,7 +10,10 @@ import { FormattedMessage } from "react-intl";
 export const ArticleCatalog = ({ catalog, color = "#369" }) => {
   return (
     <section className="ArticleCatalog">
-      <h6 className="ArticleCatalog-CatalogTitle" style={{ color: color }}>
+      <h6
+        className="ArticleCatalog-CatalogTitle aside-title"
+        style={{ color: color }}
+      >
         <FontAwesome
           className="ArticleCatalog-Catalogitle-icon"
           name="bookmark"
@@ -21,7 +24,10 @@ export const ArticleCatalog = ({ catalog, color = "#369" }) => {
       </h6>
       {catalog
         ? catalog.map(catalog => (
-            <Link to={`/article_by_catalog/${catalog}`}>
+            <Link
+              key={catalog.toString()}
+              to={`/article_by_catalog/${catalog}`}
+            >
               <Tag color="green">{catalog}</Tag>
             </Link>
           ))

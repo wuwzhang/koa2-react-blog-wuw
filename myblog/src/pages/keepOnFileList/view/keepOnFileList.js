@@ -30,7 +30,8 @@ class KeepOnFileList extends Component {
       searchLoading: true,
       articleList: [],
       catalogView: "catalog", //true 为list视图, false为summary视图
-      aside: true //true为base， false为rank
+      aside: true, //true为base， false为rank
+      rankCount: 5
     };
     this.handleView = this.handleView.bind(this);
     this.handlePage = this.handlePage.bind(this);
@@ -47,18 +48,21 @@ class KeepOnFileList extends Component {
         let keepOnFileConfig = res.config.keepOnFile;
         this.setState({
           catalogView: keepOnFileConfig.catalogView,
-          aside: keepOnFileConfig.aside
+          aside: keepOnFileConfig.aside,
+          rankCount: keepOnFileConfig.rankCount,
+          articleCount: keepOnFileConfig.articleCount
         });
       }
     } else {
       let keepOnFileConfig = config.keepOnFile;
       this.setState({
         catalogView: keepOnFileConfig.catalogView,
-        aside: keepOnFileConfig.aside
+        aside: keepOnFileConfig.aside,
+        articleCount: keepOnFileConfig.articleCount
       });
     }
 
-    let result = await getArticleDateList(1, 4);
+    let result = await getArticleDateList(1, this.state.articleCount);
 
     if (result.code === "1") {
       this.setState({
@@ -77,7 +81,7 @@ class KeepOnFileList extends Component {
       currentPage: curPage,
       redirectToReferrer: false
     });
-    let result = await getArticleDateList(curPage, 4);
+    let result = await getArticleDateList(curPage, this.state.articleCount);
 
     if (result.code === "1") {
       this.setState({
@@ -104,8 +108,15 @@ class KeepOnFileList extends Component {
     });
   }
   render() {
-    let { articleList, catalogView, aside, currentPage, count } = this.state;
-    let totalPages = Math.ceil(count / 4);
+    let {
+      articleList,
+      catalogView,
+      aside,
+      currentPage,
+      count,
+      rankCount
+    } = this.state;
+    let totalPages = Math.ceil(count / this.state.articleCount);
 
     return (
       <section>
@@ -173,8 +184,8 @@ class KeepOnFileList extends Component {
                       <CatalogAside color="#07689f" />
                     </section>
                   ) : (
-                    <section className="keepOnFile-rank">
-                      <Rank />
+                    <section className="keepOnFile-rank aside">
+                      <Rank rankCount={rankCount} />
                     </section>
                   )}
                   <p

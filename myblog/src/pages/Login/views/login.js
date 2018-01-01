@@ -114,7 +114,7 @@ class Login extends Component {
               try {
                 return await Promise.all([
                   messageFetch.getNotCheckedMessages(),
-                  commentFetch.getNotCheckedComments()
+                  commentFetch.getNotCheckedAndReportedComments()
                 ]);
               } catch (e) {
                 throw new Error(e);
@@ -137,7 +137,7 @@ class Login extends Component {
               description: this.props.intl.formatMessage(
                 message[this.state.failMessage]
               ),
-              icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+              icon: <Icon type="meh-o" style={{ color: "#A2D5F2" }} />,
               style: {
                 color: "#ff7e67",
                 bacground: "#fafafa"
@@ -157,7 +157,10 @@ class Login extends Component {
             }
 
             if (comment.code === "1") {
-              this.props.initNotCheckedComment(comment.result);
+              this.props.initNotCheckedAndReportedComment(
+                comment.result.notCheckedCount,
+                comment.result.reportedCount
+              );
             }
           }
         });
@@ -165,7 +168,7 @@ class Login extends Component {
       notification.open({
         message: this.props.intl.formatMessage(message.CheckMsgMsg),
         description: this.props.intl.formatMessage(message.CheckMsgDes),
-        icon: <Icon type="meh-o" style={{ color: "#ff7e67" }} />,
+        icon: <Icon type="meh-o" style={{ color: "#A2D5F2" }} />,
         style: {
           color: "#ff7e67",
           bacground: "#fafafa"
@@ -181,12 +184,6 @@ class Login extends Component {
 
     if (result.code === "1") {
       window.location.href = result.path;
-    }
-  }
-
-  _handleKeyPress(event) {
-    if (event.key === "Enter") {
-      this._signIn();
     }
   }
 
@@ -292,8 +289,19 @@ class Login extends Component {
                         </Col>
                         <Col md={14} sm={14} xs={24}>
                           <p className="login-other">
-                            <Link to="/forget_psw">Forget password</Link> or{" "}
-                            <Link to="/regist">Regist Now</Link>
+                            <Link to="/forget_psw">
+                              <FormattedMessage
+                                id="ForgetPsw"
+                                defaultMessage="Forget Password"
+                              />
+                            </Link>{" "}
+                            or{" "}
+                            <Link to="/regist">
+                              <FormattedMessage
+                                id="RegistNow"
+                                defaultMessage="Regist Now"
+                              />
+                            </Link>
                           </p>
                         </Col>
                       </Row>
@@ -350,8 +358,13 @@ const mapDispatchToProps = dispatch => {
       dispatch(failLogin(message));
       dispatch(loginFail(message));
     },
-    initNotCheckedComment: count => {
-      dispatch(commentAction.commentNotChecked(count));
+    initNotCheckedAndReportedComment: (notCheckedCount, reportedCount) => {
+      dispatch(
+        commentAction.commentNotCheckedAndReported(
+          notCheckedCount,
+          reportedCount
+        )
+      );
     },
     initNotCheckedMessage: count => {
       dispatch(messageAction.messageNotChecked(count));

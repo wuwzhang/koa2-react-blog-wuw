@@ -18,6 +18,40 @@ exports.addCatalog = (catalogs, articleId) => {
   });
 };
 
+exports.deleteCatalog = (catalogs, articleId) => {
+  catalogs.forEach(async catalog => {
+    await Catalog.update(
+      { catalog: catalog },
+      { $pull: { articleId: articleId } }
+    ).then(async res => {
+      if (res.ok != 1) {
+        return false;
+      }
+      let ans = await Catalog.aggregate(
+        { $match: { catalog: catalog } },
+        {
+          $addFields: {
+            count: {
+              $size: "$articleId"
+            }
+          }
+        },
+        {
+          $project: {
+            count: 1
+          }
+        }
+      );
+
+      if (ans[0].count === 0) {
+        return await Catalog.remove({ catalog: catalog });
+      } else {
+        return true;
+      }
+    });
+  });
+};
+
 exports.getArticleCatalogs = () => {
   return Catalog.aggregate(
     {

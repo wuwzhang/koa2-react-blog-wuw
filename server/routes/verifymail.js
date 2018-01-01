@@ -1,39 +1,40 @@
-const router = require('koa-router')();
-const Models = require('../lib/core');
+const router = require("koa-router")();
+const Models = require("../lib/core");
 const $User = Models.$User;
-const jwtKoa = require('koa-jwt');
-const redisUtils = require('../utils/redisUtils')
+const redisUtils = require("../utils/redisUtils");
 
-router.post('/api/registActive', async(ctx, next) => {
-  let code = '1', message = '登录成功';
+router.post("/api/registActive", async ctx => {
+  let code = "1",
+    message = "登录成功";
   var { verifyKey } = ctx.request.body;
 
   try {
-    const activeKey = verifyKey.split('/')[2];
+    const activeKey = verifyKey.split("/")[2];
 
-    await redisUtils.getCreateTmpUser(activeKey)
-          .then(async (res) => {
-            let { activeKey, ...user } = res;
-            await $User.create(user);
-          })
-          .then(async () => {
-            let result = await redisUtils.delCreateTmpUser(activeKey)
+    await redisUtils
+      .getCreateTmpUser(activeKey)
+      .then(async res => {
+        /*eslint no-unused-vars: ["error", { "ignoreRestSiblings": true }]*/
+        let { activeKey, ...user } = res;
+        await $User.create(user);
+      })
+      .then(async () => {
+        let result = await redisUtils.delCreateTmpUser(activeKey);
 
-            if (result === 0) {
-              code = '-1';
-              message = '存入redis错误'
-            }
-          })
-    // await $User.verifymail(activeKey, true);
+        if (result === 0) {
+          code = "-1";
+          message = "存入redis错误";
+        }
+      });
   } catch (e) {
-    code = '-2';
+    code = "-2";
     message = e.message;
   }
 
   ctx.response.body = {
-    'code': code,
-    'message': message
-  }
+    code: code,
+    message: message
+  };
 });
 
 module.exports = router;

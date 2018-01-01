@@ -1,11 +1,9 @@
-.aside, .articleDetails-rank {
-  position: relative !important;
+.articleDetails-rank {
   border: 1px solid #ccc;
   border-radius: 3px;
   width: 200px;
   padding: 10px;
-  background: rgba(250, 250, 250, .9);
+  background: rgba(250, 250, 250, 0.9);
 }
 .Aside-title {
-
 }

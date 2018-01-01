@@ -7,6 +7,10 @@ import {
   fetchs as commentFetchs,
   actions as commentActions
 } from "../../Comment/";
+import {
+  fetchs as configFetchs,
+  actions as configActions
+} from "../../../pages/SettingAdmin/";
 
 import "./style.css";
 
@@ -15,14 +19,39 @@ class CommentList extends Component {
     super(props);
 
     this.state = {
-      currentPage: 1
+      currentPage: 1,
+      commentCount: 4
     };
 
     this.handlePage = this.handlePage.bind(this);
   }
 
   async componentDidMount() {
-    let result = await commentFetchs.getComment(this.props.articleId, 1, 4);
+    let ans = localStorage.getItem("config"),
+      config = JSON.parse(ans);
+    if (!config) {
+      let res = await configFetchs.getConfig();
+
+      if (res.code === "1") {
+        this.props.initConfig(res.config);
+        localStorage.setItem("config", JSON.stringify(res.config));
+        let commentConfig = res.config.comment;
+        this.setState({
+          commentCount: commentConfig.count
+        });
+      }
+    } else {
+      let commentConfig = config.comment;
+
+      this.setState({
+        commentCount: commentConfig.count
+      });
+    }
+    let result = await commentFetchs.getComment(
+      this.props.articleId,
+      1,
+      this.state.commentCount
+    );
 
     if (result.code === "1") {
       // this.props.initComment(result.comments)
@@ -68,7 +97,7 @@ class CommentList extends Component {
     let result = await commentFetchs.getComment(
       this.props.articleId,
       currentPage,
-      4
+      this.state.commentCount
     );
 
     if (result.code === "1") {
@@ -110,7 +139,7 @@ class CommentList extends Component {
   render() {
     let { comments = [], commentCount } = this.props,
       { currentPage } = this.state,
-      totalPages = Math.ceil(commentCount / 4);
+      totalPages = Math.ceil(commentCount / this.state.commentCount);
 
     return (
       <section className="comment-list">
@@ -138,7 +167,8 @@ const mapStateToProps = state => {
     comments: state.comment.articleComments,
     commentCount: state.articleDetails.article.comments,
     articleId: articleId,
-    user: state.login.user
+    user: state.login.user,
+    config: state.blog.config
   };
 };
 
@@ -146,6 +176,9 @@ const mapDispatchToProps = dispatch => {
   return {
     initComment: comments => {
       dispatch(commentActions.commentInit(comments));
+    },
+    initConfig: config => {
+      dispatch(configActions.initConfig(config));
     }
   };
 };

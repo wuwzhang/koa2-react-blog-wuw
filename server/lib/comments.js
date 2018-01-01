@@ -161,7 +161,7 @@ exports.deleteCommentsByArticleId = articleId => {
 };
 
 exports.getCommentsByNotChecked = () => {
-  return Comments.count({ isChecked: false }).exec();
+  return Comments.find({ isChecked: false }, { _id: 1 }).exec();
 };
 
 exports.deleteCommentById = async id => {

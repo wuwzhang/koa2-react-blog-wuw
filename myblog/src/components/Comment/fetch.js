@@ -191,12 +191,12 @@ export const getAllComment = async (page, eachPageArticles) => {
   }
 };
 
-export const getNotCheckedComments = async () => {
-  let url = DOMAIN + "/api/getNotCheckedComments";
+export const getNotCheckedAndReportedComments = async () => {
+  let url = DOMAIN + "/api/get_NotChecked_And_Reported_Comments";
 
   try {
     var result = await fetch(url, {
-      method: "POST",
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-type": "application/json"

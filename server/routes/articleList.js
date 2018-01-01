@@ -20,7 +20,7 @@ router.post("/api/article_list", async ctx => {
   };
 });
 
-router.post("/api/article_date_list", async ctx => {
+router.get("/api/article_date_list", async ctx => {
   let code = "1",
     message = "ok";
 

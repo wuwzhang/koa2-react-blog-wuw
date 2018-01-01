@@ -19,6 +19,7 @@ import { reducer as tagsReducer } from "./components/TagsCloud/";
 // import { reducer as localesReducer } from './components/ConnectedIntlProvider/';
 import { reducer as articleSearchReducer } from "./components/ArticleSearch/";
 import { reducer as rankReducer } from "./components/Rank/";
+import { reducer as configReducer } from "./pages/SettingAdmin/";
 
 import Perf from "react-addons-perf";
 
@@ -38,7 +39,8 @@ const reducer = combineReducers({
   catalog: catalogReducer,
   tag: tagsReducer,
   routing: routerReducer,
-  rank: rankReducer
+  rank: rankReducer,
+  blog: configReducer
   // locales: localesReducer
 });
 

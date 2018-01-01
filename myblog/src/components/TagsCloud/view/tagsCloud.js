@@ -1,8 +1,7 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-
-import qs from "qs";
 
 import TagItem from "../../TagItem/index.js";
 import { getTags } from "../fetch.js";
@@ -10,47 +9,53 @@ import { initTags } from "../action.js";
 
 import FontAwesome from "react-fontawesome";
 import "./style.css";
-import { Tooltip } from "antd";
-import { FormattedMessage } from "react-intl";
+import { Tooltip, Spin } from "antd";
+import { FormattedMessage, injectIntl } from "react-intl";
+
+import message from "../../../locale/message";
 
 class TagsCloud extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tags: []
+      tags: [],
+      loading: true
     };
   }
   async componentDidMount() {
-    let result = await getTags(10);
+    let { tags } = this.props.tags;
 
-    if (result.code === "1") {
-      this.props.initTags(result.tags);
+    if (tags && tags.length > 0) {
+      this.setState({
+        tags: tags,
+        loading: false
+      });
     } else {
-      console.log(result);
+      let result = await getTags();
+
+      if (result.code === "1") {
+        this.props.initTags(result.tags);
+        this.setState({
+          tags: result.tags,
+          loading: false
+        });
+      } else {
+        console.log(result);
+      }
     }
   }
   render() {
-    let tags = this.props.tags;
+    let { tags = [] } = this.state;
     let { color = "#369" } = this.props;
-
-    const languages = navigator.languages;
-    const browserLanguage = languages[0];
-
-    const locale =
-      qs.parse(document.location.search && document.location.search.slice(1))
-        .locale ||
-      browserLanguage ||
-      "en-US";
-
-    let cliclTip = "click to show more";
-
-    cliclTip = locale === "zh-CN" ? "点击查看更多标签" : "click to show more";
 
     return (
       <section className="TagsCloud">
-        <h6 className="TagsCloud-TagsTitle">
-          <Tooltip placement="top" title={<span>{cliclTip}</span>}>
+        <h6 className="TagsCloud-TagsTitle aside-title">
+          <Tooltip
+            placement="top"
+            title={this.props.intl.formatMessage(message.TagsCloudTip)}
+          >
             <Link to="/tags_cloud" style={{ color: color }}>
               <FontAwesome className="TagsCloud-icon" name="cloud" />
               <span>
@@ -63,20 +68,28 @@ class TagsCloud extends Component {
             </Link>
           </Tooltip>
         </h6>
-        <section>
-          <ul>
-            {tags.map((tag, index) => {
-              // console.log(tag);
-              return tag ? (
-                <TagItem key={index} id={tag._id} content={tag.tag} />
-              ) : null;
-            })}
-          </ul>
-        </section>
+        <Spin size="small" spinning={this.state.loading === true}>
+          <section>
+            <ul>
+              {tags.map((tag, index) => {
+                // console.log(tag);
+                return tag ? (
+                  <TagItem key={index} id={tag._id} content={tag.tag} />
+                ) : null;
+              })}
+            </ul>
+          </section>
+        </Spin>
       </section>
     );
   }
 }
+
+TagsCloud.propTypes = {
+  intl: PropTypes.object.isRequired,
+  initTags: PropTypes.func,
+  tags: PropTypes.object
+};
 
 const mapStateToProps = state => ({
   tags: state.tag.tags
@@ -90,4 +103,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TagsCloud);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  injectIntl(TagsCloud, {
+    withRef: true
+  })
+);

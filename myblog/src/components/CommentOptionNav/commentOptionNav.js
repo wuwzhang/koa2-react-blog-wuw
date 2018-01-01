@@ -20,13 +20,13 @@ class CommentOptionNav extends Component {
     };
   }
 
-  async _deleteComment(event, article, commentId, isChecked) {
+  async _deleteComment(event, article, commentId, isChecked, isRePort) {
     event.preventDefault();
 
     let result = await commentFetch.deleteComment(commentId, article);
 
     if (result.code === "1") {
-      this.props.deleteComment(this.props.commentIndex, isChecked);
+      this.props.deleteComment(this.props.commentIndex, isChecked, isRePort);
     } else {
     }
   }
@@ -65,7 +65,13 @@ class CommentOptionNav extends Component {
             <Popconfirm
               title="Are you sure delete this task?"
               onConfirm={e =>
-                this._deleteComment(e, comment.article, comment.id, isChecked)
+                this._deleteComment(
+                  e,
+                  comment.article,
+                  comment.id,
+                  isChecked,
+                  isRePort
+                )
               }
               okText="Yes"
               cancelText="No"
@@ -141,8 +147,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    deleteComment: (commentIndex, checked) => {
-      dispatch(commentAction.commentDelete(commentIndex, checked));
+    deleteComment: (commentIndex, checked, reported) => {
+      dispatch(commentAction.commentDelete(commentIndex, checked, reported));
     },
     setCommentChecked: commentIndex => {
       dispatch(commentAction.commentChecked(commentIndex));

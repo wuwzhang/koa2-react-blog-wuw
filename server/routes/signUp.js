@@ -2,46 +2,14 @@ const router = require("koa-router")();
 const Models = require("../lib/core");
 const $User = Models.$User;
 const redisUtils = require("../utils/redisUtils");
-const nodemailer = require("nodemailer");
+
+const emailUtils = require("../utils/emailUtils");
 const cryptoUtils = require("../utils/cryptoUtils");
 const validator = require("validator");
 
-// router.get('/home/register', async(ctx, next) => {
-//   await ctx.render('home/register');
-// });
-//
-
-function sendEmail(key, email) {
-  var stmpTransport = nodemailer.createTransport({
-    host: "smtp.126.com",
-    secureConnection: true,
-    port: 25,
-    auth: {
-      user: "wuwZhang@126.com", //你的邮箱帐号,
-      pass: "sqwangyi22" //你的邮箱授权码
-    }
-  });
-
-  var mailOptions = {
-    from: "Fred Foo <wuwZhang@126.com>", //标题
-    to: email, //收件人
-    subject: "注册邮箱认证", // 标题
-    html:
-      "<a href='http://localhost:3000/verifyemail/" +
-      key +
-      "'>点击进行邮箱验证</a>" // html 内容
-  };
-
-  stmpTransport.sendMail(mailOptions, function(error, response) {
-    if (error) {
-      console.log("error", error);
-    } else {
-      console.log("Message sent:" + response.message);
-    }
-    stmpTransport.close();
-  });
-}
-
+/**
+ * 用户注册
+ */
 router.post("/api/signUp", async ctx => {
   let code = "1",
     message = "注册成功";
@@ -71,7 +39,14 @@ router.post("/api/signUp", async ctx => {
       delete user.password;
       // ctx.session.user = user;
 
-      sendEmail(activeKey, account);
+      emailUtils.sendEmail(
+        "邮箱注册",
+        "Fred Foo <wuwZhang@126.com>",
+        account,
+        "<a href='http://localhost:3000/verifyemail/" +
+          activeKey +
+          "'>点击进行邮箱验证</a>"
+      );
     }
   } catch (e) {
     if (e.message.match("E11000 duplicate key")) {
@@ -89,6 +64,9 @@ router.post("/api/signUp", async ctx => {
   };
 });
 
+/**
+ * 确认账户是否存在
+ */
 router.post("/api/checkAccount", async ctx => {
   const { account } = ctx.request.body,
     user = await $User.getUserByAccount(account);
@@ -101,6 +79,71 @@ router.post("/api/checkAccount", async ctx => {
   } else {
     code, message;
   }
+  ctx.response.body = {
+    code: code,
+    message: message
+  };
+});
+
+/**
+ * 忘记密码
+ */
+router.post("/api/forgetPsw", async ctx => {
+  let { account } = ctx.request.body;
+
+  let code = "1",
+    message = "ok";
+
+  try {
+    account = validator.trim(account);
+    var activeKey = cryptoUtils.md5(validator.trim(account));
+
+    await redisUtils.createForgetUser(account, activeKey);
+
+    emailUtils.sendEmail(
+      "邮箱重置",
+      "Fred Foo <wuwZhang@126.com>",
+      account,
+      "<a href='http://localhost:3000/reset_password/" +
+        activeKey +
+        "'>点击进行密码重置</a>"
+    );
+  } catch (e) {
+    code = "-1";
+    message = e.message;
+  }
+
+  ctx.response.body = {
+    code: code,
+    message: message
+  };
+});
+
+/**
+ * 重置密码
+ */
+router.post("/api/reset_password", async ctx => {
+  let { activeKey, password } = ctx.request.body,
+    code = "1",
+    message = "reset password succeed";
+
+  try {
+    let account = await redisUtils.getForgetUser(activeKey);
+    password = cryptoUtils.md5(validator.trim(password));
+
+    if (account) {
+      await $User.updatePasswordByAccount(account, password).then(async () => {
+        await redisUtils.delForgetUser(activeKey);
+      });
+    } else {
+      code = "-1";
+      message = "redis中用户不存在";
+    }
+  } catch (e) {
+    code = "-2";
+    message = e.message;
+  }
+
   ctx.response.body = {
     code: code,
     message: message

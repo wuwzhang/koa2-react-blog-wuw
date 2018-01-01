@@ -18,13 +18,18 @@ section.keepOnFile-page {
     url(../../../media/keepOnFile-bg.png) no-repeat;
   background-size: 80% 80vh;
   background-position: left bottom;
-  padding-top: 30px;
+  padding-top: 20px;
 }
 .timeline {
-  background: rgba(250, 250, 250, 0.6);
+  background: rgba(250, 250, 250, 0.8);
+  max-height: 85vh;
+  overflow: auto;
+  padding: 20px;
+  margin-right: 20px;
 }
-.timeline .pagination {
-  margin-top: 20px;
+.keepOnFile-page .pagination {
+  position: absolute;
+  margin-top: 5px;
 }
 .aside {
   position: absolute;
@@ -35,7 +40,8 @@ section.keepOnFile-page {
 }
 .KeepOnFile-View {
   position: absolute;
-  top: -5px;
+  top: 5px;
+  z-index: 100;
 }
 section.KeepOnFile-View span {
   font-weight: 700;
@@ -43,3 +49,214 @@ section.KeepOnFile-View span {
 .KeepOnFile-ViewIcon {
   margin-right: 5px !important;
 }
+.keepOnFile-aside {
+  position: relative;
+  height: 85vh;
+}
+.keepOnFile-aside .aside,
+.keepOnFile-aside .keepOnFile-rank {
+  position: absolute;
+  background: #fafafa;
+  height: 100%;
+}
+.keepOnFile-aside .aside {
+  overflow: hidden;
+  padding: 10px !important;
+}
+.keepOnFile-aside .aside-title {
+  font-size: 16px;
+}
+.keepOnFile-aside-change-btn {
+  position: absolute;
+  left: 115%;
+  top: 40%;
+  color: #ff7e67;
+  font-size: 16px;
+  transition: color 0.5s;
+}
+.keepOnFile-aside-change-btn:hover {
+  cursor: pointer;
+  color: rgba(255, 126, 103, 0.5);
+}
+.keepOnFile-aside-change-btn span {
+  color: #49a9ee;
+  display: inline-block;
+  padding-top: 10px;
+  border-top: 1px solid #ff7e67;
+  width: 45px;
+  font-size: 14px;
+}
+.right-animtion {
+  animation: rightMove 0.5s ease 0.5s infinite;
+  -moz-animation: rightMove 0.5s ease 0.5s infinite;
+  -webkit-animation: rightMove 0.5s ease 0.5s infinite;
+  -o-animation: rightMove 0.5s ease 0.5s infinite;
+}
+@keyframes rightMove {
+  from {
+    margin-left: 0px;
+  }
+  to {
+    margin-left: 20px;
+  }
+}
+@-moz-keyframes rightMove {
+  from {
+    margin-left: 0px;
+  }
+  to {
+    margin-left: 20px;
+  }
+}
+@-webkit-keyframes rightMove {
+  from {
+    margin-left: 0px;
+  }
+  to {
+    margin-left: 20px;
+  }
+}
+@-o-keyframes rightMove {
+  from {
+    margin-left: 0px;
+  }
+  to {
+    margin-left: 20px;
+  }
+}
+
+.left-animtion {
+  margin-left: 20px;
+  animation: leftMove 0.5s ease 0.5s infinite;
+  -moz-animation: leftMove 0.5s ease 0.5s infinite;
+  -webkit-animation: leftMove 0.5s ease 0.5s infinite;
+  -o-animation: leftMove 0.5s ease 0.5s infinite;
+}
+@keyframes leftMove {
+  from {
+    margin-left: 20px;
+  }
+  to {
+    margin-left: 0px;
+  }
+}
+@-moz-keyframes leftMove {
+  from {
+    margin-left: 20px;
+  }
+  to {
+    margin-left: 0px;
+  }
+}
+@-webkit-keyframes leftMove {
+  from {
+    margin-left: 20px;
+  }
+  to {
+    margin-left: 0px;
+  }
+}
+@-o-keyframes leftMove {
+  from {
+    margin-left: 20px;
+  }
+  to {
+    margin-left: 0px;
+  }
+}
+
+/*
+ * --------------
+ * rank start
+ * --------------
+ */
+.keepOnFile-rank {
+  padding: 20px;
+  height: 100%;
+}
+.keepOnFile-rank .rank-Title,
+.keepOnFile-rank .rank-sub-Title {
+  font-size: 23px;
+  font-weight: bolder;
+  color: rgb(51, 102, 153);
+  font-weight: 700;
+  text-shadow: rgba(16, 142, 233, 0.5);
+}
+.keepOnFile-rank .rank-Title {
+  line-height: 34px;
+  border-bottom: 1px solid rgba(7, 104, 159, 0.39);
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  box-shadow: 0px 1px 0px #49a9ee;
+}
+.keepOnFile-rank .rank-sub-Title {
+  font-size: 15px;
+  color: #369;
+  border-bottom: 1px solid rgba(255, 126, 103, 0.49);
+
+  text-shadow: 1px 1px rgba(16, 142, 233, 0.5);
+  margin-top: 15px;
+  padding: 3px 20px 3px 15px;
+  display: inline-block;
+}
+.keepOnFile-rank .rank-sub-Title::before {
+  content: "";
+  position: absolute;
+  border-right: 2px solid #ff7e67;
+  border-top: 2px solid #ff7e67;
+  width: 10px;
+  height: 10px;
+  transform: translate(-18px, 5px) rotate(45deg);
+  -ms-transform: translate(-18px, 5px) rotate(45deg);
+  -webkit-transform: translate(-18px, 5px) rotate(45deg);
+  -o-transform: translate(-18px, 5px) rotate(45deg);
+  -moz-transform: translate(-18px, 5px) rotate(45deg);
+}
+.keepOnFile-rank .topRank {
+  /*position: absolute;*/
+  top: 10px;
+  margin-top: 10px;
+}
+/* .keepOnFile-rank .topPreview {
+  margin-top: 20px;
+} */
+.keepOnFile-rank .topRank .topRank-li {
+  display: block !important;
+  color: rgba(7, 104, 159, 0.68);
+  padding-left: 2px;
+  height: 45px;
+  text-align: bottom;
+  line-height: 45px;
+  border-bottom: 1px dotted rgba(162, 213, 242, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 500;
+}
+.keepOnFile-rank .topRank .topRank-li:hover span {
+  color: #ff7e67;
+}
+.keepOnFile-rank .topRank-li span {
+  transition: all 0.2s ease-in;
+  display: inline-block;
+  text-align: left;
+  vertical-align: bottom;
+}
+.keepOnFile-rank .articleDetail-rank-content {
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.keepOnFile-rank .articleDetail-rank-count {
+  color: #ff7e67;
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 7px;
+}
+
+/*
+  * --------------
+  * rank end
+  * --------------
+  */

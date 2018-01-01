@@ -168,7 +168,7 @@ class ArticleList extends Component {
                       return article ? (
                         <ArticleLi
                           id={article._id}
-                          key={index}
+                          key={article._id}
                           title={article.title}
                           isPublic={article.isPublic}
                           isComment={article.isComment}

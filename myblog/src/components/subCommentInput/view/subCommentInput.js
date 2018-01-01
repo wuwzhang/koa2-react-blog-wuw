@@ -67,6 +67,7 @@ class SubCommentInput extends Component {
         this.props.successComment(
           {
             subComment: {
+              _id: result._id,
               user: user,
               content: subComment.value,
               created_at: result.created_at,

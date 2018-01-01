@@ -36,7 +36,7 @@ export const getNotCheckedMessages = async () => {
 
   try {
     var result = await fetch(url, {
-      method: "POST",
+      method: "GET",
       headers: {
         Accept: "application/json",
         "Content-type": "application/json"

@@ -8,12 +8,21 @@
   color: #07689f;
 }
 .commentItem-content {
-  color: rgb(7, 104, 159, 0.8);
+  color: rgba(0, 0, 0, 0.65);
+  font-weight: 600;
+  font-size: 13px;
+  margin: 5px 0;
 }
 .commentItem-option {
   color: #666;
 }
+.commentItem-createTime {
+  color: rgba(14, 119, 201, 0.55);
+  font-weight: 500;
+}
 .commentItem-option-btn {
+  color: rgba(14, 119, 201, 0.55);
+  font-weight: 500;
   display: inline-block;
   margin: 0 5px;
   -moz-user-select: -moz-none;
@@ -24,7 +33,7 @@
 }
 .commentItem-option-btn:hover {
   cursor: pointer;
-  color: #A2D5F2;
+  color: #a2d5f2;
 }
 .ant-notification-notice {
   background: #fafafa !important;

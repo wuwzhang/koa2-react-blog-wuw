@@ -11,7 +11,8 @@
   border-bottom: 1px solid #eee;
   margin: 5px 0;
   padding-bottom: 5px;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 700;
 }
 .ArticleItem-title:hover {
   color: rgba(255, 125, 104, 0.6);
@@ -21,7 +22,26 @@
 }
 .ArticleItem .ArticleItem-time {
   margin-right: 5px;
+  color: rgba(73, 169, 238, 0.8);
 }
 .ArticleItem .ArticleItem-content {
-  margin: 5px 0;
+  margin: 10px 0;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(7, 104, 159, 1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ArticleItem-catalog-container {
+  margin-left: 10px;
+}
+.ArticleItem-catalog {
+  display: inline-block;
+  margin: 0 3px;
+  color: rgba(255, 125, 104, 0.8);
+}
+.ArticleItem-catalog:hover {
+  color: rgba(255, 125, 104, 0.6);
 }

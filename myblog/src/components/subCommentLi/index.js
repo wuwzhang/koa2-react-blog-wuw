@@ -16,7 +16,7 @@ import "./style.css";
 import message from "../../locale/message";
 
 class SubCommentLi extends Component {
-  async _handleDeleteSubComment(commentId, subCommentId, e) {
+  async _handleDeleteSubComment(commentId, subCommentId, e, isRePort) {
     e.preventDefault();
 
     let result = await commentsFetchs.deleteSubComment({
@@ -27,7 +27,7 @@ class SubCommentLi extends Component {
     let { commentIndex, subCommentIndex } = this.props;
 
     if (result.code === "1") {
-      this.props.setSubCommentDeleted(commentIndex, subCommentIndex);
+      this.props.setSubCommentDeleted(commentIndex, subCommentIndex, isRePort);
       notification.open({
         message: this.props.intl.formatMessage(message.DeleteSuccessMsg),
         description: this.props.intl.formatMessage(message.DeleteSuccessDes),
@@ -111,7 +111,9 @@ class SubCommentLi extends Component {
           <Col md={4}>
             <Popconfirm
               title={this.props.intl.formatMessage(message.CheckChancel)}
-              onConfirm={e => this._handleDeleteSubComment(_id, comment.id, e)}
+              onConfirm={e =>
+                this._handleDeleteSubComment(_id, comment.id, e, isRePort)
+              }
               okText={this.props.intl.formatMessage(message.PopcomfirmCheck)}
               cancelText={this.props.intl.formatMessage(
                 message.PopcomfirmCancel
@@ -157,9 +159,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    setSubCommentDeleted: (commentIndex, subCommentIndex) => {
+    setSubCommentDeleted: (commentIndex, subCommentIndex, isRePort) => {
       dispatch(
-        commentsActions.deleteSubComment({ commentIndex, subCommentIndex })
+        commentsActions.deleteSubComment({
+          commentIndex,
+          subCommentIndex,
+          isRePort
+        })
       );
     },
     setSubCommentCanceled: (commentIndex, subCommentIndex) => {

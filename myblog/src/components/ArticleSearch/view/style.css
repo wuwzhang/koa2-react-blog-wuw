@@ -6,6 +6,7 @@
   width: 90%;
   text-indent: 5px;
   outline: none;
+  border: 1px solid rgba(7, 104, 159, 0.5);
 }
 .ArticleSearch button {
   border: 0;
@@ -14,10 +15,9 @@
   margin-top: 1px;
   width: 26px;
   height: 26px;
-  color: #FF7E67;
+  color: #ff7e67;
 }
 .ArticleSearch-SearchTitle {
-  font-size: 16px;
   font-weight: bolder;
   margin-bottom: 10px;
 }

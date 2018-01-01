@@ -2,16 +2,18 @@
   margin: 10px 0 0 16px;
 }
 .ArticleTime-TimeTitle {
-  font-size: 16px;
   font-weight: bolder;
   margin-bottom: 10px;
 }
 .ArticleTime li span {
   color: #ccc;
+  font-size: 14px;
 }
 .ArticleTime li span.ArticleTime-time {
-  font-size: 14px;
+  /* text-shadow: 1px 1px #07689f; */
   margin-right: 10px;
+  color: #49a9ee;
+  font-weight: 600;
 }
 .ArticleTime-TimeTitle-icon {
   margin-right: 5px;

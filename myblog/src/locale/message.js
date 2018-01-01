@@ -20,6 +20,10 @@ const message = defineMessages({
     id: "labelComfirmPassword",
     defaultMessage: "Password Comfirm"
   },
+  TagsCloudTip: {
+    id: "TagsCloudTip",
+    defaultMessage: "click to show more"
+  },
   CheckDelete: {
     id: "CheckDelete",
     defaultMessage: "Are you sure"
@@ -60,10 +64,6 @@ const message = defineMessages({
     id: "PostFailedDes",
     defaultMessage: "Sorry, Post Failed"
   },
-  CommentFailedDes: {
-    id: "CommentFailedDes",
-    defaultMessage: "Commemnt Failed"
-  },
   CommentReport: {
     id: "CommentReport",
     defaultMessage: "Are you sure"
@@ -75,6 +75,10 @@ const message = defineMessages({
   CheckMsgDes: {
     id: "CheckMsgDes",
     defaultMessage: "Cheak your message, please"
+  },
+  UserNotFound: {
+    id: "UserNotFound",
+    default: "User Not Found"
   },
   RegistEmailCheckMsg: {
     id: "RegistEmailCheckMsg",
@@ -104,9 +108,45 @@ const message = defineMessages({
     id: "LoginSuccessDsc",
     defaultMessage: "login succeed"
   },
+  LogoutSuccessMsg: {
+    id: "LogoutSuccessMsg",
+    defaultMessage: "Logout Succeed"
+  },
+  LogoutSuccessDsc: {
+    id: "LogoutSuccessDsc",
+    defaultMessage: "login succeed"
+  },
+  LogoutFailMsg: {
+    id: "LogoutFailMsg",
+    defaultMessage: "Logout Failed"
+  },
+  LogoutFailDsc: {
+    id: "LogoutFailDsc",
+    defaultMessage: "login failed"
+  },
   LoginCheckMes: {
     id: "LoginCheckMes",
     defaultMessage: "Sign In"
+  },
+  ResetPswSuccessMsg: {
+    id: "ResetPswSuccessMsg",
+    defaultMessage: "Reset Password Succeed"
+  },
+  ResetPswSuccessDes: {
+    id: "ResetPswSuccessDes",
+    defaultMessage: "Reset Password Succeed"
+  },
+  ResetPswFailMsg: {
+    id: "ResetPswFailMsg",
+    defaultMessage: "Reset Password Failed"
+  },
+  ResetPswFailDes: {
+    id: "ResetPswFailDes",
+    defaultMessage: "Reset Password Failed"
+  },
+  ResetPswOverTime: {
+    id: "ResetPswOverTime",
+    defaultMessage: "Reset Password Over Time"
   },
   ReplyLoginCheckDes: {
     id: "ReplyLoginCheckDes",

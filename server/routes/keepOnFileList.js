@@ -44,7 +44,7 @@ router.post("/api/getArticleDateList", async ctx => {
   };
 });
 
-router.post("/api/article_Catalog_And_Count", async ctx => {
+router.get("/api/article_Catalog_And_Count", async ctx => {
   let code = "1",
     message = "ok",
     result = [],

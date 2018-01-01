@@ -402,7 +402,7 @@ class ArticlePost extends Component {
   _addFontSize() {
     let fontSize = this.state.fontSize;
 
-    fontSize = parseInt(fontSize) + 1;
+    fontSize = parseInt(fontSize, 10) + 1;
 
     this.setState({
       fontSize: fontSize
@@ -414,7 +414,7 @@ class ArticlePost extends Component {
   _desFontSize() {
     let fontSize = this.state.fontSize;
 
-    fontSize = parseInt(fontSize) - 1;
+    fontSize = parseInt(fontSize, 10) - 1;
 
     if (fontSize < 12) {
       fontSize = 12;

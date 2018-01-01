@@ -8,7 +8,7 @@ import {
   CANCEL_COMMENT,
   DELETE_SUB_COMMENT,
   CHANCEL_SUB_COMMENT,
-  NOTCHECKED_COMMENT,
+  NOTCHECKED_AND_REPORT_COMMENT,
   SET_COMMENT_FILTER,
   SET_SHOW_REPLY,
   SET_ADMIN_SHOW_REPLY,
@@ -38,10 +38,15 @@ export const addSubComment = ({ subComment, commentIndex }) => ({
   commentIndex
 });
 
-export const deleteSubComment = ({ commentIndex, subCommentIndex }) => ({
+export const deleteSubComment = ({
+  commentIndex,
+  subCommentIndex,
+  isRePort
+}) => ({
   type: DELETE_SUB_COMMENT,
   subCommentIndex,
-  commentIndex
+  commentIndex,
+  isRePort
 });
 
 export const cancelSubComment = ({ commentIndex, subCommentIndex }) => ({
@@ -55,15 +60,20 @@ export const commentChecked = commentIndex => ({
   commentIndex
 });
 
-export const commentNotChecked = NotCheckedCount => ({
-  type: NOTCHECKED_COMMENT,
-  NotCheckedCount
+export const commentNotCheckedAndReported = (
+  notCheckedCount,
+  reportedCount
+) => ({
+  type: NOTCHECKED_AND_REPORT_COMMENT,
+  notCheckedCount,
+  reportedCount
 });
 
-export const commentDelete = (commentIndex, isChecked) => ({
+export const commentDelete = (commentIndex, isChecked, isRePorted) => ({
   type: DELETE_COMMENT,
   commentIndex,
-  isChecked
+  isChecked,
+  isRePorted
 });
 
 export const commentCancel = ({ commentIndex, state }) => ({

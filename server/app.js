@@ -26,8 +26,8 @@ app.use(bodyparser({ enableTypes: ["json", "form", "text"] }));
 app.use(json());
 app.use(require("koa-static")(__dirname + "/build"));
 app.use(views(__dirname + "/build", { extension: "html" }));
-// app.use(middlewares.page404())
-// app.use(middlewares.page500())
+// app.use(middlewares.page404());
+// app.use(middlewares.page500());
 
 // logger
 //正常请求的日志

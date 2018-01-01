@@ -8,11 +8,16 @@ import { view as TagsCloud } from "../../../components/TagsCloud/";
 import { view as TopMenu } from "../../../components/TopMenu/";
 import { view as Rank } from "../../../components/Rank/";
 import Footer from "../../../components/Footer/index.js";
+import Pagination from "../../../components/Pagination/pagination";
+
 import {
   fetchs as searchFetch,
   actions as searchAction
 } from "../../../components/ArticleSearch/";
-import Pagination from "../../../components/Pagination/pagination";
+import {
+  fetchs as configFetchs,
+  actions as configActions
+} from "../../SettingAdmin/";
 
 import { FormattedMessage } from "react-intl";
 
@@ -26,7 +31,12 @@ class ArticleBySearch extends Component {
     super(props);
 
     this.state = {
-      currentPage: 1
+      currentPage: 1,
+      base: true,
+      rank: true,
+      rankCount: 4,
+      articleCount: 4,
+      searchLoading: true
     };
 
     this.handlePage = this.handlePage.bind(this);
@@ -34,14 +44,45 @@ class ArticleBySearch extends Component {
   }
 
   async componentDidMount() {
+    let ans = localStorage.getItem("config"),
+      config = JSON.parse(ans);
+    if (!config) {
+      let res = await configFetchs.getConfig();
+
+      if (res.code === "1") {
+        this.props.initConfig(res.config);
+        localStorage.setItem("config", JSON.stringify(res.config));
+        let searchPageConfig = res.config.searchPage;
+        this.setState({
+          base: searchPageConfig.base,
+          rank: searchPageConfig.rank,
+          rankCount: searchPageConfig.rankCount,
+          articleCount: searchPageConfig.articleCount
+        });
+      }
+    } else {
+      let searchPageConfig = config.searchPage;
+
+      this.setState({
+        base: searchPageConfig.base,
+        rank: searchPageConfig.rank,
+        rankCount: searchPageConfig.rankCount,
+        articleCount: searchPageConfig.articleCount
+      });
+    }
     let { articles, searchContent } = this.props;
 
     if (!articles || articles.length === 0) {
-      let result = await searchFetch.getArticleBySearch(searchContent, 1, 4);
+      let result = await searchFetch.getArticleBySearch(
+        searchContent,
+        1,
+        this.state.articleCount
+      );
 
       if (result.code === "1") {
         this.setState({
-          redirectToReferrer: true
+          redirectToReferrer: true,
+          searchLoading: false
         });
         this.props.successSearch(result.articles, result.count);
       } else {
@@ -53,19 +94,21 @@ class ArticleBySearch extends Component {
   async handlePage(curPage) {
     this.setState({
       currentPage: curPage,
-      redirectToReferrer: false
+      redirectToReferrer: false,
+      searchLoading: true
     });
     let result = await searchFetch.getArticleBySearch(
       this.props.searchContent,
       curPage,
-      4
+      this.state.articleCount
     );
 
     if (result.code === "1") {
       this.setState({
         articles: result.articles,
         pageArticleCount: result.count,
-        redirectToReferrer: false
+        redirectToReferrer: false,
+        searchLoading: false
       });
       this.props.successSearch(result.articles, result.count);
     } else {
@@ -78,21 +121,6 @@ class ArticleBySearch extends Component {
     this.props.startSearch();
 
     let { value } = this.state;
-
-    // let result = await searchFetch.getArticleBySearch(value, 1, 4);
-
-    // if (result.code === '1') {
-    //   this.setState({
-    //     redirectToReferrer: true
-    //   })
-    //   this.props.successSearch(result.articles, result.count);
-
-    // } else {
-
-    //   this.props.failSearch(result.message);
-    //   console.log(result);
-    // }
-    //
     window.location.href = "/article_by_search/" + value;
   }
 
@@ -103,10 +131,9 @@ class ArticleBySearch extends Component {
   }
 
   render() {
-    let { articles } = this.props;
-    let { currentPage } = this.state;
-
-    let totalPages = Math.ceil(this.props.count / 4);
+    let { articles = [] } = this.props;
+    let { currentPage, rank, base, rankCount, articleCount } = this.state;
+    let totalPages = Math.ceil(this.props.count / articleCount);
 
     return (
       <section>
@@ -117,68 +144,65 @@ class ArticleBySearch extends Component {
           <section className="articleByxx-container articleSearch-bg">
             <Row gutter={16}>
               <Col md={4} sm={4} xs={24}>
-                <section className="articleByxx-Aside">
-                  <section className="ArticleSearch">
-                    <h6
-                      className="ArticleSearch-SearchTitle"
-                      style={{ color: "#07689f" }}
-                    >
-                      <FontAwesome
-                        className="ArticleSearch-SearchTitle-icon"
-                        name="search"
-                      />
-                      <span>
-                        <FormattedMessage id="Search" defaultMessage="Search" />
-                      </span>
-                    </h6>
-                    <from>
-                      <input
-                        type="text"
-                        value={this.state.value}
-                        onChange={event =>
-                          this.setState({ value: event.target.value })
-                        }
-                        onKeyPress={this._handleKeyPress}
-                      />
-                      <Button
-                        shape="circle"
-                        icon="search"
-                        onClick={() => this._clickToSearchArtciles()}
-                        htmlType="submit"
-                      />
-                    </from>
-                    {this.props.searching ? (
-                      <Spin
-                        spinning={this.state.loading}
-                        delay={500}
-                        size="large"
-                      />
-                    ) : null}
+                {base ? (
+                  <section className="articleByxx-Aside">
+                    <section className="ArticleSearch">
+                      <h6
+                        className="ArticleSearch-SearchTitle aside-title"
+                        style={{ color: "#07689f" }}
+                      >
+                        <FontAwesome
+                          className="ArticleSearch-SearchTitle-icon"
+                          name="search"
+                        />
+                        <span>
+                          <FormattedMessage
+                            id="Search"
+                            defaultMessage="Search"
+                          />
+                        </span>
+                      </h6>
+                      <from>
+                        <input
+                          type="text"
+                          value={this.state.value}
+                          onChange={event =>
+                            this.setState({ value: event.target.value })
+                          }
+                          onKeyPress={this._handleKeyPress}
+                        />
+                        <Button
+                          shape="circle"
+                          icon="search"
+                          onClick={() => this._clickToSearchArtciles()}
+                          htmlType="submit"
+                        />
+                      </from>
+                    </section>
+                    <TagsCloud color="#07689f" />
+                    <CatalogAside color="#07689f" />
                   </section>
-                  <TagsCloud color="#07689f" />
-                  <CatalogAside color="#07689f" />
-                </section>
-                <Rank
-                  showCharNum={8}
-                  style={{ width: "100%", padding: "10px", border: "0" }}
-                />
+                ) : null}
+                {rank ? <Rank rankCount={rankCount} /> : null}
               </Col>
               <Col md={20} sm={20} xs={24}>
-                <ul className="ArticleBySearch-article">
-                  <QueueAnim className="demo-content">
-                    {articles
-                      ? articles.map((article, index) => {
-                          return article ? (
-                            <ArticlSearchItem
-                              ind={index}
-                              key={index}
-                              article={article}
-                            />
-                          ) : null;
-                        })
-                      : null}
-                  </QueueAnim>
-                </ul>
+                <Spin size="large" spinning={this.state.searchLoading === true}>
+                  <ul className="ArticleBySearch-article">
+                    <QueueAnim className="demo-content">
+                      {articles
+                        ? articles.map((article, index) => {
+                            return article ? (
+                              <ArticlSearchItem
+                                ind={index}
+                                key={index}
+                                article={article}
+                              />
+                            ) : null;
+                          })
+                        : null}
+                    </QueueAnim>
+                  </ul>
+                </Spin>
                 <Pagination
                   totalPages={totalPages}
                   currentPage={currentPage}
@@ -199,7 +223,8 @@ const mapStateToProps = state => {
   return {
     articles: state.articleSearch.articles,
     count: state.articleSearch.count,
-    searchContent: state.routing.location.pathname.split("/")[2]
+    searchContent: state.routing.location.pathname.split("/")[2],
+    config: state.blog.config
   };
 };
 const mapDispatchToProps = dispatch => {
@@ -214,6 +239,9 @@ const mapDispatchToProps = dispatch => {
     failSearch: error => {
       dispatch(searchAction.searchFail());
       dispatch(searchAction.failSearch(error));
+    },
+    initConfig: config => {
+      dispatch(configActions.initConfig(config));
     }
   };
 };

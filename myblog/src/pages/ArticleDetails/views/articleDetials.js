@@ -1,26 +1,33 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { detailArticle } from "../fetch";
-import { fetchs as rankFetchs } from "../../../components/Rank/";
+
 import { withRouter, Redirect, Link } from "react-router-dom";
 
-import { articleInitDetails } from "../action.js";
 import ArticleOptionNav from "../../../components/ArticleOptionNav/articleOptionNav.js";
+import { Aside } from "../../../components/Aside/index.js";
+import { view as TopMenu } from "../../../components/TopMenu/";
+import Footer from "../../../components/Footer/index.js";
+
 import {
   view as Comment,
   fetchs as commentFetchs,
   actions as commentActions
 } from "../../../components/Comment/";
-import { Aside } from "../../../components/Aside/index.js";
-import { view as TopMenu } from "../../../components/TopMenu/";
-import Footer from "../../../components/Footer/index.js";
-
+import { detailArticle } from "../fetch";
+import { fetchs as rankFetchs } from "../../../components/Rank/";
 import { actions as deleteActions } from "../../ArticleList/";
+import { articleInitDetails } from "../action.js";
+import {
+  fetchs as configFetchs,
+  actions as configActions
+} from "../../SettingAdmin/";
 
-import { BackTop, Button, Col, Row } from "antd";
+import { BackTop, Button, Col, Row, Spin } from "antd";
 import FontAwesome from "react-fontawesome";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FormattedMessage } from "react-intl";
+
+import utils from "../../../utils/utils";
 
 import "./style.css";
 
@@ -35,8 +42,28 @@ class ArticleDetails extends Component {
       nextArticle: {},
       topPreviewArticle: [],
       topCommentsArticle: [],
-      windowLocation: document.URL
+      windowLocation: document.URL,
+      searching: true,
+      topPreviewLoading: true,
+      topCommentLoading: true,
+      base: true,
+      rank: true,
+      rankCount: 4,
+      mathJax: false,
+      scrollbarContainer: {},
+      scrollbar: { width: "0px" }
     };
+    let katex = false;
+
+    if (this.state.mathJax) {
+      katex = import("katex")
+        .then(res => {
+          return res;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
 
     this.onCopy = this.onCopy.bind(this);
 
@@ -52,18 +79,42 @@ class ArticleDetails extends Component {
           smartLists: true,
           smartypants: true,
           highlight: code => hljs.highlightAuto(code).value,
-          math: true
+          math: true,
+          kaTex: katex
         });
       })
       .catch(err => {
         console.log(err);
       });
-
-    // console.log('articleDetails - constructor - location', this.props.location)
   }
 
   async componentDidMount() {
-    // console.log('articleDetails - componentDidMount - location', this.props.location)
+    let ans = localStorage.getItem("config"),
+      config = JSON.parse(ans);
+    if (!config) {
+      let res = await configFetchs.getConfig();
+
+      if (res.code === "1") {
+        this.props.initConfig(res.config);
+        localStorage.setItem("config", JSON.stringify(res.config));
+        let articleDetailsConfig = res.config.articleDetails;
+        this.setState({
+          base: articleDetailsConfig.base,
+          rank: articleDetailsConfig.rank,
+          rankCount: articleDetailsConfig.rankCount,
+          mathJax: articleDetailsConfig.mathJax
+        });
+      }
+    } else {
+      let articleDetailsConfig = config.articleDetails;
+
+      this.setState({
+        base: articleDetailsConfig.base,
+        rank: articleDetailsConfig.rank,
+        rankCount: articleDetailsConfig.rankCount,
+        mathJax: articleDetailsConfig.mathJax
+      });
+    }
 
     let articleId = this.props.match.params.articleId;
     let result = await detailArticle(articleId);
@@ -73,29 +124,69 @@ class ArticleDetails extends Component {
 
       this.setState({
         preArticle: result.preArticle,
-        nextArticle: result.nextArticle
+        nextArticle: result.nextArticle,
+        searching: false
       });
     } else {
       console.log(result);
     }
 
-    let topPreviewRes = await rankFetchs.getTopPreviewArticle();
-    if (topPreviewRes.code === "1") {
-      this.setState({
-        topPreviewArticle: topPreviewRes.result
-      });
-    } else {
+    if (this.state.rank) {
+      let { rankCount = 5 } = this.state;
+
+      let topPreviewRes = await rankFetchs.getTopPreviewArticle();
+      if (topPreviewRes.code === "1") {
+        let articles = topPreviewRes.result;
+        articles = articles.slice(0, Math.min(rankCount, articles.length));
+        this.setState({
+          topPreviewArticle: articles,
+          topPreviewLoading: false
+        });
+      } else {
+      }
+
+      let topCommentsRes = await rankFetchs.getTopCommentsArticle();
+      if (topCommentsRes.code === "1") {
+        let articles = topCommentsRes.result;
+        articles = articles.slice(0, Math.min(rankCount, articles.length));
+        this.setState({
+          topCommentsArticle: articles,
+          topCommentLoading: false
+        });
+      }
     }
 
-    let topCommentsRes = await rankFetchs.getTopCommentsArticle();
-    if (topCommentsRes.code === "1") {
+    window.addEventListener("scroll", () => {
+      let scrollTop =
+        document.body.scrollTop || document.documentElement.scrollTop;
+
+      let pageHeight = utils._getPageHeight(),
+        docHeight = utils._getDocHeight();
+
+      if (scrollTop < 54) {
+        this.setState({
+          scrollbarContainer: { position: "relative" }
+        });
+      } else {
+        this.setState({
+          scrollbarContainer: { position: "fixed", top: "0px" }
+        });
+      }
+
+      let scrolled = scrollTop / (docHeight - pageHeight) * 100;
+
       this.setState({
-        topCommentsArticle: topCommentsRes.result
+        scrollbar: {
+          width: `${scrolled}%`
+        }
       });
-    }
+    });
   }
 
   async _getNewArticle(articleId) {
+    this.setState({
+      searching: true
+    });
     let result = await detailArticle(articleId);
 
     if (result.code === "1") {
@@ -103,7 +194,8 @@ class ArticleDetails extends Component {
 
       this.setState({
         preArticle: result.preArticle,
-        nextArticle: result.nextArticle
+        nextArticle: result.nextArticle,
+        searching: false
       });
     } else {
       console.log(result);
@@ -166,140 +258,173 @@ class ArticleDetails extends Component {
       preArticle,
       nextArticle,
       topPreviewArticle = [],
-      topCommentsArticle = []
+      topCommentsArticle = [],
+      rank,
+      base
     } = this.state;
 
     if (article) {
       return (
         <section>
           <section className="All-Nav">
-            <TopMenu />
+            <TopMenu style={{ position: "relative" }} />
+          </section>
+          <section
+            className="ArticleDetials-scrollbar-control"
+            style={this.state.scrollbarContainer}
+          >
+            <div
+              className="ArticleDetials-scrollbar"
+              style={this.state.scrollbar}
+            />
           </section>
           <div className="container">
-            <section>
-              <Row gutter={16}>
-                <section className="ArticleDetials-titleContainer">
-                  <Col md={12} sm={12} xs={12}>
-                    <h3 className="ArticleDetails-articleTitle">
-                      {article.title}
-                    </h3>
-                  </Col>
-                  <Col md={12} sm={12} xs={12}>
-                    {this.props.user && this.props.user.level === 0 ? (
-                      <ArticleOptionNav
-                        myStyle={{
-                          color: "#FF7E67",
-                          fontSize: "16px",
-                          marginRight: "15px"
+            <section className="articleDetail">
+              <Spin size="large" spinning={this.state.searchLoading === true}>
+                <Row gutter={16}>
+                  <section className="ArticleDetials-titleContainer">
+                    <Col md={12} sm={12} xs={12}>
+                      <h3 className="ArticleDetails-articleTitle">
+                        {article.title}
+                      </h3>
+                    </Col>
+                    <Col md={12} sm={12} xs={12}>
+                      {this.props.user && this.props.user.level === 0 ? (
+                        <ArticleOptionNav
+                          myStyle={{
+                            color: "#FF7E67",
+                            fontSize: "16px",
+                            marginRight: "15px"
+                          }}
+                        />
+                      ) : (
+                        <CopyToClipboard
+                          onCopy={this.onCopy}
+                          text={this.state.windowLocation}
+                        >
+                          <Button>
+                            <FormattedMessage
+                              id="Fork"
+                              defaultMessage="Copy To Clipboard"
+                            />
+                          </Button>
+                        </CopyToClipboard>
+                      )}
+                    </Col>
+                  </section>
+                </Row>
+                <Row>
+                  <Col md={20} sm={20} xs={24}>
+                    {article.content ? (
+                      <div
+                        className="article-content marked-preview"
+                        dangerouslySetInnerHTML={{
+                          __html: marked(article.content)
                         }}
                       />
-                    ) : (
-                      <CopyToClipboard
-                        onCopy={this.onCopy}
-                        text={this.state.windowLocation}
-                      >
-                        <Button>
-                          <FormattedMessage
-                            id="Fork"
-                            defaultMessage="Copy To Clipboard"
-                          />
-                        </Button>
-                      </CopyToClipboard>
-                    )}
+                    ) : null}
                   </Col>
-                </section>
-              </Row>
-              <Row>
-                <Col md={20} sm={20} xs={24}>
-                  {article.content ? (
-                    <div
-                      className="article-content marked-preview"
-                      dangerouslySetInnerHTML={{
-                        __html: marked(article.content)
-                      }}
-                    />
-                  ) : null}
-                </Col>
-                <Col md={4} sm={4} xs={0}>
-                  <Aside
-                    color="#07689f"
-                    tags={article.tags}
-                    catalog={article.catalog}
-                    create_time={
-                      article.created_at ? article.created_at.slice(0, 10) : ""
-                    }
-                    update_time={
-                      article.updated_at ? article.updated_at.slice(0, 10) : ""
-                    }
-                  />
-                  <section className="articleDetails-rank">
-                    <h5 className="ArticleDetails-Title">
-                      <FontAwesome
-                        name="user-secret"
-                        style={{ color: "#ff7e67", marginRight: "5px" }}
+                  <Col md={4} sm={4} xs={0}>
+                    {base ? (
+                      <Aside
+                        color="#07689f"
+                        tags={article.tags}
+                        catalog={article.catalog}
+                        create_time={
+                          article.created_at
+                            ? article.created_at.slice(0, 10)
+                            : ""
+                        }
+                        update_time={
+                          article.updated_at
+                            ? article.updated_at.slice(0, 10)
+                            : ""
+                        }
                       />
-                      <FormattedMessage id="Rank" defaultMessage="Rank" /> ~
-                    </h5>
-                    <section className="topPreview topRank">
-                      <h6 className="ArticleDetails-sub-Title">
-                        <FormattedMessage
-                          id="Preview"
-                          defaultMessage="Preview"
-                        />
-                      </h6>
-                      <ul>
-                        {topPreviewArticle.map(article => {
-                          return (
-                            <Link
-                              className="topRank-li"
-                              onClick={() => this._getNewArticle(article._id)}
-                              to={`/article_details/${article._id}`}
-                            >
-                              <span>
-                                {article.title.length > 12
-                                  ? article.title.slice(0, 15) + "..."
-                                  : article.title}
-                              </span>
-                              <span className="articleDetail-rank-count">
-                                {" "}
-                                ({article.pv})
-                              </span>
-                            </Link>
-                          );
-                        })}
-                      </ul>
-                    </section>
-                    <section className="topComment topRank">
-                      <h6 className="ArticleDetails-sub-Title">
-                        <FormattedMessage
-                          id="Comment"
-                          defaultMessage="Comment"
-                        />
-                      </h6>
-                      <ul>
-                        {topCommentsArticle.map(article => {
-                          return (
-                            <Link
-                              className="topRank-li"
-                              onClick={() => this._getNewArticle(article._id)}
-                              to={`/article_details/${article._id}`}
-                            >
-                              <span>
-                                {article.title.length > 12
-                                  ? article.title.slice(0, 15) + "..."
-                                  : article.title}
-                              </span>
-                              <span className="articleDetail-rank-count">
-                                ({article.commentCount})
-                              </span>
-                            </Link>
-                          );
-                        })}
-                      </ul>
-                    </section>
-                  </section>
-                </Col>
-              </Row>
+                    ) : null}
+                    {rank ? (
+                      <section className="articleDetails-rank rank">
+                        <h5 className="ArticleDetails-Title">
+                          <FontAwesome
+                            name="user-secret"
+                            style={{ color: "#ff7e67", marginRight: "5px" }}
+                          />
+                          <FormattedMessage id="Rank" defaultMessage="Rank" /> ~
+                        </h5>
+                        <section className="topPreview topRank">
+                          <h6 className="ArticleDetails-sub-Title">
+                            <FormattedMessage
+                              id="Preview"
+                              defaultMessage="Preview"
+                            />
+                          </h6>
+                          <Spin
+                            size="small"
+                            spinning={this.state.topPreviewLoading === true}
+                          >
+                            <ul>
+                              {topPreviewArticle.map(article => {
+                                return (
+                                  <Link
+                                    key={article._id}
+                                    className="topRank-li"
+                                    onClick={() =>
+                                      this._getNewArticle(article._id)
+                                    }
+                                    to={`/article_details/${article._id}`}
+                                  >
+                                    <span className="articleDetail-rank-content">
+                                      {article.title}
+                                    </span>
+                                    <span className="articleDetail-rank-count">
+                                      {" "}
+                                      ({article.pv})
+                                    </span>
+                                  </Link>
+                                );
+                              })}
+                            </ul>
+                          </Spin>
+                        </section>
+                        <section className="topComment topRank">
+                          <h6 className="ArticleDetails-sub-Title">
+                            <FormattedMessage
+                              id="Comment"
+                              defaultMessage="Comment"
+                            />
+                          </h6>
+                          <Spin
+                            size="small"
+                            spinning={this.state.topCommentLoading === true}
+                          >
+                            <ul>
+                              {topCommentsArticle.map(article => {
+                                return (
+                                  <Link
+                                    key={article._id}
+                                    className="topRank-li"
+                                    onClick={() =>
+                                      this._getNewArticle(article._id)
+                                    }
+                                    to={`/article_details/${article._id}`}
+                                  >
+                                    <span className="articleDetail-rank-content">
+                                      {article.title}
+                                    </span>
+                                    <span className="articleDetail-rank-count">
+                                      ({article.commentCount})
+                                    </span>
+                                  </Link>
+                                );
+                              })}
+                            </ul>
+                          </Spin>
+                        </section>
+                      </section>
+                    ) : null}
+                  </Col>
+                </Row>
+              </Spin>
               <Row>
                 <section className="pre-next">
                   <ul>
@@ -331,7 +456,9 @@ class ArticleDetails extends Component {
                     <Comment />
                   </Col>
                 ) : (
-                  <p>此篇文章暂不开放评论</p>
+                  <p className="ArticleDetails-commentTip">
+                    此篇文章暂不开放评论
+                  </p>
                 )}
               </Row>
               <BackTop />
@@ -350,7 +477,8 @@ const mapStateToProps = state => {
     user: state.login.user,
     article: state.articleDetails.article,
     deleted: state.articleList.deleted,
-    location: state.routing.location
+    location: state.routing.location,
+    config: state.blog.config
   };
 };
 
@@ -368,6 +496,9 @@ const mapDispatchToProps = dispatch => {
     },
     initComment: comments => {
       dispatch(commentActions.commentInit(comments));
+    },
+    initConfig: config => {
+      dispatch(configActions.initConfig(config));
     }
   };
 };

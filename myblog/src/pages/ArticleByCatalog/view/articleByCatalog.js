@@ -12,8 +12,12 @@ import Footer from "../../../components/Footer/index.js";
 import Pagination from "../../../components/Pagination/pagination";
 
 import { getArticlesByCatalog } from "../fetch.js";
+import {
+  fetchs as configFetchs,
+  actions as configActions
+} from "../../SettingAdmin/";
 
-import { Col, Row } from "antd";
+import { Col, Row, Spin } from "antd";
 import QueueAnim from "rc-queue-anim";
 import "./style.css";
 
@@ -28,18 +32,56 @@ class ArticleByCatalog extends Component {
     this.state = {
       articles: [],
       catalogCotent: this.props.catalogCotent,
+      searchLoading: true,
+      base: true,
+      rank: true,
+      rankCount: 4,
+      articleCount: 4,
       currentPage: 1,
       pageArticleCount: 1
     };
   }
 
   async componentDidMount() {
-    let result = await getArticlesByCatalog(this.props.catalogCotent, 1, 4);
+    let ans = localStorage.getItem("config"),
+      config = JSON.parse(ans);
+    if (!config) {
+      let res = await configFetchs.getConfig();
+
+      if (res.code === "1") {
+        this.props.initConfig(res.config);
+        localStorage.setItem("config", JSON.stringify(res.config));
+        let searchPageConfig = res.config.searchPage;
+
+        this.setState({
+          base: searchPageConfig.base,
+          rank: searchPageConfig.rank,
+          rankCount: searchPageConfig.rankCount,
+          articleCount: searchPageConfig.articleCount
+        });
+      }
+    } else {
+      let searchPageConfig = config.searchPage;
+
+      this.setState({
+        base: searchPageConfig.base,
+        rank: searchPageConfig.rank,
+        rankCount: searchPageConfig.rankCount,
+        articleCount: searchPageConfig.articleCount
+      });
+    }
+
+    let result = await getArticlesByCatalog(
+      this.props.catalogCotent,
+      1,
+      this.state.articleCount
+    );
 
     if (result.code === "1") {
       this.setState({
         articles: result.articles,
-        pageArticleCount: result.count
+        pageArticleCount: result.count,
+        searchLoading: false
       });
     } else {
       console.log(result);
@@ -48,18 +90,20 @@ class ArticleByCatalog extends Component {
 
   async handlePage(curPage) {
     this.setState({
-      currentPage: curPage
+      currentPage: curPage,
+      searchLoading: true
     });
     let result = await getArticlesByCatalog(
       this.props.catalogCotent,
       curPage,
-      4
+      this.state.articleCount
     );
 
     if (result.code === "1") {
       this.setState({
         articles: result.articles,
-        pageArticleCount: result.count
+        pageArticleCount: result.count,
+        searchLoading: false
       });
     } else {
       console.log(result);
@@ -67,7 +111,11 @@ class ArticleByCatalog extends Component {
   }
 
   async _handleCatalog(content) {
-    let result = await getArticlesByCatalog(content, 1, 4);
+    let result = await getArticlesByCatalog(
+      content,
+      1,
+      this.state.articleCount
+    );
 
     if (result.code === "1") {
       let articles = result.articles;
@@ -75,7 +123,8 @@ class ArticleByCatalog extends Component {
       this.setState({
         articles: articles,
         catalogCotent: content,
-        pageArticleCount: result.count
+        pageArticleCount: result.count,
+        searchLoading: false
       });
     } else {
       console.log(result);
@@ -84,17 +133,21 @@ class ArticleByCatalog extends Component {
 
   render() {
     let {
-      articles,
+      articles = [],
       catalogCotent = this.props.tagContent,
       currentPage,
-      pageArticleCount
+      pageArticleCount,
+      base,
+      rank,
+      rankCount,
+      articleCount
     } = this.state;
 
     if (catalogCotent !== this.props.catalogCotent) {
       this._handleCatalog(this.props.catalogCotent);
     }
 
-    let totalPages = Math.ceil(pageArticleCount / 4);
+    let totalPages = Math.ceil(pageArticleCount / articleCount);
     return (
       <section>
         <section className="All-Nav">
@@ -104,18 +157,17 @@ class ArticleByCatalog extends Component {
           <section className="articleByxx-container ArticleBySearch-bg">
             <Row gutter={16}>
               <Col md={4} sm={4} xs={24}>
-                <section className="articleByxx-Aside">
-                  <SearchBox />
-                  <CatalogAside color="#07689f" />
-                  <TagsCloud color="#07689f" />
-                </section>
-                <Rank
-                  showCharNum={8}
-                  style={{ width: "100%", padding: "10px", border: "0" }}
-                />
+                {base ? (
+                  <section className="articleByxx-Aside">
+                    <SearchBox />
+                    <CatalogAside color="#07689f" />
+                    <TagsCloud color="#07689f" />
+                  </section>
+                ) : null}
+                {rank ? <Rank rankCount={rankCount} /> : null}
               </Col>
               <Col md={20} sm={20} xs={24}>
-                <p>
+                <p className="ArticleBySearch-tip">
                   <span>
                     <FormattedMessage
                       id="SearchByCatalog"
@@ -125,19 +177,21 @@ class ArticleByCatalog extends Component {
                   </span>
                   <span>{this.props.catalogCotent}</span>
                 </p>
-                <ul className="ArticleByCatalog-article">
-                  <QueueAnim className="demo-content">
-                    {articles.map((article, index) => {
-                      return article ? (
-                        <ArticlCatalogItem
-                          ind={index}
-                          key={index}
-                          article={article}
-                        />
-                      ) : null;
-                    })}
-                  </QueueAnim>
-                </ul>
+                <Spin size="large" spinning={this.state.searchLoading === true}>
+                  <ul className="ArticleByCatalog-article">
+                    <QueueAnim className="demo-content">
+                      {articles.map((article, index) => {
+                        return article ? (
+                          <ArticlCatalogItem
+                            ind={index}
+                            key={index}
+                            article={article}
+                          />
+                        ) : null;
+                      })}
+                    </QueueAnim>
+                  </ul>
+                </Spin>
                 <Pagination
                   totalPages={totalPages}
                   currentPage={currentPage}
@@ -160,8 +214,19 @@ const mapStateToProps = state => {
 
   return {
     catalogCotent: catalogCotent,
-    catalogs: state.catalog.catalog
+    catalogs: state.catalog.catalog,
+    config: state.blog.config
   };
 };
 
-export default withRouter(connect(mapStateToProps)(ArticleByCatalog));
+const mapDispatchToProps = dispatch => {
+  return {
+    initConfig: config => {
+      dispatch(configActions.initConfig(config));
+    }
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ArticleByCatalog)
+);

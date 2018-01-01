@@ -37,37 +37,70 @@ async function setCreateTmpUser(params) {
     )
   ) {
     console.error("redis - setCreateTmpUser 参数错误");
+  } else {
+    let { activeKey } = params;
+
+    let keys = "create_user" + ":" + activeKey;
+    return await client.set(keys, JSON.stringify(params), "EX", 5 * 60);
   }
-
-  let { activeKey } = params;
-
-  let keys = "create_user" + ":" + activeKey;
-  return await client.set(keys, JSON.stringify(params), "EX", 5 * 60);
 }
 
 async function getCreateTmpUser(activeKey) {
   if (utils.isEmpty(activeKey)) {
     console.error("redis - getCreateTmpUser 参数错误");
+  } else {
+    let keys = "create_user" + ":" + activeKey;
+
+    let user = await client.get(keys);
+
+    if (user === null) {
+      return null;
+    }
+
+    return JSON.parse(user);
   }
-
-  let keys = "create_user" + ":" + activeKey;
-
-  let user = await client.get(keys);
-
-  if (user === null) {
-    return null;
-  }
-
-  return JSON.parse(user);
 }
 
 async function delCreateTmpUser(activeKey) {
   if (utils.isEmpty(activeKey)) {
     console.error("redis - delCreateTmpUser 参数错误");
+  } else {
+    let keys = "create_user" + ":" + activeKey;
+    return await client.del(keys, activeKey);
   }
+}
 
-  let keys = "create_user" + ":" + activeKey;
-  return await client.del(keys, activeKey);
+async function createForgetUser(account, activeKey) {
+  if (utils.isEmpty(account, activeKey)) {
+    console.error("redis - createForgetUser 参数错误");
+  } else {
+    let keys = "create_forget_user" + ":" + activeKey;
+    return await client.set(keys, account, "EX", 5 * 60);
+  }
+}
+
+async function getForgetUser(activeKey) {
+  if (utils.isEmpty(activeKey)) {
+    console.error("redis - getForgetUser 参数错误");
+  } else {
+    let keys = "create_forget_user" + ":" + activeKey;
+    let user = await client.get(keys);
+
+    if (user === null) {
+      return null;
+    }
+
+    return user;
+  }
+}
+
+async function delForgetUser(activeKey) {
+  if (utils.isEmpty(activeKey)) {
+    console.error("redis - delForgetUser 参数错误");
+  } else {
+    let keys = "create_forget_user" + ":" + activeKey;
+    return await client.del(keys, activeKey);
+  }
 }
 
 /**
@@ -107,7 +140,7 @@ async function getUser(_id) {
 
 async function delUser(_id) {
   if (utils.isEmpty(_id)) {
-    return console.log("redis - delUser 参数错误");
+    return console.error("redis - delUser 参数错误");
   }
 
   let keys = USER_KEY + ":" + _id;
@@ -196,7 +229,7 @@ async function getThumbs(commentId) {
  */
 async function reportCommentById(commentId, userId) {
   if (utils.isEmpty(commentId, userId)) {
-    console.log("redis - reportCommentById 参数错误");
+    console.error("redis - reportCommentById 参数错误");
   } else {
     let keys = COMMENT_KEY + "_report:" + commentId;
 
@@ -206,7 +239,7 @@ async function reportCommentById(commentId, userId) {
 
 async function cancleCommentById(commentId) {
   if (utils.isEmpty(commentId)) {
-    console.log("redis - cancelCommentById 参数错误");
+    console.error("redis - cancelCommentById 参数错误");
   } else {
     let keys = COMMENT_KEY + "_report:" + commentId;
 
@@ -256,13 +289,25 @@ async function getTopPreviewArticle(start = 1, end = 5) {
 async function setTopPreviewArticle(params) {
   if (utils.isEmpty(params, params._id, params.title, params.pv)) {
     console.error("redis - setTopPreviewArticle 参数错误");
+  } else {
+    let keys = "preview:" + ARTICLE_KEY,
+      { _id, title, pv } = params,
+      value = _id + ":" + title;
+
+    await client.zadd(keys, pv, value);
   }
+}
 
-  let keys = "preview:" + ARTICLE_KEY,
-    { _id, title, pv } = params,
-    value = _id + ":" + title;
+async function delTopPreviewArticle(params) {
+  if (utils.isEmpty(params, params._id, params.title)) {
+    console.error("redis - delTopPreviewArticle 参数错误");
+  } else {
+    let keys = "preview:" + ARTICLE_KEY,
+      { _id, title } = params,
+      value = _id + ":" + title;
 
-  await client.zadd(keys, pv, value);
+    await client.zrem(keys, value);
+  }
 }
 
 /**
@@ -295,6 +340,27 @@ async function setArticleCatalogs(catalog, count) {
   }
 }
 
+async function delArticleCatalogs(catalogs) {
+  if (utils.isEmpty(catalogs)) {
+    console.error("redis - delArticleCatalogs 参数错误");
+  } else {
+    let keys = "catalog_count_" + ARTICLE_KEY;
+
+    catalogs.map(async catalog => {
+      await client
+        .zscore(keys, catalog)
+        .then(async res => {
+          if (res >= 1) {
+            await client.zrem(keys, catalog);
+          } else {
+            await client.zincrby(keys, 1, catalog);
+          }
+        })
+        .catch(e => e);
+    });
+  }
+}
+
 /**
  * 查询文章评论量默认前5的文章
  */
@@ -307,13 +373,24 @@ async function getTopCommentsArticle(start = 1, end = 5) {
 async function setTopCommentsArticle(params) {
   if (utils.isEmpty(params, params._id, params.title, params.commentCount)) {
     console.error("redis - setTopCommentsArticle 参数错误");
+  } else {
+    let keys = "comments:" + ARTICLE_KEY,
+      { _id, title, commentCount } = params,
+      value = _id + ":" + title;
+
+    await client.zadd(keys, commentCount, value);
   }
+}
 
-  let keys = "comments:" + ARTICLE_KEY,
-    { _id, title, commentCount } = params,
-    value = _id + ":" + title;
-
-  await client.zadd(keys, commentCount, value);
+async function delTopCommentsArticle(params) {
+  if (utils.isEmpty(params, params._id, params.title)) {
+    console.error("redis - delTopCommentsArticle 参数错误");
+  } else {
+    let keys = "comments:" + ARTICLE_KEY,
+      { _id, title } = params,
+      value = _id + ":" + title;
+    await client.zrem(keys, value);
+  }
 }
 
 async function setCommentCount(articleId, title, num) {
@@ -327,11 +404,116 @@ async function setCommentCount(articleId, title, num) {
   }
 }
 
+async function delCommentCount(articleId, title, num) {
+  if (utils.isEmpty(articleId, title, num)) {
+    console.error("redis - incComment 参数错误");
+  } else {
+    let keys = "comments:" + ARTICLE_KEY,
+      value = articleId + ":" + title;
+
+    await client.zincrby(keys, num, value);
+  }
+}
+
+async function addNotCheckedComment(params) {
+  if (utils.isEmpty(params, params._id)) {
+    console.error("redis - addNotCheckedComment 参数错误");
+  } else {
+    let keys = "not_checked_comments",
+      value = JSON.stringify(params);
+
+    await client.sadd(keys, value);
+  }
+}
+
+async function delNotCheckedComment(params) {
+  if (utils.isEmpty(params, params._id)) {
+    console.error("redis - delNotCheckedComment 参数错误");
+  } else {
+    let keys = "not_checked_comments",
+      value = JSON.stringify(params);
+
+    await client.srem(keys, value);
+  }
+}
+
+async function getNotCheckedComment() {
+  let keys = "not_checked_comments";
+  let exit = await client.exists(keys);
+  if (exit === 0) {
+    return "-1";
+  } else {
+    return await client.scard(keys);
+  }
+}
+
+async function addNotCheckedMessage(params) {
+  if (utils.isEmpty(params, params._id)) {
+    console.error("redis - addNotCheckedMessage 参数错误");
+  } else {
+    let keys = "not_checked_messages",
+      value = JSON.stringify(params);
+
+    await client.sadd(keys, value);
+  }
+}
+
+async function delNotCheckedMessage(params) {
+  if (utils.isEmpty(params, params._id)) {
+    console.error("redis - delNotCheckedMessage 参数错误");
+  } else {
+    let keys = "not_checked_messages",
+      value = JSON.stringify(params);
+
+    await client.srem(keys, value);
+  }
+}
+
+async function getNotCheckedMessage() {
+  let keys = "not_checked_messages";
+  let exit = await client.exists(keys);
+  if (exit === 0) {
+    return "-1";
+  } else {
+    return await client.scard(keys);
+  }
+}
+
+async function addReportedComment(params) {
+  if (utils.isEmpty(params, params._id, params.parentId)) {
+    console.error("redis - addReportedComment 参数错误");
+  } else {
+    let keys = "reported_comments",
+      value = JSON.stringify({ _id: params._id, parentId: params.parentId });
+
+    await client.sadd(keys, value);
+  }
+}
+
+async function delReportedComment(params) {
+  if (utils.isEmpty(params, params._id, params.parentId)) {
+    console.error("redis - delReportedComment 参数错误");
+  } else {
+    let keys = "reported_comments",
+      value = JSON.stringify({ _id: params._id, parentId: params.parentId });
+
+    await client.srem(keys, value);
+  }
+}
+
+async function getReportedComment() {
+  let keys = "reported_comments";
+  await client.scard(keys);
+}
+
 module.exports = {
   start,
   setCreateTmpUser,
   getCreateTmpUser,
   delCreateTmpUser,
+  createForgetUser,
+  getForgetUser,
+  delForgetUser,
   addUser,
   getUser,
   delUser,
@@ -341,14 +523,27 @@ module.exports = {
   delThumbs,
   getTopPreviewArticle,
   setTopPreviewArticle,
+  delTopPreviewArticle,
   incPv,
   getTopCommentsArticle,
   setTopCommentsArticle,
+  delTopCommentsArticle,
   setCommentCount,
+  delCommentCount,
   getArticleCatalogs,
   setArticleCatalogs,
+  delArticleCatalogs,
   reportCommentById,
   reportSubCommentById,
   cancleCommentById,
-  deleteSubComment
+  deleteSubComment,
+  addNotCheckedComment,
+  delNotCheckedComment,
+  getNotCheckedComment,
+  addNotCheckedMessage,
+  delNotCheckedMessage,
+  getNotCheckedMessage,
+  addReportedComment,
+  delReportedComment,
+  getReportedComment
 };

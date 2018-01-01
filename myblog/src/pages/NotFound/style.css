@@ -1,0 +1,28 @@
+.notFound {
+  background: -webkit-linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.9) 100%
+    ),
+    url(../../media/foot.png) no-repeat;
+  background: -o-linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.9) 100%
+    ),
+    url(../../media/foot.png) no-repeat;
+  background: linear-gradient(
+      rgba(256, 256, 256, 0.1) 0%,
+      rgba(256, 256, 256, 0.9) 100%
+    ),
+    url(../../media/foot.png) no-repeat;
+  background-position: 0% 30%;
+  background-size: 30% 60%;
+}
+.notFound-title {
+  font-size: 60px;
+  margin-top: 15%;
+  font-weight: 800;
+  color: #07689f;
+}
+.notFound-title-des {
+  text-shadow: 3px 3px 2px #49a9ee;
+}

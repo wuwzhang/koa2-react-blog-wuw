@@ -11,7 +11,6 @@ import {
   actions as commentAction
 } from "../../../components/Comment/";
 
-// import { Grid, Col, Row } from "react-bootstrap";
 import { Row, Col } from "antd";
 import { Radio } from "antd";
 import QueueAnim from "rc-queue-anim";
@@ -196,7 +195,7 @@ class CommentAdmin extends Component {
                   <section key="c">
                     {comments.map((comment, index) => {
                       return comment ? (
-                        <CommentLi commentIndex={index} />
+                        <CommentLi key={index} commentIndex={index} />
                       ) : null;
                     })}
                   </section>

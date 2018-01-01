@@ -11,7 +11,7 @@ import {
   DELETE_COMMENT,
   DELETE_SUB_COMMENT,
   CHANCEL_SUB_COMMENT,
-  NOTCHECKED_COMMENT,
+  NOTCHECKED_AND_REPORT_COMMENT,
   SET_THUMBSUP,
   SET_THUMBSDOWN,
   SET_REPORT
@@ -23,7 +23,8 @@ export default (state, action) => {
       articleComments: [],
       allComment: [],
       filter: "ALL",
-      NotCheckedCount: 0
+      NotCheckedCount: 0,
+      ReportCount: 0
     };
   }
 
@@ -69,6 +70,10 @@ export default (state, action) => {
       };
     }
     case DELETE_SUB_COMMENT: {
+      let reportCount = action.isRePorted
+        ? state.ReportCount - 1
+        : state.ReportCount;
+
       let comment = state,
         { commentIndex, subCommentIndex } = action;
       let { allComment } = comment;
@@ -78,6 +83,7 @@ export default (state, action) => {
       ];
       allComment[commentIndex].replies = replies;
       comment.allComment = allComment;
+      comment.ReportCount = reportCount;
       return comment;
     }
     case CHANCEL_SUB_COMMENT: {
@@ -86,7 +92,8 @@ export default (state, action) => {
         allComment: [
           ...(state.allComment[action.commentIndex].isRePort = false),
           ...state.allComment
-        ]
+        ],
+        ReportCount: state.ReportCount - 1
       };
     }
     case CHECK_COMMENT: {
@@ -105,7 +112,8 @@ export default (state, action) => {
         allComment: [
           ...(state.allComment[action.commentIndex].isRePort = action.state),
           ...state.allComment
-        ]
+        ],
+        ReportCount: state.ReportCount - 1
       };
     }
     case DELETE_COMMENT: {
@@ -113,19 +121,25 @@ export default (state, action) => {
         ? state.NotCheckedCount
         : state.NotCheckedCount - 1;
 
+      let reportCount = action.isRePorted
+        ? state.ReportCount - 1
+        : state.ReportCount;
+
       return {
         ...state,
         allComment: [
           ...state.allComment.slice(0, action.commentIndex),
           ...state.allComment.slice(action.commentIndex + 1)
         ],
-        NotCheckedCount: count
+        NotCheckedCount: count,
+        ReportCount: reportCount
       };
     }
-    case NOTCHECKED_COMMENT: {
+    case NOTCHECKED_AND_REPORT_COMMENT: {
       return {
         ...state,
-        NotCheckedCount: action.NotCheckedCount
+        NotCheckedCount: action.notCheckedCount,
+        ReportCount: action.reportedCount
       };
     }
     case SET_COMMENT_FILTER: {
@@ -192,7 +206,8 @@ export default (state, action) => {
           ...(state.articleComments[action.commentIndex].isRePort =
             action.state),
           ...state.articleComments
-        ]
+        ],
+        ReportCount: state.ReportCount + 1
       };
     }
     default: {

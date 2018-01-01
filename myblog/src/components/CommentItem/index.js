@@ -260,7 +260,7 @@ class CommentItem extends Component {
           <Row>
             <Col md={24} sm={24}>
               <ul className="commentItem-Ul commentItem-option">
-                <li>
+                <li className="commentItem-createTime">
                   {comment && comment.created_at
                     ? comment.created_at.slice(0, 10)
                     : comment}

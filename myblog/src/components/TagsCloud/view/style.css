@@ -1,14 +1,16 @@
 .TagsCloud {
-  margin: 10px 0 0 15px;
+  margin: 15px 0 0 15px;
+  max-height: 26%;
+  min-height: 20%;
+  overflow-y: auto;
 }
 .TagsCloud-TagsTitle {
-  font-size: 16px;
   font-weight: bolder;
 
   margin-bottom: 10px;
 }
 .TagsCloud-TagsTitle:hover a span {
-  color: #FF7E67;
+  color: #ff7e67;
 }
 .TagsCloud-TagsTitle a span {
   /*color: #3366cc;
