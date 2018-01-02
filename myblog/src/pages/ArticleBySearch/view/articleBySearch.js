@@ -88,6 +88,10 @@ class ArticleBySearch extends Component {
       } else {
         this.props.failSearch(result.message);
       }
+    } else {
+      this.setState({
+        searchLoading: false
+      });
     }
   }
 
