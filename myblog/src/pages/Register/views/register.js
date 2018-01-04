@@ -345,14 +345,14 @@ class Register extends Component {
               sm={{ span: 8, offset: 8 }}
             >
               <QueueAnim className="demo-content">
-                <Row key="a">
+                <Row key="registera">
                   <Col md={{ span: 22, offset: 1 }}>
                     <h2>
                       <FormattedMessage id="Regist" defaultMessage="Sign Up" />
                     </h2>
                   </Col>
                 </Row>
-                <Row key="b">
+                <Row key="registerb">
                   <Col md={{ span: 22, offset: 1 }}>
                     <Form>
                       <FormItem

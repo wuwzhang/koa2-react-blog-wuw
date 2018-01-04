@@ -21,12 +21,6 @@ class CatalogAside extends Component {
     };
   }
 
-  /**
-   * result = [
-   *   {_id: '前端', count: '4'},
-   *   {_id: '', count: ''}
-   *]
-   */
   async componentDidMount() {
     let { catalogs } = this.props.catalogs;
 
@@ -49,6 +43,14 @@ class CatalogAside extends Component {
       }
     }
   }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.state.catalogs !== nextState.catalogs ||
+      this.state.loading !== nextState.loading
+    );
+  }
+
   render() {
     let { catalogs } = this.state;
     let { color } = this.props;
@@ -66,9 +68,12 @@ class CatalogAside extends Component {
         <Spin size="small" spinning={this.state.loading === true}>
           <ul>
             {catalogs
-              ? catalogs.map((catalog, index) => {
+              ? catalogs.map(catalog => {
                   return (
-                    <Link to={`/article_by_catalog/${catalog._id}`} key={index}>
+                    <Link
+                      to={`/article_by_catalog/${catalog._id}`}
+                      key={`CatalogAside${catalog._id}`}
+                    >
                       <li>
                         <span className="catalogName">{catalog._id}</span>
                         <span className="catalogCount">({catalog.count})</span>

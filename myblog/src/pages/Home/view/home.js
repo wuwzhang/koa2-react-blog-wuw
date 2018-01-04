@@ -113,10 +113,10 @@ class Home extends Component {
         <section className="Home-header">
           <div className="conatiner">
             <QueueAnim delay={300} type={["top", "bottom"]}>
-              <div key="0" className="Home-avatar">
+              <div key="Home0" className="Home-avatar">
                 <img src={avatar} alt="" />
               </div>
-              <div key="1" className="Home-title">
+              <div key="Home1" className="Home-title">
                 <h1>
                   <span>wuw's</span>
                   <span>blog</span>
@@ -128,7 +128,7 @@ class Home extends Component {
         <section className="Home-container">
           <div className="container">
             <QueueAnim delay={300} type={["bottom", "top"]}>
-              <section key="0" className="Home-signtuare">
+              <section key="Homea" className="Home-signtuare">
                 <p className="Home-signtuare-small">
                   <FormattedMessage
                     id="HomeHeadingTop"
@@ -142,7 +142,7 @@ class Home extends Component {
                   />
                 </p>
               </section>
-              <section key="1" className="Home-search">
+              <section key="Homeb" className="Home-search">
                 <from>
                   <input
                     autoFocus
@@ -161,7 +161,7 @@ class Home extends Component {
                   />
                 </from>
               </section>
-              <section key="2" className="Home-foot">
+              <section key="Homec" className="Home-foot">
                 <Row>
                   <Col md={8} sm={24} xs={24}>
                     <p>© 2017 wuw All rights reserved.</p>

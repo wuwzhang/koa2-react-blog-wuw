@@ -476,7 +476,7 @@ class ArticleEdit extends Component {
                 {catalogsArr.map((catalog, index) => {
                   return (
                     <Tag
-                      key={index}
+                      key={`tag${index}`}
                       checked={index}
                       onClick={e => this._addCatalog(e, index)}
                     >
@@ -494,7 +494,7 @@ class ArticleEdit extends Component {
                 {tagsArr.map((tag, index) => {
                   return (
                     <Tag
-                      key={index}
+                      key={`tag${index}`}
                       checked={index}
                       onClick={e => this._addTag(e, index)}
                     >

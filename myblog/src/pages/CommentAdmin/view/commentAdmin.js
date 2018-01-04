@@ -61,6 +61,8 @@ class CommentAdmin extends Component {
   }
 
   handleView(e) {
+    e.preventDefault();
+
     this.setState({
       filter: e.target.value
     });
@@ -96,7 +98,7 @@ class CommentAdmin extends Component {
             <section className="ArticleList">
               <ul>
                 <QueueAnim className="demo-content">
-                  <Row key="a">
+                  <Row key="commentAdmina">
                     <Col md={18} sm={18} xs={24}>
                       <h2>
                         <FormattedMessage
@@ -134,7 +136,7 @@ class CommentAdmin extends Component {
                     </Col>
                   </Row>
 
-                  <Row key="b">
+                  <Row key="commentAdminb">
                     <section
                       className="ArticleLi-head"
                       style={{ color: "#999" }}
@@ -192,10 +194,13 @@ class CommentAdmin extends Component {
                       </Col>
                     </section>
                   </Row>
-                  <section key="c">
+                  <section key="commentAdminc">
                     {comments.map((comment, index) => {
                       return comment ? (
-                        <CommentLi key={index} commentIndex={index} />
+                        <CommentLi
+                          key={`CommentLi${index}`}
+                          commentIndex={index}
+                        />
                       ) : null;
                     })}
                   </section>

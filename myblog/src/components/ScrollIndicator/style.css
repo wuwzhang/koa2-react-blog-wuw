@@ -1,0 +1,22 @@
+.ArticleDetials-scrollbar-control {
+  z-index: 100;
+  width: 100%;
+  height: 5px;
+  background: rgba(250, 250, 250, 0.55);
+}
+.ArticleDetials-scrollbar-control .ArticleDetials-scrollbar {
+  height: 100%;
+  border-radius: 0 2px 2px 0;
+  /* background: #49a9ee; */
+  background: -moz-linear-gradient(to right, #07689f, #0e77ca, #49a9ee);
+  background: -webkit-linear-gradient(to right, #07689f, #0e77ca, #49a9ee);
+  background: -o-linear-gradient(to right, #07689f, #0e77ca, #49a9ee);
+  background: linear-gradient(to right, #07689f, #0e77ca, #49a9ee);
+}
+.ArticleDetials-scrollbar::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  z-index: -1;
+  background: #fafafa;
+}

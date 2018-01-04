@@ -12,14 +12,6 @@ import { injectIntl, FormattedMessage } from "react-intl";
 import message from "../../locale/message";
 
 class CommentOptionNav extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      alertVisble: false
-    };
-  }
-
   async _deleteComment(event, article, commentId, isChecked, isRePort) {
     event.preventDefault();
 

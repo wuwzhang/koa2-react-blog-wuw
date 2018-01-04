@@ -241,14 +241,14 @@ class Login extends Component {
               sm={{ span: 6, offset: 6 }}
             >
               <QueueAnim className="login">
-                <Row key="a">
+                <Row key="logina">
                   <Col md={{ span: 22, offset: 1 }}>
                     <h2>
                       <FormattedMessage id="Login" defaultMessage="Sign In" />
                     </h2>
                   </Col>
                 </Row>
-                <Row key="b">
+                <Row key="loginb">
                   <Col md={{ span: 22, offset: 1 }}>
                     <Form>
                       <FormItem

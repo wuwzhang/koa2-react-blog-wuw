@@ -116,7 +116,7 @@ class Rank extends Component {
               {topPreviewArticle.map(article => {
                 return (
                   <Link
-                    key={article._id}
+                    key={`rank-topPreviewArticle${article._id}`}
                     className="topRank-li"
                     to={`/article_details/${article._id}`}
                   >
@@ -142,7 +142,7 @@ class Rank extends Component {
               {topCommentsArticle.map(article => {
                 return (
                   <Link
-                    key={article._id}
+                    key={`rank-topCommentsArticle${article._id}`}
                     className="topRank-li"
                     to={`/article_details/${article._id}`}
                   >

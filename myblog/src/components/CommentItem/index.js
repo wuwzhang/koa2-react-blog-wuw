@@ -27,6 +27,15 @@ class CommentItem extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      (this.state.pathname !== nextState.pathname &&
+        this.state.redirectState !== nextState.redirectState) ||
+      this.props.user !== nextProps.user ||
+      this.props.comments !== nextProps.comments
+    );
+  }
+
   _login() {
     let pathname = "/login",
       redirectState = { from: this.props.location };
@@ -79,6 +88,7 @@ class CommentItem extends Component {
 
     const btn = (
       <Button
+        key="CommentItemb1"
         className="submit-btn subComment-btn"
         onClick={() => this._login()}
       >
@@ -142,6 +152,7 @@ class CommentItem extends Component {
   async _handleThumbsUp(commentId) {
     const btn = (
       <Button
+        key="CommentItemb2"
         className="submit-btn subComment-btn"
         onClick={() => this._login()}
       >
@@ -181,6 +192,7 @@ class CommentItem extends Component {
   async _handleThumbsDown(commentId) {
     const btn = (
       <Button
+        key="CommentItemb3"
         className="submit-btn subComment-btn"
         onClick={() => this._login()}
       >
@@ -324,7 +336,7 @@ class CommentItem extends Component {
               {replies.map((reply, index) => {
                 return (
                   <SubCommentItem
-                    key={index}
+                    key={`subCommentItem${index}`}
                     reply={reply}
                     commentIndex={commentIndex}
                   />

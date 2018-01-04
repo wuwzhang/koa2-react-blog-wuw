@@ -198,7 +198,7 @@ class ArticleBySearch extends Component {
                             return article ? (
                               <ArticlSearchItem
                                 ind={index}
-                                key={index}
+                                key={`ArticlSearchItem${index}`}
                                 article={article}
                               />
                             ) : null;

@@ -94,6 +94,15 @@ class KeepOnFileList extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.state.articleList !== nextState.articleList ||
+      this.state.catalogView !== nextState.catalogView ||
+      this.state.aside !== nextState.aside ||
+      this.props.config !== nextProps.config
+    );
+  }
+
   handleAside(e) {
     e.preventDefault();
     let { aside } = this.state;
@@ -129,6 +138,7 @@ class KeepOnFileList extends Component {
               md={{ span: 6, offset: 14 }}
               sm={{ span: 6, offset: 14 }}
               xs={0}
+              key="KeepOnFileLista"
             >
               <section className="KeepOnFile-View">
                 <Radio.Group value={catalogView} onChange={this.handleView}>
@@ -147,16 +157,16 @@ class KeepOnFileList extends Component {
               </section>
             </Col>
             <Row>
-              <Col md={20} sm={20} xs={24}>
+              <Col md={20} sm={20} xs={24} key="KeepOnFileListb">
                 <Spin size="large" spinning={this.state.searchLoading === true}>
                   <section className="timeline">
                     <Timeline>
                       <QueueAnim>
                         {articleList.map((article, index) => {
                           return article ? (
-                            <Timeline.Item key={index}>
+                            <Timeline.Item key={`articleList${index}`}>
                               <KeepOnFileItem
-                                key={index}
+                                key={`KeepOnFileList${article._id}`}
                                 article={article}
                                 catalogView={catalogView}
                               />
@@ -174,7 +184,7 @@ class KeepOnFileList extends Component {
                   onChange={this.handlePage}
                 />
               </Col>
-              <Col md={4} sm={4} xs={0}>
+              <Col md={4} sm={4} xs={0} key="KeepOnFileListc">
                 <section className="keepOnFile-aside">
                   {aside ? (
                     <section className="aside">

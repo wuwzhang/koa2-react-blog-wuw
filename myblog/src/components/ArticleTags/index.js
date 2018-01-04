@@ -37,7 +37,7 @@ class ArticleTags extends Component {
         <ul>
           {tags.map(tag => {
             return (
-              <Link key={tag.toString()} to={`/article_by_tag/${tag}`}>
+              <Link to={`/article_by_tag/${tag}`}>
                 <Tag
                   className="ArticleTags-tagItem"
                   color={this.getRandColor()}

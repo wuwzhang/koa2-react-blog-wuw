@@ -24,10 +24,7 @@ export const ArticleCatalog = ({ catalog, color = "#369" }) => {
       </h6>
       {catalog
         ? catalog.map(catalog => (
-            <Link
-              key={catalog.toString()}
-              to={`/article_by_catalog/${catalog}`}
-            >
+            <Link to={`/article_by_catalog/${catalog}`}>
               <Tag color="green">{catalog}</Tag>
             </Link>
           ))

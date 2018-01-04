@@ -141,7 +141,7 @@ class ForgetPsw extends Component {
               sm={{ span: 6, offset: 6 }}
             >
               <QueueAnim className="login">
-                <Row key="a">
+                <Row key="forgetPswa">
                   <Col md={{ span: 22, offset: 1 }}>
                     <h2>
                       <FormattedMessage
@@ -151,7 +151,7 @@ class ForgetPsw extends Component {
                     </h2>
                   </Col>
                 </Row>
-                <Row key="b">
+                <Row key="forgetPswb">
                   <Col md={{ span: 22, offset: 1 }}>
                     <Form>
                       <Row>

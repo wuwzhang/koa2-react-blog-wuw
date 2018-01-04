@@ -186,7 +186,7 @@ class SettingAdmin extends Component {
           <Spin size="large" spinning={this.state.searchLoading === true}>
             <section className="settingAdmin">
               <QueueAnim type={["right", "left"]}>
-                <Row key="a">
+                <Row key="settingAdmina">
                   <Col md={8} sm={12} xs={24}>
                     <Row>
                       {keepOnFile ? (
@@ -460,7 +460,7 @@ class SettingAdmin extends Component {
                     </Row>
                   </Col>
                 </Row>
-                <Row key="b">
+                <Row key="settingAdminb">
                   <Col md={8} sm={12} xs={24}>
                     <Row>
                       {comment ? (

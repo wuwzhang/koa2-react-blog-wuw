@@ -57,6 +57,13 @@ class Contact extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.state.account !== nextState.account ||
+      this.state.content !== nextState.content
+    );
+  }
+
   _handleAccount = e => {
     let value = e.target.value;
     this.setState({

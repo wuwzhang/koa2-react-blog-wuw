@@ -68,7 +68,7 @@ function _checkEmail(email) {
 function _getPageWidth() {
   let pageWidth = window.innerWidth;
 
-  if (typeof pageWidth != "number") {
+  if (typeof pageWidth !== "number") {
     if (document.compatMode === "CSS1Compat") {
       pageWidth = document.documentElement.clientWidth;
     } else {
@@ -82,7 +82,7 @@ function _getPageWidth() {
 function _getPageHeight() {
   let pageHeight = window.innerHeight;
 
-  if (typeof pageHeight != "number") {
+  if (typeof pageHeight !== "number") {
     if (document.compatMode === "CSS1Compat") {
       pageHeight = document.documentElement.clientHeight;
     } else {

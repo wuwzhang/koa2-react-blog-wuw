@@ -127,21 +127,3 @@
   margin-left: 7px;
   vertical-align: top;
 }
-.ArticleDetials-scrollbar-control {
-  z-index: 100;
-  width: 100%;
-  height: 5px;
-  background: rgba(250, 250, 250, 0.55);
-}
-.ArticleDetials-scrollbar-control .ArticleDetials-scrollbar {
-  height: 100%;
-  border-radius: 0 2px 2px 0;
-  background: #49a9ee;
-}
-.ArticleDetials-scrollbar::before {
-  content: "";
-  position: fixed;
-  width: 100%;
-  z-index: -1;
-  background: #fafafa;
-}

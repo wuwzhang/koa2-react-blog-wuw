@@ -27,7 +27,10 @@ const KeepOnFileList = ({ year, monthInfo, badgeColor = "red" }) => {
         {monthInfo
           ? monthInfo.map((item, index) => {
               return (
-                <p key={index} className="KeepOnFile-month">
+                <p
+                  key={`KeepOnFile-month${index}`}
+                  className="KeepOnFile-month"
+                >
                   {Arr[item.month - 1]}
                   <Badge
                     style={{

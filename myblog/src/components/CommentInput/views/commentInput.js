@@ -48,6 +48,16 @@ class CommentInput extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.state.comment !== nextState.comment ||
+      this.state.pathname !== nextState.pathname ||
+      this.state.redirectState !== nextState.redirectState ||
+      this.props.user !== nextProps.user ||
+      this.props.article !== nextProps.article
+    );
+  }
+
   async _addComment() {
     const { comment } = this.state;
 

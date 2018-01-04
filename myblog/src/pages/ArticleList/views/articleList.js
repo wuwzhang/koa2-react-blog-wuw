@@ -84,7 +84,7 @@ class ArticleList extends Component {
             <section className="ArticleList">
               <ul>
                 <QueueAnim className="demo-content">
-                  <Row key="a">
+                  <Row key="articleLista">
                     <Col md={18} sm={18} xs={12}>
                       <h2>
                         <FormattedMessage
@@ -108,7 +108,7 @@ class ArticleList extends Component {
                       </Link>
                     </Col>
                   </Row>
-                  <Row key="b">
+                  <Row key="articleListb">
                     <li className="ArticleLi-head">
                       <Col md={12} ms={12} xs={20}>
                         <p>
@@ -163,12 +163,12 @@ class ArticleList extends Component {
                       </Col>
                     </li>
                   </Row>
-                  <section key="c">
+                  <section key="articleListc">
                     {articles.map((article, index) => {
                       return article ? (
                         <ArticleLi
                           id={article._id}
-                          key={article._id}
+                          key={`article._id${article._id}`}
                           title={article.title}
                           isPublic={article.isPublic}
                           isComment={article.isComment}

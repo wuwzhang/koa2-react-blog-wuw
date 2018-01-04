@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import { withRouter, Redirect, Link } from "react-router-dom";
 
 import ArticleOptionNav from "../../../components/ArticleOptionNav/articleOptionNav.js";
 import { Aside } from "../../../components/Aside/index.js";
 import { view as TopMenu } from "../../../components/TopMenu/";
 import Footer from "../../../components/Footer/index.js";
+import ScrollIndicator from "../../../components/ScrollIndicator/index.js";
 
 import {
   view as Comment,
@@ -27,7 +27,7 @@ import FontAwesome from "react-fontawesome";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FormattedMessage } from "react-intl";
 
-import utils from "../../../utils/utils";
+// import utils from "../../../utils/utils";
 
 import "./style.css";
 
@@ -49,9 +49,9 @@ class ArticleDetails extends Component {
       base: true,
       rank: true,
       rankCount: 4,
-      mathJax: false,
-      scrollbarContainer: {},
-      scrollbar: { width: "0px" }
+      mathJax: false
+      // scrollbarContainer: {},
+      // scrollbar: { width: "0px" }
     };
     let katex = false;
 
@@ -155,32 +155,26 @@ class ArticleDetails extends Component {
         });
       }
     }
+  }
 
-    window.addEventListener("scroll", () => {
-      let scrollTop =
-        document.body.scrollTop || document.documentElement.scrollTop;
-
-      let pageHeight = utils._getPageHeight(),
-        docHeight = utils._getDocHeight();
-
-      if (scrollTop < 54) {
-        this.setState({
-          scrollbarContainer: { position: "relative" }
-        });
-      } else {
-        this.setState({
-          scrollbarContainer: { position: "fixed", top: "0px" }
-        });
-      }
-
-      let scrolled = scrollTop / (docHeight - pageHeight) * 100;
-
-      this.setState({
-        scrollbar: {
-          width: `${scrolled}%`
-        }
-      });
-    });
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.state.searching !== nextState.searching ||
+      this.state.topPreviewLoading !== nextState.topPreviewLoading ||
+      this.state.topCommentLoading !== nextState.topCommentLoading ||
+      this.state.topPreviewArticle !== nextState.topPreviewArticle ||
+      this.state.topCommentsArticle !== nextState.topCommentsArticle ||
+      this.state.preArticle !== nextState.preArticle ||
+      this.state.nextArticle !== nextState.nextArticle ||
+      // this.state.scrollbarContainer !== nextState.scrollbarContainer ||
+      // this.state.scrollbar !== nextState.scrollbar ||
+      this.props.config !== nextProps.config ||
+      this.props.article !== nextProps.article ||
+      (this.state.pathname !== nextState.pathname &&
+        this.state.redirectState !== nextState.redirectState) ||
+      this.props.user !== nextProps.user ||
+      this.props.deleted !== nextProps.deleted
+    );
   }
 
   async _getNewArticle(articleId) {
@@ -269,26 +263,21 @@ class ArticleDetails extends Component {
           <section className="All-Nav">
             <TopMenu style={{ position: "relative" }} />
           </section>
-          <section
-            className="ArticleDetials-scrollbar-control"
-            style={this.state.scrollbarContainer}
-          >
-            <div
-              className="ArticleDetials-scrollbar"
-              style={this.state.scrollbar}
-            />
-          </section>
+          <ScrollIndicator
+            scrollbarContainer={this.state.scrollbarContainer}
+            scrollbar={this.state.scrollbar}
+          />
           <div className="container">
             <section className="articleDetail">
-              <Spin size="large" spinning={this.state.searchLoading === true}>
-                <Row gutter={16}>
+              <Spin size="large" spinning={this.state.searching === true}>
+                <Row gutter={16} key="articleDetaila">
                   <section className="ArticleDetials-titleContainer">
-                    <Col md={12} sm={12} xs={12}>
+                    <Col md={12} sm={12} xs={12} key="articleDetaila1">
                       <h3 className="ArticleDetails-articleTitle">
                         {article.title}
                       </h3>
                     </Col>
-                    <Col md={12} sm={12} xs={12}>
+                    <Col md={12} sm={12} xs={12} key="articleDetaila2">
                       {this.props.user && this.props.user.level === 0 ? (
                         <ArticleOptionNav
                           myStyle={{
@@ -313,7 +302,7 @@ class ArticleDetails extends Component {
                     </Col>
                   </section>
                 </Row>
-                <Row>
+                <Row key="articleDetailb">
                   <Col md={20} sm={20} xs={24}>
                     {article.content ? (
                       <div
@@ -366,7 +355,7 @@ class ArticleDetails extends Component {
                               {topPreviewArticle.map(article => {
                                 return (
                                   <Link
-                                    key={article._id}
+                                    key={`topPreviewArticle${article._id}`}
                                     className="topRank-li"
                                     onClick={() =>
                                       this._getNewArticle(article._id)
@@ -401,7 +390,7 @@ class ArticleDetails extends Component {
                               {topCommentsArticle.map(article => {
                                 return (
                                   <Link
-                                    key={article._id}
+                                    key={`topCommentsArticle${article._id}`}
                                     className="topRank-li"
                                     onClick={() =>
                                       this._getNewArticle(article._id)
@@ -425,11 +414,12 @@ class ArticleDetails extends Component {
                   </Col>
                 </Row>
               </Spin>
-              <Row>
+              <Row key="articleDetailc">
                 <section className="pre-next">
                   <ul>
                     {preArticle ? (
                       <Link
+                        key={preArticle._id}
                         onClick={() => this._getNewArticle(preArticle._id)}
                         to={`/article_details/${preArticle._id}`}
                       >
@@ -440,6 +430,7 @@ class ArticleDetails extends Component {
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     {nextArticle ? (
                       <Link
+                        key={nextArticle._id}
                         onClick={() => this._getNewArticle(nextArticle._id)}
                         to={`/article_details/${nextArticle._id}`}
                       >
@@ -450,9 +441,9 @@ class ArticleDetails extends Component {
                   </ul>
                 </section>
               </Row>
-              <Row>
+              <Row key="articleDetaild">
                 {article.isComment ? (
-                  <Col md={20} ms={20} xs={20}>
+                  <Col md={20} ms={20} xs={20} key="articleDetaild1">
                     <Comment />
                   </Col>
                 ) : (

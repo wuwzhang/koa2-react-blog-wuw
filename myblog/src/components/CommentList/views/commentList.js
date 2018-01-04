@@ -12,6 +12,8 @@ import {
   actions as configActions
 } from "../../../pages/SettingAdmin/";
 
+import { Spin } from "antd";
+
 import "./style.css";
 
 class CommentList extends Component {
@@ -20,7 +22,8 @@ class CommentList extends Component {
 
     this.state = {
       currentPage: 1,
-      commentCount: 4
+      commentCount: 4,
+      commentLoading: true
     };
 
     this.handlePage = this.handlePage.bind(this);
@@ -54,7 +57,9 @@ class CommentList extends Component {
     );
 
     if (result.code === "1") {
-      // this.props.initComment(result.comments)
+      this.setState({
+        commentLoading: false
+      });
       let comments = result.comments;
       let ans = comments.map(comment => {
         let likesState = 0,
@@ -87,6 +92,17 @@ class CommentList extends Component {
       this.props.initComment(ans);
     } else {
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return (
+      this.state.commentLoading !== nextState.commentLoading ||
+      this.props.config !== nextProps.config ||
+      this.props.comments !== nextProps.comments ||
+      this.props.user !== nextProps.user ||
+      this.props.commentCount !== nextProps.commentCount ||
+      this.props.articleId !== nextProps.articleId
+    );
   }
 
   async handlePage(currentPage) {
@@ -150,11 +166,13 @@ class CommentList extends Component {
           range={5}
           onChange={this.handlePage}
         />
-        <ul>
-          {comments.map((comment, index) => {
-            return <CommentItem key={index} commentIndex={index} />;
-          })}
-        </ul>
+        <Spin size="small" spinning={this.state.commentLoading === true}>
+          <ul>
+            {comments.map((comment, index) => {
+              return <CommentItem key={index} commentIndex={index} />;
+            })}
+          </ul>
+        </Spin>
       </section>
     );
   }

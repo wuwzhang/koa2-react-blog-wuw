@@ -16,6 +16,10 @@ class CommentLi extends Component {
     this.props.setShowReply(params);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return this.props.comments !== nextProps.comments;
+  }
+
   render() {
     let { comments, commentIndex } = this.props,
       comment = comments[commentIndex],
@@ -91,7 +95,7 @@ class CommentLi extends Component {
               ? replies.map((reply, index) => {
                   return (
                     <SubCommentLi
-                      key={index}
+                      key={`SubCommentLi${index}`}
                       commentIndex={commentIndex}
                       subCommentIndex={index}
                     />

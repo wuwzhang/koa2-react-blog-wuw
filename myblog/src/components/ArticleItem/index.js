@@ -6,9 +6,9 @@ import CatalogItem from "../CatalogItem/index.js";
 
 import "./style.css";
 
-const view = ({ article, ind }) => {
+const view = ({ article }) => {
   return (
-    <li key={ind}>
+    <li>
       <section className="ArticleItem">
         <Link to={`/article_details/${article._id}`}>
           <h5 className="ArticleItem-title">{article.title}</h5>
@@ -23,7 +23,7 @@ const view = ({ article, ind }) => {
                 <CatalogItem
                   className="ArticleItem-catalog"
                   content={item}
-                  key={index}
+                  key={`articleItemCatalog${index}`}
                 />
               );
             })}
@@ -33,7 +33,9 @@ const view = ({ article, ind }) => {
         <div>
           <ul>
             {article.tags.map((item, index) => {
-              return item ? <TagItem key={index} content={item} /> : null;
+              return item ? (
+                <TagItem key={`ArticleItemTagItem${index}`} content={item} />
+              ) : null;
             })}
           </ul>
         </div>

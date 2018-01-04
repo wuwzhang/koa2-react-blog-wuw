@@ -173,7 +173,7 @@ class ArticleByTag extends Component {
                       {articles.map((article, index) => {
                         return article ? (
                           <ArticlTagItem
-                            key={index}
+                            key={`ArticlTagItem${index}`}
                             ind={index}
                             article={article}
                             route={route}

@@ -52,9 +52,9 @@ const view = ({ article, catalogView }) => {
       {articles.map((article, index) => {
         return article ? (
           catalogView === "catalog" ? (
-            <CatalogView article={article} key={index} />
+            <CatalogView article={article} key={`keepOnFile-catalog${index}`} />
           ) : (
-            <SummaryView article={article} key={index} />
+            <SummaryView article={article} key={`keepOnFile-summary${index}`} />
           )
         ) : null;
       })}

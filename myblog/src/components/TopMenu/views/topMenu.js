@@ -39,6 +39,19 @@ class TopMenu extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.messagecommentNotCheckedCount !==
+        nextProps.messagecommentNotCheckedCount ||
+      this.props.commentcommentReportedCount !==
+        nextProps.commentcommentReportedCount ||
+      this.props.commentcommentNotCheckedCount !==
+        nextProps.commentcommentNotCheckedCount ||
+      this.props.user !== nextProps.user ||
+      this.props.location !== nextProps.location
+    );
+  }
+
   async handleSignOut(event) {
     event.preventDefault();
     let { user } = this.props;
@@ -280,7 +293,12 @@ TopMenu.propTypes = {
   intl: PropTypes.object.isRequired,
   user: PropTypes.object,
   loginOut: PropTypes.func,
-  loginByToken: PropTypes.func
+  loginByToken: PropTypes.func,
+  initNotCheckedAndReportedComment: PropTypes.func,
+  initNotCheckedMessage: PropTypes.func,
+  commentcommentNotCheckedCount: PropTypes.number.isRequired,
+  commentcommentReportedCount: PropTypes.number.isRequired,
+  messagecommentNotCheckedCount: PropTypes.number.isRequired
 };
 
 const mapStateToProps = state => ({

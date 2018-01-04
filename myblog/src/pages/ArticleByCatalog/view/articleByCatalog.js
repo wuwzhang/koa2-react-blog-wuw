@@ -184,7 +184,7 @@ class ArticleByCatalog extends Component {
                         return article ? (
                           <ArticlCatalogItem
                             ind={index}
-                            key={index}
+                            key={`ArticlCatalogItem${index}`}
                             article={article}
                           />
                         ) : null;

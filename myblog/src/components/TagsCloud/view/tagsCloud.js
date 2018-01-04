@@ -74,7 +74,11 @@ class TagsCloud extends Component {
               {tags.map((tag, index) => {
                 // console.log(tag);
                 return tag ? (
-                  <TagItem key={index} id={tag._id} content={tag.tag} />
+                  <TagItem
+                    key={`TagItem${index}`}
+                    id={tag._id}
+                    content={tag.tag}
+                  />
                 ) : null;
               })}
             </ul>

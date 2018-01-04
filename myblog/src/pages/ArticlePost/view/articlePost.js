@@ -591,7 +591,7 @@ class ArticlePost extends Component {
                     return (
                       <Tag
                         color="red"
-                        key={index}
+                        key={`tag${index}`}
                         checked={index}
                         onClick={e => this._addCatalog(e, index)}
                       >
@@ -611,7 +611,7 @@ class ArticlePost extends Component {
                     return (
                       <Tag
                         color="blue"
-                        key={index}
+                        key={`tag${index}`}
                         checked={index}
                         onClick={e => this._addTag(e, index)}
                       >

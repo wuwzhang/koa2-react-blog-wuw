@@ -95,7 +95,7 @@ class MessageAdmin extends Component {
             <section className="ArticleList">
               <ul>
                 <QueueAnim className="demo-content">
-                  <Row key="a">
+                  <Row key="MessageAdmina">
                     <Col md={18} sm={18} xs={24}>
                       <h2>
                         <FormattedMessage
@@ -132,7 +132,7 @@ class MessageAdmin extends Component {
                       </section>
                     </Col>
                   </Row>
-                  <Row key="b">
+                  <Row key="MessageAdminb">
                     <section
                       className="ArticleLi-head"
                       style={{ color: "#999" }}
@@ -171,12 +171,12 @@ class MessageAdmin extends Component {
                       </Col>
                     </section>
                   </Row>
-                  <section key="c">
+                  <section key="MessageAdminc">
                     {messages.map((message, index) => {
                       return message ? (
                         <MessageLi
                           id={message._id}
-                          key={message._id}
+                          key={`MessageLi${message._id}`}
                           index={index}
                           user={message.email}
                           isChecked={message.isChecked}
