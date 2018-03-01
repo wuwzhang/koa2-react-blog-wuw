@@ -1,9 +1,10 @@
+# 后台配置文件
 server/config/*
 !config/default.*
 npm-debug.log
 node_modules
 myblog/build/*
-server/logs/*
+server/logs/*.log
 # build folder
 server/build
 markdown/*
@@ -11,6 +12,7 @@ markdown/*
 # the mac problem
 .DS_Store
 .DS_Store?
+server/dump.rdb
 毕业设计.*
 *.todo
 .gitignore
