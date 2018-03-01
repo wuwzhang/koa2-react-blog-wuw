@@ -1,12 +1,24 @@
 import React from "react";
-import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import {
+  connect
+} from "react-redux";
+import {
+  Link
+} from "react-router-dom";
 
-import { view as Contact } from "../Contact/";
+import {
+  view as Contact
+} from "../Contact/";
 
 import FontAwesome from "react-fontawesome";
-import { Popover, Col, Row } from "antd";
-import { FormattedMessage } from "react-intl";
+import {
+  Popover,
+  Col,
+  Row
+} from "antd";
+import {
+  FormattedMessage
+} from "react-intl";
 
 import carImg from "../../media/foot.png";
 import wechat from "../../media/wechat.jpg";
@@ -185,7 +197,7 @@ const Footer = () => {
         </Row>
         <Row key="footerb">
           <Col md={24} sm={24} xs={24} key="footerb1">
-            <p className="power">© 2017 wuw All rights reserved.</p>
+            <p className="power">© 2018 wuw 版权所有 | 浙ICP备18007945</p>
           </Col>
         </Row>
       </div>
