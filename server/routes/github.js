@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Models = require("../lib/core");
 const $User = Models.$User;
-const config = require("config-lite")(__dirname);
+const config = require("../config/default.js");
 const router = require("koa-router")();
 const jwtUtils = require("../utils/jwtUtils");
 const fetch = require("node-fetch");
@@ -40,12 +40,12 @@ router.get("/github/oauth/callback", async ctx => {
   };
 
   var result = await fetch(path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(params)
-  })
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(params)
+    })
     .then(res => {
       return res.text();
     })

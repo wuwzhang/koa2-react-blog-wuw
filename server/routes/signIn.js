@@ -4,7 +4,7 @@ const $User = Models.$User;
 const jwtUtils = require("../utils/jwtUtils");
 const cryptoUtils = require("../utils/cryptoUtils");
 const redisUtils = require("../utils/redisUtils");
-const config = require("config-lite")(__dirname);
+const config = require("../config/default.js");
 
 router.get("/home/login", async ctx => {
   await ctx.render("home/login");
@@ -16,7 +16,10 @@ router.post("/api/signIn", async ctx => {
     user = null,
     token = "";
 
-  let { account, password } = ctx.request.body;
+  let {
+    account,
+    password
+  } = ctx.request.body;
 
   try {
     user = await redisUtils.getCreateTmpUser(cryptoUtils.md5(account));
@@ -66,7 +69,9 @@ router.post("/api/signIn", async ctx => {
 });
 
 router.post("/api/getUserByToken", async ctx => {
-  let { token } = ctx.request.body;
+  let {
+    token
+  } = ctx.request.body;
   let code = "1",
     message = "token获取用户成功",
     _id = "",

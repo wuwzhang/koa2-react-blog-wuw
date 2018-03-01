@@ -1,6 +1,6 @@
 const Redis = require("ioredis");
 const utils = require("./utils");
-const config = require("config-lite")(__dirname).redis;
+const config = require("../config/default.js").redis;
 
 const USER_KEY = "users";
 const ARTICLE_KEY = "articles";
@@ -38,7 +38,9 @@ async function setCreateTmpUser(params) {
   ) {
     console.error("redis - setCreateTmpUser 参数错误");
   } else {
-    let { activeKey } = params;
+    let {
+      activeKey
+    } = params;
 
     let keys = "create_user" + ":" + activeKey;
     return await client.set(keys, JSON.stringify(params), "EX", 5 * 60);
@@ -258,8 +260,12 @@ async function reportSubCommentById(params) {
     console.error("redis - reportSubCommentById 参数错误");
   }
 
-  let { userId, parentId, commentId } = params,
-    keys = "sub_" + COMMENT_KEY + "_report:" + parentId + ":" + commentId;
+  let {
+    userId,
+    parentId,
+    commentId
+  } = params,
+  keys = "sub_" + COMMENT_KEY + "_report:" + parentId + ":" + commentId;
 
   return await client.sadd(keys, userId);
 }
@@ -291,7 +297,11 @@ async function setTopPreviewArticle(params) {
     console.error("redis - setTopPreviewArticle 参数错误");
   } else {
     let keys = "preview:" + ARTICLE_KEY,
-      { _id, title, pv } = params,
+      {
+        _id,
+        title,
+        pv
+      } = params,
       value = _id + ":" + title;
 
     await client.zadd(keys, pv, value);
@@ -303,7 +313,10 @@ async function delTopPreviewArticle(params) {
     console.error("redis - delTopPreviewArticle 参数错误");
   } else {
     let keys = "preview:" + ARTICLE_KEY,
-      { _id, title } = params,
+      {
+        _id,
+        title
+      } = params,
       value = _id + ":" + title;
 
     await client.zrem(keys, value);
@@ -319,7 +332,10 @@ async function incPv(params) {
   }
 
   let keys = "preview:" + ARTICLE_KEY,
-    { articleId, title } = params,
+    {
+      articleId,
+      title
+    } = params,
     value = articleId + ":" + title;
 
   await client.zincrby(keys, 1, value);
@@ -375,7 +391,11 @@ async function setTopCommentsArticle(params) {
     console.error("redis - setTopCommentsArticle 参数错误");
   } else {
     let keys = "comments:" + ARTICLE_KEY,
-      { _id, title, commentCount } = params,
+      {
+        _id,
+        title,
+        commentCount
+      } = params,
       value = _id + ":" + title;
 
     await client.zadd(keys, commentCount, value);
@@ -387,7 +407,10 @@ async function delTopCommentsArticle(params) {
     console.error("redis - delTopCommentsArticle 参数错误");
   } else {
     let keys = "comments:" + ARTICLE_KEY,
-      { _id, title } = params,
+      {
+        _id,
+        title
+      } = params,
       value = _id + ":" + title;
     await client.zrem(keys, value);
   }
@@ -484,7 +507,10 @@ async function addReportedComment(params) {
     console.error("redis - addReportedComment 参数错误");
   } else {
     let keys = "reported_comments",
-      value = JSON.stringify({ _id: params._id, parentId: params.parentId });
+      value = JSON.stringify({
+        _id: params._id,
+        parentId: params.parentId
+      });
 
     await client.sadd(keys, value);
   }
@@ -495,7 +521,10 @@ async function delReportedComment(params) {
     console.error("redis - delReportedComment 参数错误");
   } else {
     let keys = "reported_comments",
-      value = JSON.stringify({ _id: params._id, parentId: params.parentId });
+      value = JSON.stringify({
+        _id: params._id,
+        parentId: params.parentId
+      });
 
     await client.srem(keys, value);
   }

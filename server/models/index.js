@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-var config = require('config-lite')(__dirname);
+var config = require('../config/default.js');
 
-mongoose.connect(config.mongodb, function (err) {
+mongoose.connect(config.mongodb, function(err) {
   if (err) {
     console.error('connect to %s error: ', config.mongodb, err.message);
     process.exit(1);
