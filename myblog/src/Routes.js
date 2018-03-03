@@ -15,8 +15,8 @@ import { view as ForgetPsw } from "./pages/ForgetPsw/";
 import { view as ResetPassword } from "./pages/ResetPassword/";
 import { view as Register } from "./pages/Register/";
 import { view as ArticlePost } from "./pages/ArticlePost/";
-import { view as ArticleEdit } from "./pages/ArticleEdit/";
-import { view as ArticleDetails } from "./pages/ArticleDetails/";
+// import { view as ArticleEdit } from "./pages/ArticleEdit/";
+// import { view as ArticleDetails } from "./pages/ArticleDetails/";
 import { view as ArticleList } from "./pages/ArticleList/";
 import { view as CommentAdmin } from "./pages/CommentAdmin/";
 import { view as MessageAdmin } from "./pages/MessageAdmin/";
@@ -28,24 +28,37 @@ import { view as ArticleBySearch } from "./pages/ArticleBySearch/";
 
 const history = createHistory();
 
-// const getArticlePostPage = (nextState, callback) => {
-//   require.ensure([], function(require) {
-//     callback(null, require('./pages/ArticlePost/view/articlePost.js').default);
-//   }, 'articlePost');
-// };
+const getArticlePostPage = (nextState, callback) => {
+  require.ensure(
+    [],
+    function(require) {
+      callback(
+        null,
+        require("./pages/ArticlePost/view/articlePost.js").default
+      );
+    },
+    "articlePost"
+  );
+};
 
-// const getArticleEditPage = (nextState, callback) => {
-//   require.ensure([], function(require) {
-//     callback(null, require('./pages/ArticleEdit/view/articleEdit.js').default);
-//   }, 'articleEdit');
-// };
+const getArticleEditPage = (nextState, callback) => {
+  require.ensure(
+    [],
+    function(require) {
+      callback(
+        null,
+        require("./pages/ArticleEdit/view/articleEdit.js").default
+      );
+    },
+    "articleEdit"
+  );
+};
 
 // const getArticleDetailsPage = (nextState, callback) => {
 //   require.ensure([], function(require) {
 //     callback(null, require('./pages/ArticleDetails/views/articleDetials.js').default);
 //   }, 'articelDetails');
 // };
-//
 //
 
 const Routes = () => (
@@ -61,8 +74,8 @@ const Routes = () => (
       <Route path="/signOut" component={Login} />
       <Route path="/regist" component={Register} />
       <Route path="/article_post" component={ArticlePost} />
-      <Route path="/article_edit/:articleId" component={ArticleEdit} />
-      <Route path="/article_details/:articleId" component={ArticleDetails} />
+      {/*<Route path="/article_edit/:articleId" component={ArticleEdit} />
+      <Route path="/article_details/:articleId" component={ArticleDetails} />*/}
       <Route path="/article_admin" component={ArticleList} />
       <Route path="/comment_admin" component={CommentAdmin} />
       <Route path="/message_admin" component={MessageAdmin} />
@@ -71,9 +84,9 @@ const Routes = () => (
       <Route path="/article_by_tag" component={ArticleByTag} />
       <Route path="/article_by_catalog" component={ArticleByCatalog} />
       <Route path="/article_by_search/:value" component={ArticleBySearch} />
-      {/* <Route path="article_post" getComponent={ getArticlePostPage }></Route>
-      <Route path="article_edit/:articleId" getComponent={ getArticleEditPage }></Route>
-      <Route path="article_details/:articleId" getComponent={ getArticleDetailsPage }></Route> */}
+      <Route path="article_post" getComponent={getArticlePostPage} />
+      <Route path="article_edit/:articleId" getComponent={getArticleEditPage} />
+      {/* <Route path="article_details/:articleId" getComponent={ getArticleDetailsPage }></Route> */}
       <Route path="/verifyemail/:verifyemail" component={VerifyMail} />
       <Route path="/github/oauth/callback" component={VerifyGithub} />
       <Route path="*" status={404} component={NotFound} />

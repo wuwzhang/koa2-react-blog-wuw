@@ -182,7 +182,7 @@ class TopMenu extends Component {
                         <Dropdown overlay={menu}>
                           <Link
                             className="ant-dropdown-link"
-                            to="/article_admim"
+                            to="/Keep_On_File"
                           >
                             <Badge
                               count={
@@ -201,7 +201,7 @@ class TopMenu extends Component {
                         <Dropdown overlay={menu}>
                           <Link
                             className="ant-dropdown-link"
-                            to="/Keep_On_File"
+                            to="/article_admin"
                           >
                             <Icon type="bell" style={{ color: "#FAFAFA" }} />
                             &nbsp;&nbsp;&nbsp;
