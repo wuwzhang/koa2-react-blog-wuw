@@ -1,12 +1,12 @@
 # 后台配置文件
-server/config/*
+# server/config/*
 !config/default.*
 npm-debug.log
 node_modules
 myblog/build/*
 server/logs/*.log
 # build folder
-server/build
+# server/build
 markdown/*
 #coverage
 # the mac problem
