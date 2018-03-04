@@ -14,9 +14,9 @@ import { view as Login } from "./pages/Login/";
 import { view as ForgetPsw } from "./pages/ForgetPsw/";
 import { view as ResetPassword } from "./pages/ResetPassword/";
 import { view as Register } from "./pages/Register/";
-import { view as ArticlePost } from "./pages/ArticlePost/";
+//import { view as ArticlePost } from "./pages/ArticlePost/";
 // import { view as ArticleEdit } from "./pages/ArticleEdit/";
-// import { view as ArticleDetails } from "./pages/ArticleDetails/";
+import { view as ArticleDetails } from "./pages/ArticleDetails/";
 import { view as ArticleList } from "./pages/ArticleList/";
 import { view as CommentAdmin } from "./pages/CommentAdmin/";
 import { view as MessageAdmin } from "./pages/MessageAdmin/";
@@ -73,9 +73,9 @@ const Routes = () => (
       <Route path="/reset_password/:activeKey" component={ResetPassword} />
       <Route path="/signOut" component={Login} />
       <Route path="/regist" component={Register} />
-      <Route path="/article_post" component={ArticlePost} />
-      {/*<Route path="/article_edit/:articleId" component={ArticleEdit} />
-      <Route path="/article_details/:articleId" component={ArticleDetails} />*/}
+      {/*<Route path="/article_post" component={ArticlePost} />
+      <Route path="/article_edit/:articleId" component={ArticleEdit} />*/}
+      <Route path="/article_details/:articleId" component={ArticleDetails} />
       <Route path="/article_admin" component={ArticleList} />
       <Route path="/comment_admin" component={CommentAdmin} />
       <Route path="/message_admin" component={MessageAdmin} />
