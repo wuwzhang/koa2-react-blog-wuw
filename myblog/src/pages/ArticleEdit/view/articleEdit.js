@@ -105,9 +105,7 @@ class ArticleEdit extends Component {
     // }
 
     import ("highlight.js")
-    .then(({
-        hljs
-      }) => {
+    .then((hljs) => {
         marked.setOptions({
           renderer: new marked.Renderer(),
           gfm: true,

@@ -56,6 +56,7 @@ import {
 import {
   FormattedMessage
 } from "react-intl";
+// import hljs from 'highlight.js'
 
 // import utils from "../../../utils/utils";
 
@@ -99,26 +100,24 @@ class ArticleDetails extends Component {
     this.onCopy = this.onCopy.bind(this);
 
     import ("highlight.js")
-    .then(({
-        hljs
-      }) => {
-        marked.setOptions({
-          renderer: new marked.Renderer(),
-          gfm: true,
-          tables: true,
-          breaks: false,
-          pedantic: false,
-          sanitize: true,
-          smartLists: true,
-          smartypants: true,
-          highlight: code => hljs.highlightAuto(code).value,
-          math: true,
-          // kaTex: katex
-        });
-      })
-      .catch(err => {
-        console.log(err);
+    .then((hljs) => {
+      // console.log(hljs)
+      marked.setOptions({
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: true,
+        smartLists: true,
+        smartypants: true,
+        highlight: hljs ? code => hljs.highlightAuto(code).value : null,
+        math: true,
+        // kaTex: katex
       });
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
   async componentDidMount() {
