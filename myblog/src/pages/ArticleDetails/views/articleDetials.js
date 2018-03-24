@@ -1,10 +1,22 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { withRouter, Redirect, Link } from "react-router-dom";
+import React, {
+  Component
+} from "react";
+import {
+  connect
+} from "react-redux";
+import {
+  withRouter,
+  Redirect,
+  Link
+} from "react-router-dom";
 
 import ArticleOptionNav from "../../../components/ArticleOptionNav/articleOptionNav.js";
-import { Aside } from "../../../components/Aside/index.js";
-import { view as TopMenu } from "../../../components/TopMenu/";
+import {
+  Aside
+} from "../../../components/Aside/index.js";
+import {
+  view as TopMenu
+} from "../../../components/TopMenu/";
 import Footer from "../../../components/Footer/index.js";
 import ScrollIndicator from "../../../components/ScrollIndicator/index.js";
 
@@ -13,19 +25,37 @@ import {
   fetchs as commentFetchs,
   actions as commentActions
 } from "../../../components/Comment/";
-import { detailArticle } from "../fetch";
-import { fetchs as rankFetchs } from "../../../components/Rank/";
-import { actions as deleteActions } from "../../ArticleList/";
-import { articleInitDetails } from "../action.js";
+import {
+  detailArticle
+} from "../fetch";
+import {
+  fetchs as rankFetchs
+} from "../../../components/Rank/";
+import {
+  actions as deleteActions
+} from "../../ArticleList/";
+import {
+  articleInitDetails
+} from "../action.js";
 import {
   fetchs as configFetchs,
   actions as configActions
 } from "../../SettingAdmin/";
 
-import { BackTop, Button, Col, Row, Spin } from "antd";
+import {
+  BackTop,
+  Button,
+  Col,
+  Row,
+  Spin
+} from "antd";
 import FontAwesome from "react-fontawesome";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { FormattedMessage } from "react-intl";
+import {
+  CopyToClipboard
+} from "react-copy-to-clipboard";
+import {
+  FormattedMessage
+} from "react-intl";
 
 // import utils from "../../../utils/utils";
 
@@ -53,22 +83,25 @@ class ArticleDetails extends Component {
       // scrollbarContainer: {},
       // scrollbar: { width: "0px" }
     };
-    let katex = false;
+    // let katex = false;
 
-    if (this.state.mathJax) {
-      katex = import("katex")
-        .then(res => {
-          return res;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+    // if (this.state.mathJax) {
+    //   katex =
+    //     import ("katex")
+    //     .then(res => {
+    //       return res;
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
 
     this.onCopy = this.onCopy.bind(this);
 
-    import("highlight")
-      .then(({ hljs }) => {
+    import ("highlight.js")
+    .then(({
+        hljs
+      }) => {
         marked.setOptions({
           renderer: new marked.Renderer(),
           gfm: true,
@@ -80,7 +113,7 @@ class ArticleDetails extends Component {
           smartypants: true,
           highlight: code => hljs.highlightAuto(code).value,
           math: true,
-          kaTex: katex
+          // kaTex: katex
         });
       })
       .catch(err => {
@@ -132,7 +165,9 @@ class ArticleDetails extends Component {
     }
 
     if (this.state.rank) {
-      let { rankCount = 5 } = this.state;
+      let {
+        rankCount = 5
+      } = this.state;
 
       let topPreviewRes = await rankFetchs.getTopPreviewArticle();
       if (topPreviewRes.code === "1") {
@@ -142,8 +177,7 @@ class ArticleDetails extends Component {
           topPreviewArticle: articles,
           topPreviewLoading: false
         });
-      } else {
-      }
+      } else {}
 
       let topCommentsRes = await rankFetchs.getTopCommentsArticle();
       if (topCommentsRes.code === "1") {
@@ -204,8 +238,11 @@ class ArticleDetails extends Component {
           dislikesState = 0;
 
         if (this.props.user && this.props.user._id) {
-          let { likes, dislikes } = comment,
-            userId = this.props.user._id;
+          let {
+            likes,
+            dislikes
+          } = comment,
+          userId = this.props.user._id;
 
           if (likes && likes.length > 0) {
             likesState = userId.indexOf(likes) === "-1" ? -1 : 1;
@@ -228,12 +265,13 @@ class ArticleDetails extends Component {
       });
 
       this.props.initComment(ans);
-    } else {
-    }
+    } else {}
   }
 
   onCopy() {
-    this.setState({ copied: true });
+    this.setState({
+      copied: true
+    });
   }
 
   render() {
@@ -247,7 +285,9 @@ class ArticleDetails extends Component {
         />
       );
     }
-    let { article } = this.props;
+    let {
+      article
+    } = this.props;
     let {
       preArticle,
       nextArticle,

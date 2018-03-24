@@ -16,7 +16,12 @@ router.post("/api/signUp", async ctx => {
 
   try {
     var data = JSON.parse(ctx.request.body);
-    let { account, username, password, avatarValue } = data;
+    let {
+      account,
+      username,
+      password,
+      avatarValue
+    } = data;
 
     if (!account || !validator.isEmail(account)) {
       code = "-1";
@@ -43,9 +48,9 @@ router.post("/api/signUp", async ctx => {
         "邮箱注册",
         "Fred Foo <wuwZhang@126.com>",
         account,
-        "<a href='http://localhost:3000/verifyemail/" +
-          activeKey +
-          "'>点击进行邮箱验证</a>"
+        "<a href='http://zhanglisha.xyz/verifyemail/" +
+        activeKey +
+        "'>点击进行邮箱验证</a>"
       );
     }
   } catch (e) {
@@ -68,7 +73,9 @@ router.post("/api/signUp", async ctx => {
  * 确认账户是否存在
  */
 router.post("/api/checkAccount", async ctx => {
-  const { account } = ctx.request.body,
+  const {
+    account
+  } = ctx.request.body,
     user = await $User.getUserByAccount(account);
 
   let code = "1",
@@ -77,7 +84,8 @@ router.post("/api/checkAccount", async ctx => {
   if (user) {
     (code = "-1"), (message = "用户名已存在");
   } else {
-    code, message;
+    code,
+    message;
   }
   ctx.response.body = {
     code: code,
@@ -89,7 +97,9 @@ router.post("/api/checkAccount", async ctx => {
  * 忘记密码
  */
 router.post("/api/forgetPsw", async ctx => {
-  let { account } = ctx.request.body;
+  let {
+    account
+  } = ctx.request.body;
 
   let code = "1",
     message = "ok";
@@ -104,9 +114,9 @@ router.post("/api/forgetPsw", async ctx => {
       "邮箱重置",
       "Fred Foo <wuwZhang@126.com>",
       account,
-      "<a href='http://localhost:3000/reset_password/" +
-        activeKey +
-        "'>点击进行密码重置</a>"
+      "<a href='http://zhanglisha.xyz/reset_password/" +
+      activeKey +
+      "'>点击进行密码重置</a>"
     );
   } catch (e) {
     code = "-1";
@@ -123,7 +133,10 @@ router.post("/api/forgetPsw", async ctx => {
  * 重置密码
  */
 router.post("/api/reset_password", async ctx => {
-  let { activeKey, password } = ctx.request.body,
+  let {
+    activeKey,
+    password
+  } = ctx.request.body,
     code = "1",
     message = "reset password succeed";
 

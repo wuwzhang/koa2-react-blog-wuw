@@ -6,7 +6,7 @@ node_modules
 myblog/build/*
 server/logs/*.log
 # build folder
-# server/build
+server/build/*
 markdown/*
 #coverage
 # the mac problem

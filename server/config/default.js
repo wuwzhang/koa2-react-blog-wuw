@@ -19,5 +19,5 @@ module.exports = {
     'client_secret': '8691d9c926b971ac02356f5233e266fdc1b07a37',
     'scope': ['user']
   },
-  cors: 'http://localhost:3000'
+  cors: 'http://zhanglisha.xyz'
 }

@@ -1,15 +1,27 @@
-import React, { Component } from "react";
+import React, {
+  Component
+} from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { withRouter, Redirect } from "react-router-dom";
+import {
+  connect
+} from "react-redux";
+import {
+  withRouter,
+  Redirect
+} from "react-router-dom";
 import moment from "moment";
 import marked from "marked";
 
 import redirect from "../../../components/Redirect";
-import { view as TopMenu } from "../../../components/TopMenu/";
+import {
+  view as TopMenu
+} from "../../../components/TopMenu/";
 import "./style.css";
 
-import { addPost, checkTitle } from "../fetch";
+import {
+  addPost,
+  checkTitle
+} from "../fetch";
 import {
   fetchs as catalogFetchs,
   actions as catalogActions
@@ -20,7 +32,9 @@ import {
   actions as tagsActions
 } from "../../../components/TagsCloud/";
 
-import { initPostArticle } from "../action";
+import {
+  initPostArticle
+} from "../action";
 
 import {
   Button,
@@ -32,7 +46,10 @@ import {
   notification,
   Popconfirm
 } from "antd";
-import { injectIntl, FormattedMessage } from "react-intl";
+import {
+  injectIntl,
+  FormattedMessage
+} from "react-intl";
 import message from "../../../locale/message";
 
 const FormItem = Form.Item;
@@ -100,18 +117,21 @@ class ArticlePost extends Component {
   constructor(props) {
     super(props);
 
-    if (true) {
-      var katex = import("katex")
-        .then(res => {
-          return res;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+    // if (true) {
+    //   var katex =
+    //     import ("katex")
+    //     .then(res => {
+    //       return res;
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
 
-    import("highlight")
-      .then(({ hljs }) => {
+    import ("highlight.js")
+    .then(({
+        hljs
+      }) => {
         marked.setOptions({
           renderer: new marked.Renderer(),
           gfm: true,
@@ -122,7 +142,7 @@ class ArticlePost extends Component {
           smartLists: true,
           smartypants: false,
           math: true,
-          kaTex: katex,
+          // kaTex: katex,
           highlight: code => hljs.highlightAuto(code).value
         });
       })
@@ -135,8 +155,7 @@ class ArticlePost extends Component {
         value: localStorage.getItem("title") || this.props.articleTitle || ""
       },
       content: {
-        value:
-          localStorage.getItem("content") || this.props.articleContent || ""
+        value: localStorage.getItem("content") || this.props.articleContent || ""
       },
       fontSize: localStorage.getItem("fontSize") || 12,
       tags: {
@@ -163,7 +182,10 @@ class ArticlePost extends Component {
     let isSubmit = this.state.isSubmit,
       title = this.state.title.value,
       content = this.state.content.value,
-      { catalogs, tags } = this.props;
+      {
+        catalogs,
+        tags
+      } = this.props;
 
     this.setState({
       isSubmit: !isSubmit,
@@ -195,7 +217,12 @@ class ArticlePost extends Component {
   }
 
   async _postArticle() {
-    let { title, content, tags, catalog } = this.state;
+    let {
+      title,
+      content,
+      tags,
+      catalog
+    } = this.state;
     // console.log(title, content, tags, catalog);
     if (
       title.validateStatus === "success" &&
@@ -298,11 +325,17 @@ class ArticlePost extends Component {
 
   _setTitle = e => {
     localStorage.setItem("title", e.target.value);
-    this.setState({ title: { value: e.target.value } });
+    this.setState({
+      title: {
+        value: e.target.value
+      }
+    });
   };
 
   _addCatalog(e, catalogIndex) {
-    let { catalog } = this.state;
+    let {
+      catalog
+    } = this.state;
 
     catalog = catalog.value;
 
@@ -312,9 +345,9 @@ class ArticlePost extends Component {
 
     let catalogs = this.props.catalogs;
     let tmpCatalog =
-      catalogs && catalogs[catalogIndex]
-        ? catalogs[catalogIndex]._id + ";"
-        : "";
+      catalogs && catalogs[catalogIndex] ?
+      catalogs[catalogIndex]._id + ";" :
+      "";
 
     if (catalog.indexOf(tmpCatalog) === -1) {
       let catalogValue = "" + catalog + tmpCatalog;
@@ -329,7 +362,9 @@ class ArticlePost extends Component {
   }
 
   _addTag(e, tagIndex) {
-    let { tags } = this.state;
+    let {
+      tags
+    } = this.state;
 
     let tagsArr = this.props.tags;
     let tmpTag =
@@ -438,11 +473,16 @@ class ArticlePost extends Component {
       isShowPreview,
       fontSize
     } = this.state;
-    let { location, user } = this.props,
+    let {
+      location,
+      user
+    } = this.props,
       tagsArr = this.props.tags,
       catalogsArr = this.props.catalogs;
     let pathname = "/login",
-      redirectState = { from: location };
+      redirectState = {
+        from: location
+      };
 
     if (!user) {
       return (

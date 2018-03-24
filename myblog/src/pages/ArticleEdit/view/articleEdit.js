@@ -1,15 +1,27 @@
-import React, { Component } from "react";
+import React, {
+  Component
+} from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { withRouter, Redirect } from "react-router-dom";
+import {
+  connect
+} from "react-redux";
+import {
+  withRouter,
+  Redirect
+} from "react-router-dom";
 import moment from "moment";
 import marked from "marked";
 
 import redirect from "../../../components/Redirect";
-import { view as TopMenu } from "../../../components/TopMenu/";
+import {
+  view as TopMenu
+} from "../../../components/TopMenu/";
 import "./style.css";
 
-import { getEditArticle, updateArticle } from "../fetch";
+import {
+  getEditArticle,
+  updateArticle
+} from "../fetch";
 import {
   fetchs as catalogFetchs,
   actions as catalogActions
@@ -20,10 +32,23 @@ import {
   actions as tagsActions
 } from "../../../components/TagsCloud/";
 
-import { initUpdateArticle } from "../action";
+import {
+  initUpdateArticle
+} from "../action";
 
-import { Button, Icon, Form, Input, Modal, Tag, notification } from "antd";
-import { injectIntl, FormattedMessage } from "react-intl";
+import {
+  Button,
+  Icon,
+  Form,
+  Input,
+  Modal,
+  Tag,
+  notification
+} from "antd";
+import {
+  injectIntl,
+  FormattedMessage
+} from "react-intl";
 import message from "../../../locale/message";
 
 const FormItem = Form.Item;
@@ -68,18 +93,21 @@ class ArticleEdit extends Component {
   constructor(props) {
     super(props);
 
-    if (true) {
-      var katex = import("katex")
-        .then(res => {
-          return res;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
+    // if (true) {
+    //   var katex =
+    //     import ("katex")
+    //     .then(res => {
+    //       return res;
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // }
 
-    import("highlight")
-      .then(({ hljs }) => {
+    import ("highlight.js")
+    .then(({
+        hljs
+      }) => {
         marked.setOptions({
           renderer: new marked.Renderer(),
           gfm: true,
@@ -90,7 +118,7 @@ class ArticleEdit extends Component {
           smartLists: true,
           smartypants: false,
           math: true,
-          kaTex: katex,
+          // kaTex: katex,
           highlight: code => hljs.highlightAuto(code).value
         });
       })
@@ -101,10 +129,18 @@ class ArticleEdit extends Component {
     let fontSize = localStorage.getItem("fontSize") || 12;
 
     this.state = {
-      title: { value: "" },
-      content: { value: "" },
-      tags: { value: "" },
-      catalog: { value: "" },
+      title: {
+        value: ""
+      },
+      content: {
+        value: ""
+      },
+      tags: {
+        value: ""
+      },
+      catalog: {
+        value: ""
+      },
       preTags: [],
       preCatalog: [],
       isShowHead: true,
@@ -117,7 +153,9 @@ class ArticleEdit extends Component {
   async componentDidMount() {
     this.props.initPost();
 
-    let { article = {}, articleId } = this.props;
+    let {
+      article = {}, articleId
+    } = this.props;
 
     if (article) {
       let result = await getEditArticle(articleId);
@@ -131,8 +169,13 @@ class ArticleEdit extends Component {
 
     if (article) {
       this.setState({
-        title: { value: article.title },
-        content: { value: article.content, validateStatus: "success" },
+        title: {
+          value: article.title
+        },
+        content: {
+          value: article.content,
+          validateStatus: "success"
+        },
         tags: {
           value: article.tags.join(";").toString(),
           validateStatus: "success"
@@ -150,7 +193,10 @@ class ArticleEdit extends Component {
   async _handleSubModel() {
     let isSubmit = this.state.isSubmit,
       content = this.state.content.value,
-      { catalogs, tags } = this.props;
+      {
+        catalogs,
+        tags
+      } = this.props;
 
     this.setState({
       isSubmit: !isSubmit,
@@ -178,7 +224,13 @@ class ArticleEdit extends Component {
   }
 
   async _updateArticle() {
-    let { content, tags, catalog, preTags, preCatalog } = this.state;
+    let {
+      content,
+      tags,
+      catalog,
+      preTags,
+      preCatalog
+    } = this.state;
     if (
       content.validateStatus === "success" &&
       tags.validateStatus === "success" &&
@@ -266,7 +318,9 @@ class ArticleEdit extends Component {
   };
 
   _addCatalog(e, catalogIndex) {
-    let { catalog } = this.state;
+    let {
+      catalog
+    } = this.state;
 
     catalog = catalog.value;
 
@@ -276,9 +330,9 @@ class ArticleEdit extends Component {
 
     let catalogs = this.props.catalogs;
     let tmpCatalog =
-      catalogs && catalogs[catalogIndex]
-        ? catalogs[catalogIndex]._id + ";"
-        : "";
+      catalogs && catalogs[catalogIndex] ?
+      catalogs[catalogIndex]._id + ";" :
+      "";
 
     if (catalog.indexOf(tmpCatalog) === -1) {
       let catalogValue = "" + catalog + tmpCatalog;
@@ -293,7 +347,9 @@ class ArticleEdit extends Component {
   }
 
   _addTag(e, tagIndex) {
-    let { tags } = this.state;
+    let {
+      tags
+    } = this.state;
 
     let tagsArr = this.props.tags;
     let tmpTag =
@@ -350,11 +406,16 @@ class ArticleEdit extends Component {
       isShowPreview,
       fontSize
     } = this.state;
-    let { location, user } = this.props,
+    let {
+      location,
+      user
+    } = this.props,
       tagsArr = this.props.tags,
       catalogsArr = this.props.catalogs;
     let pathname = "/login",
-      redirectState = { from: location };
+      redirectState = {
+        from: location
+      };
 
     if (!user) {
       return (
