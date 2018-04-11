@@ -275,6 +275,7 @@ input:-moz-placeholder {
   padding: 5px;
   border-radius: 5px;
   background: rgba(238, 238, 238, 0.5) !important;
+  overflow-y: auto;
 }
 .marked-preview pre > code,
 .marked-preview pre > code > span {
